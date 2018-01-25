@@ -3,7 +3,7 @@
 The backend for the Aquila system that manages pre-award/post-award workflows
 for UAS at CSULA.
 
-##First Time Setup
+## First Time Setup
 1. Clone the project from its GitHub repository
 2. In Eclipse, select *File -> *Import* ... -> *Existing Maven Projects* to
 	import the project into Eclipse.
@@ -19,7 +19,7 @@ for UAS at CSULA.
 6. Run AquilaServerApplication.java as java application
 7. Begin testing requests
 
-##Test procedure
+## Test procedure
 If you have made any modifications to the models, you need to re-create the schema.
 1. Run SchemaGeneration.java
 4. Open aquila-tables.ddl found in src/main/scripts/ and copy the schema
