@@ -8,12 +8,12 @@ for UAS at CSULA.
 2. In Eclipse, select *File -> *Import* ... -> *Existing Maven Projects* to
 	import the project into Eclipse.
 3. Run SchemaGeneration.java
-4. Open aquila-tables.ddl found in src/main/scripts/ and copy the schema
+4. Open aquila-tables.ddl found in `src/main/scripts/` and copy the schema
 5. Create database in MySQL Workbench
 	* Create new query
 	* Type in 
-		'CREATE schema aquila;'
-		'USE aquila;'
+		* `CREATE schema aquila;`
+		* `USE aquila;`
 	* Paste the aquila-tables.ddl
 	* Run the query 
 6. Run AquilaServerApplication.java as java application
@@ -22,13 +22,13 @@ for UAS at CSULA.
 ## Test procedure
 If you have made any modifications to the models, you need to re-create the schema.
 1. Run SchemaGeneration.java
-4. Open aquila-tables.ddl found in src/main/scripts/ and copy the schema
+4. Open aquila-tables.ddl found in `src/main/scripts/` and copy the schema
 5. Create database in MySQL Workbench
 	* Create new query
 	* Type in 
-		'DROP schema aquila;'
-		'CREATE schema aquila;'
-		'USE aquila;'
+		* `DROP schema aquila;`
+		* `CREATE schema aquila;`
+		* `USE aquila;`
 	* Paste the aquila-tables.ddl
 	* Run the query 
 6. Run AquilaServerApplication.java as java application
