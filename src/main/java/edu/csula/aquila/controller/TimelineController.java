@@ -106,6 +106,7 @@ public class TimelineController {
 		return new DeleteResponse("Stage Deleted!");
 	}
 	
+	
 	public class DeleteResponse{
 		private String message;
 		

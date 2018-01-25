@@ -45,20 +45,16 @@ public class User implements Serializable {
     private String email;
     
 
+    //turn into a map later for pi and co-pi 
     @JsonIgnore
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name="proposal_id", nullable = true)
     List<Proposal> proposals;
-
     
-
-
 	public User()
     {
     }
-    
-
-
+   
     public User(String username, String password, String lastName, String firstName, String phoneNumber, String email) {
 		this.username = username;
 		this.password = password;
@@ -67,8 +63,6 @@ public class User implements Serializable {
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 	}
-
-
 
 	public Long getId()
     {
