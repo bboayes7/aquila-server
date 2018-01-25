@@ -5,7 +5,7 @@ for UAS at CSULA.
 
 ## First Time Setup
 1. Clone the project from its GitHub repository
-2. In Eclipse, select *File -> *Import* ... -> *Existing Maven Projects* to
+2. In Eclipse, select *File* -> *Import* ... -> *Existing Maven Projects* to
 	import the project into Eclipse.
 3. Run SchemaGeneration.java
 4. Open aquila-tables.ddl found in `src/main/scripts/` and copy the schema
