@@ -34,11 +34,13 @@ public class ProposalController {
 	@Autowired
 	private TimelineDao timelineDao;
 	
+	//Get a proposal
 	@RequestMapping(value = "proposal/{id}", method = RequestMethod.GET)
 	public Proposal getProposal(@PathVariable Long id){
 		return proposalDao.getProposal(id);
 	}
 	
+	//Create a proposal
 	@RequestMapping(value = "proposal/", method = RequestMethod.POST)
 	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate) {
 		//create proposal and set the name
@@ -76,6 +78,7 @@ public class ProposalController {
 		return proposal = proposalDao.saveProposal(proposal);
 	}
 	
+	//Get a list of proposals of a user
 	@RequestMapping(value = "proposals/{id}", method = RequestMethod.GET)
 	public List<Proposal> getProposalsOfUser(@PathVariable Long id){
 		

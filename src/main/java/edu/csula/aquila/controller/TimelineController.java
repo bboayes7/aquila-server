@@ -82,22 +82,25 @@ public class TimelineController {
 	}
 	
 	
-	//Stage Daos
+	//Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
 	public Timeline.Stage getStage(@PathVariable Long id){
 		return timelineDao.getStage(id);
 	}
 	
+	//create a stage
 	@RequestMapping(value = "timeline/stage/", method = RequestMethod.POST)
 	public Timeline.Stage createStage(Timeline.Stage stage){
 		return timelineDao.createStage(stage);
 	}
 	
+	//update a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
 	public Timeline.Stage updateStage(Timeline.Stage stage, @PathVariable Long id){
 		return timelineDao.updateStage(stage);
 	}
 	
+	//delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id){
@@ -107,6 +110,7 @@ public class TimelineController {
 	}
 	
 	
+	//message to send when a stage is deleted
 	public class DeleteResponse{
 		private String message;
 		

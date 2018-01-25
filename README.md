@@ -16,8 +16,11 @@ for UAS at CSULA.
 		* `USE aquila;`
 	* Paste the aquila-tables.ddl
 	* Run the query 
-6. Run AquilaServerApplication.java as java application
-7. Begin testing requests
+6. Prepopulate database with users
+	* Create new query
+	* Run aquila-inserts.sql found in `src/main/scripts`	
+7. Run AquilaServerApplication.java as java application
+8. Begin testing requests
 
 ## Test procedure
 If you have made any modifications to the models, you need to re-create the schema.
@@ -31,5 +34,8 @@ If you have made any modifications to the models, you need to re-create the sche
 		* `USE aquila;`
 	* Paste the aquila-tables.ddl
 	* Run the query 
-6. Run AquilaServerApplication.java as java application
-7. Begin testing requests
+6. Prepopulate database with users
+	* Create new query
+	* Run aquila-inserts.sql found in `src/main/scripts`
+7. Run AquilaServerApplication.java as java application
+8. Begin testing requests
