@@ -238,8 +238,6 @@ public class Timeline implements Serializable {
 		public Stage() {
 		}
 
-	
-
 		public Stage(Long id, String name, Date expectedDate, Date completedDate, boolean uasReviewRequired,
 				boolean uasReviewed, List<String> requiredForms, List<Form> forms, List<String> addComments) {
 			super();
