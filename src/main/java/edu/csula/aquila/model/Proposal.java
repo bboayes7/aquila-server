@@ -49,7 +49,7 @@ public class Proposal implements Serializable{
 	@JoinColumn(name="intake_form_id")
 	IntakeForm intakeForm;
 	
-	@JsonIgnore
+//	@JsonIgnore
 	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name="timeline_id")
 	Timeline timeline;

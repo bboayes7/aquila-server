@@ -248,6 +248,7 @@ public class IntakeForm extends Form implements Serializable {
 	@JsonIgnore
 	@OneToOne(mappedBy = "intakeForm")
 	Proposal proposal;
+	
 
 	public IntakeForm() {
 	}
