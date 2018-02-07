@@ -11,6 +11,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -175,8 +176,8 @@ public class EquipmentForm extends Form implements Serializable{
 	Date directorOfFacilitiesServicesSignatureDate;
 	
 	//proposal relationship
-//	@OneToOne(mappedBy="equipmentForm")
-//	Proposal proposalForm;
+	@OneToOne(mappedBy="equipmentForm")
+	Proposal proposalForm;
 
 //	public Long getId() {
 //		return id;

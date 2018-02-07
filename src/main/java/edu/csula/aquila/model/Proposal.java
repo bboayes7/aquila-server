@@ -49,8 +49,8 @@ public class Proposal implements Serializable{
 	@JoinColumn(name="intake_form_id")
 	IntakeForm intakeForm;
 	
-	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.MERGE})
+//	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="timeline_id")
 	Timeline timeline;
 //	
@@ -83,10 +83,10 @@ public class Proposal implements Serializable{
 	@JoinColumn(name="economic_interest_id")
 	EconomicInterestPI economicInterest;
 //
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="equipment_form_id")
-//	private EquipmentForm equipmentForm;
+	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.MERGE})
+	@JoinColumn(name="equipment_form_id")
+	private EquipmentForm equipmentForm;
 //
 //	@JsonIgnore
 //	@OneToOne
@@ -198,15 +198,15 @@ public class Proposal implements Serializable{
 //	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
 //		this.coiPhs = coiPhs;
 //	}
-//
-//	public EquipmentForm getEquipmentForm() {
-//		return equipmentForm;
-//	}
-//
-//	public void setEquipmentForm(EquipmentForm equipmentForm) {
-//		this.equipmentForm = equipmentForm;
-//	}
-//
+
+	public EquipmentForm getEquipmentForm() {
+		return equipmentForm;
+	}
+
+	public void setEquipmentForm(EquipmentForm equipmentForm) {
+		this.equipmentForm = equipmentForm;
+	}
+
 	public Timeline getTimeline() {
 		return timeline;
 	}

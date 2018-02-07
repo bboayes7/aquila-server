@@ -1,7 +1,7 @@
 package edu.csula.aquila.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
-import edu.csula.aquila.model.ApprovalForm;
+import edu.csula.aquila.model.ConflictOfInterestPHS;
 import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.Form;
+import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
 
 @RestController
@@ -22,6 +24,8 @@ public class TimelineController {
 
 	@Autowired
 	private TimelineDao timelineDao;
+	
+	@Autowired ProposalDao proposalDao;
 	
 
 	//create a new timeline
@@ -31,53 +35,67 @@ public class TimelineController {
 	}
 	
 	//update a timeline
-	@RequestMapping(value = "timeline/{id}", method = RequestMethod.PUT)
-	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id) {
-		timelineDao.saveTimelineForm(timeline);
-		timeline = timelineDao.getTimelineForm(id);
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
+	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) {
+		 
+		//setting up proposal dao to avoid null pointer error when calling a user's intake from the timeline
+		Proposal proposal = proposalDao.getProposal(proposalId);
 		
-		//get a list of stages
 		List<Timeline.Stage> stages = timeline.getStages();
-		//make a list of required forms
-		List<String> requiredForms;
 		
+		//go through each stage
 		for(int i = 0; i < stages.size(); i++) {
-			//create a new list of forms
-			List<Form> forms = new ArrayList<Form>();
-			//grab the required forms string from a stage
-			requiredForms = stages.get(i).getRequiredForms();
-			
-			//if a form contains the name of a model form, add it to the form list
-			for(int j = 0; j < requiredForms.size(); j++) {
+			//get the map from a stage
+			Map<String, Form> forms = stages.get(i).getRequiredForms();
+			//go through the map
+			for(Map.Entry<String, Form> form: forms.entrySet()) {
+				//get the form name
+				String key = form.getKey();
 				
-				//if the string is an intake form, get a user's intake form and add it to the form list
-				if(requiredForms.get(j).equals("Intake Form")) {
-					forms.add(timeline.getProposalForm().getIntakeForm());
+				switch(key) {
+					//if form name is intake form, add the form value
+					case "Intake Form" :
+						form.setValue(proposal.getIntakeForm());
+						System.out.println("intake form linked!");
+						break;
+					
+					//if form name is equipment form, add the form value
+					case "Equipment Form" :
+						//needs to be related
+						form.setValue(new EquipmentForm());
+						System.out.println("equipment form linked!");
+						break;
+						
+					//if form name is coi phs, add the form value
+					case "Conflict Of Interest PHS" :
+						form.setValue(new ConflictOfInterestPHS());
+						System.out.println("coi phs linked!");
+						break;
+						
+					default :
+						System.out.println("Invalid Form name");
+						
 				}
 				
-				//since these forms aren't mapped out yet, this creates a new form for now
-				//will implement soon
-				if(requiredForms.get(j).equals("Equipment Form")) {
-					forms.add(new EquipmentForm());
-				}
-				if(requiredForms.get(j).equals("Approval Form")) {
-					forms.add(new ApprovalForm());
-				}
+
 			}
-			//set the list of forms for the stage
-			stages.get(i).setForms(forms);
+			
+			//set the map of forms for the stage
+			stages.get(i).setRequiredForms(forms);
 		}
+
 		
-		//update timeline
+		//set stages
 		timeline.setStages(stages);
-		
-		//save timeline to db
+
+		//save timeline
 		return timelineDao.saveTimelineForm(timeline);
 	}
 	
 	//return a timeline
 	@RequestMapping(value = "timeline/{id}", method = RequestMethod.GET)
 	public Timeline getTimeline(@PathVariable Long id) {
+	
 		return timelineDao.getTimelineForm(id);
 	}
 	
@@ -126,6 +144,18 @@ public class TimelineController {
 			this.message = message;
 		}
 
+	}
+	
+	public void stageCheck(Timeline.Stage stage) {
+		//pseudo code
+		//get the stage
+		//check if all forms are completed through the isComplete boolean
+		//if all forms are complete, have a boolean called formsCompleted and set it to true
+		//check if all the files are uploaded through the isUploaded boolean
+		//if all files are uploaded, have a boolean called filesUploaded and set it to true
+		//when formsCompleted && filesUploaded is true
+		//set uasReviewRequired to true
+		//send an email to UAS
 	}
 }
 
