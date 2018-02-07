@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
+import edu.csula.aquila.model.ConflictOfInterestPHS;
+import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.Form;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
@@ -60,11 +62,19 @@ public class TimelineController {
 					//if form name is equipment form, add the form value
 					case "Equipment Form" :
 						//needs to be related
+						form.setValue(new EquipmentForm());
 						System.out.println("equipment form linked!");
 						break;
-					
+						
+					//if form name is coi phs, add the form value
+					case "Conflict Of Interest PHS" :
+						form.setValue(new ConflictOfInterestPHS());
+						System.out.println("coi phs linked!");
+						break;
+						
 					default :
 						System.out.println("Invalid Form name");
+						
 				}
 				
 
@@ -85,15 +95,7 @@ public class TimelineController {
 	//return a timeline
 	@RequestMapping(value = "timeline/{id}", method = RequestMethod.GET)
 	public Timeline getTimeline(@PathVariable Long id) {
-		if (timelineDao.getTimelineForm(id).getProposalForm() == null) {
-			System.out.println("no proposal");
-			
-		} else {
-			System.out.println("There's a proposal form linked.");
-			if(timelineDao.getTimelineForm(id).getProposalForm().getIntakeForm() != null) {
-				System.out.println("there's also an intake form linked");
-			}
-		}
+	
 		return timelineDao.getTimelineForm(id);
 	}
 	
@@ -142,6 +144,18 @@ public class TimelineController {
 			this.message = message;
 		}
 
+	}
+	
+	public void stageCheck(Timeline.Stage stage) {
+		//pseudo code
+		//get the stage
+		//check if all forms are completed through the isComplete boolean
+		//if all forms are complete, have a boolean called formsCompleted and set it to true
+		//check if all the files are uploaded through the isUploaded boolean
+		//if all files are uploaded, have a boolean called filesUploaded and set it to true
+		//when formsCompleted && filesUploaded is true
+		//set uasReviewRequired to true
+		//send an email to UAS
 	}
 }
 

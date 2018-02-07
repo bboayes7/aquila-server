@@ -64,7 +64,7 @@ public class Timeline implements Serializable {
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.MERGE}, mappedBy="timeline")
+	@OneToOne(cascade = {CascadeType.ALL}, mappedBy="timeline")
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposalForm;
 
@@ -205,19 +205,17 @@ public class Timeline implements Serializable {
 		@ElementCollection
 		@MapKeyColumn(name = "form_name")
 		@Column(name = "form_id")
-//		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_forms_id"))
 	    @JoinTable(
 	            name = "required_forms",
 	            joinColumns = @JoinColumn(name = "form_id"),
 	            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
 		Map<String, Form> requiredForms;
 
-		//Files as a map (Test)
+		//Files as a map 
 		@ElementCollection
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
-//		@CollectionTable(name = "required_files", joinColumns = @JoinColumn(name = "required_files_id"))
-		 @JoinTable(
+		@JoinTable(
 		            name = "required_files",
 		            joinColumns = @JoinColumn(name = "file_info_id"),
 		            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
