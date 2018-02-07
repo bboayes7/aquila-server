@@ -1,9 +1,12 @@
 package edu.csula.aquila.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,13 @@ public class TimelineController {
 	@Autowired
 	private TimelineDao timelineDao;
 	
+
+	@RequestMapping(value="timelinedefault/{uasDueDate}", method = RequestMethod.POST)
+	public Timeline defTimeline(@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date uasDueDate)
+	{
+		Timeline defaultTimeline = new Timeline(uasDueDate);
+		return timelineDao.saveTimelineForm(defaultTimeline);
+	}
 
 	//create a new timeline
 	@RequestMapping(value = "timeline", method = RequestMethod.POST)

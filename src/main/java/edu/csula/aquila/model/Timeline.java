@@ -2,6 +2,7 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -62,9 +63,76 @@ public class Timeline implements Serializable {
 //	@JsonIgnore
 	 @OneToOne(mappedBy="timeline")
 	 Proposal proposalForm;
+	 
+	 
+	 public Timeline()
+	 {
+		 
+	 }
+	
 
-	public Timeline() {
+	public Timeline(Date uasDueDate) 
+	{
+		//list of default stages
+		List<Timeline.Stage> preFill = new ArrayList<Timeline.Stage>();
+		
+		//create instance of date
+		Calendar deadline = Calendar.getInstance();
+		Date dueDate = uasDueDate;
+		
+		//15 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -15);
+		Date deadline1 = deadline.getTime();
+		
+		//11 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -11);
+		Date deadline2 = deadline.getTime();
+		
+		//7 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -7);
+		Date deadline3 = deadline.getTime();
+		/*
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -2);
+		Date deadline4 = deadline.getTime();
+		*/
+		
+		//file lists and form lists for each stage
+		List<String> files1 = new ArrayList<String>();
+		List<String> files2 = new ArrayList<String>();
+		List<String> files3 = new ArrayList<String>();
+		List<String> forms2 = new ArrayList<String>();
+		List<String> forms3 = new ArrayList<String>();
+		
+		files1.add("Budget");
+		files2.add("Sub Contract Documents");
+		files2.add("Equipment Quotes & Specs");
+		files3.add("Supporting Letters");
+		files3.add("Signatures PDF");
+		
+		forms2.add("Budget");
+		forms2.add("Equipment");
+		forms3.add("Intake Form");
+		forms3.add("Conflict of Interest");
+		forms3.add("Approval");
+		
+		//create default stages
+		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
+		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
+		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
+		
+		
+		//add default stages
+		preFill.add(stage1);
+		preFill.add(stage2);
+		preFill.add(stage3);
+		this.setStages(preFill);
+		
 	}
+	
 
 	public Timeline(String pI, List<String> coPI, String proposal, String fundingAgency, Date uasDueDate,
 			Date sponsorDueDate, Date finalSign, List<Stage> stages, User user) {
@@ -224,6 +292,14 @@ public class Timeline implements Serializable {
 		List<Form> forms;
 
 		// allows uas member to add needed file
+		@ElementCollection
+		@CollectionTable(name = "required_files", joinColumns = @JoinColumn(name = "timeline_id"))
+		@Column(name = "file_name")
+		List<String> requiredFiles;
+		
+		@OneToMany(cascade = { CascadeType.ALL })
+		@JoinColumn(name = "stage_id", nullable = true)
+		List<FileInfo> files;
 
 		// allows uas member to add comments to a stage if needed
 		@ElementCollection
@@ -237,9 +313,18 @@ public class Timeline implements Serializable {
 
 		public Stage() {
 		}
+		
+		public Stage(String name, Date expectedDate, String deadlineType, List<String> requiredForms, List<String> requiredFiles) 
+		{
+			this.name = name;
+			this.expectedDate = expectedDate;
+			this.deadlineType = deadlineType;
+			this.requiredForms = requiredForms;
+			this.requiredFiles = requiredFiles;
+		}
 
 		public Stage(Long id, String name, Date expectedDate, Date completedDate, boolean uasReviewRequired,
-				boolean uasReviewed, List<String> requiredForms, List<Form> forms, List<String> addComments) {
+				boolean uasReviewed, List<String> requiredForms, List<String> requiredFiles, List<String> addComments) {
 			super();
 			this.name = name;
 			this.expectedDate = expectedDate;
@@ -247,7 +332,7 @@ public class Timeline implements Serializable {
 			this.uasReviewRequired = uasReviewRequired;
 			this.uasReviewed = uasReviewed;
 			this.requiredForms = requiredForms;
-			this.forms = forms;
+			this.requiredFiles = requiredFiles;
 			this.addComments = addComments;
 		}
 
