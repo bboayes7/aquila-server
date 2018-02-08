@@ -23,14 +23,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "budget")
-public class BudgetFile implements Serializable{
+public class BudgetFile extends FileInfo implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name ="budget_form_id")
-	private Long id;
+
 	
 	@Column(name = "status")
 	private String status;
@@ -57,14 +54,6 @@ public class BudgetFile implements Serializable{
 	
 	public BudgetFile() {}
 	
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getStatus() {
 		return status;
