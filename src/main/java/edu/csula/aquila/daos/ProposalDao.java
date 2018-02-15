@@ -9,6 +9,8 @@ public interface ProposalDao {
 	Proposal getProposal( Long id );
 	
 	Proposal saveProposal( Proposal proposal);
+	
+	//Proposal updateProposal( Proposal proposal );
 
 	List<Proposal> getProposalsOfUser( Long id );
 	

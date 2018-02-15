@@ -42,11 +42,6 @@ public class Proposal implements Serializable{
 	@Column(name="date_created")
 	Date dateCreated;
 	
-	@ElementCollection
-	@MapKeyColumn(name="file_path")
-	@Column(name = "file_date")
-	@CollectionTable(name = "file_description", joinColumns=@JoinColumn(name = "proposal_id"))
-	private Map<String,Date> filePaths;
 	
 	@Column(name="status")
 	String status;
@@ -104,10 +99,10 @@ public class Proposal implements Serializable{
 //	private Timeline timeline;
 //
 	
-	@OneToOne(cascade = {CascadeType.MERGE})
+	/*@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name="budget_id")
 	BudgetFile budget;
-
+*/
 	public Proposal(){}
 	
 	public Proposal(String proposalName, User user, String status, Date dateCreated) {
@@ -152,14 +147,6 @@ public class Proposal implements Serializable{
 		this.dateCreated = dateCreated;
 	}
 	
-
-	public Map<String, Date> getFilePaths() {
-		return filePaths;
-	}
-
-	public void setFilePaths(Map<String, Date> filePaths) {
-		this.filePaths = filePaths;
-	}
 
 	public String getStatus() {
 		return status;

@@ -36,6 +36,13 @@ public class ProposalDaoImpl  implements ProposalDao{
 		return condensedProposal;
 	}
 	
+	/*@Override
+	@Transactional
+	public Proposal updateProposal(Proposal proposal)
+	{
+		return entityManager.merge(proposal);
+	}
+	*/
 	@Override
 	public List<Proposal> getProposalsOfUser( Long id ){
 		String query = "from Proposal where user_id = :id";
@@ -44,6 +51,7 @@ public class ProposalDaoImpl  implements ProposalDao{
 				.getResultList();
 		
 	}
+
 
 }
 

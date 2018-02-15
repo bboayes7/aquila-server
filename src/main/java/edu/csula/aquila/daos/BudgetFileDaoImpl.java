@@ -25,7 +25,7 @@ public class BudgetFileDaoImpl implements BudgetFileDao{
 	private EntityManager entityManager;
 
 	//files saved here
-	private static String directory = "C:\\uas_uploads\\";
+	private static String directory = "C:\\proposal\\files\\budget\\";
 	
 	
 	@Override
@@ -50,24 +50,29 @@ public class BudgetFileDaoImpl implements BudgetFileDao{
 		//counter for version control
 		int count = 1;
 	
-		String checkName =  Calendar.getInstance().get(Calendar.YEAR) + "id" + id + "version" + count + ".xls";
+		String checkName =  Calendar.getInstance().get(Calendar.YEAR) + "id" + 
+								id + "version" + count + ".xls";
 
 		
 		//checks if version within budget already exists, increments version counter if it does
-		while(new File(directory + checkName).exists()) {
+		while(new File(directory + checkName).exists()) 
+		{
 			count++;
-			checkName =  Calendar.getInstance().get(Calendar.YEAR) + "id" + id + "version" + count + ".xls";
+			checkName =  Calendar.getInstance().get(Calendar.YEAR) + "id" + 
+							id + "version" + count + ".xls";
 
-			
 		}
 		String newFileName = checkName;
+		
+		
 		for (MultipartFile file : files) 
 		{
 			if (file.isEmpty()) 
 			{
 				continue; 
 	        }
-				//save bytes to the created path(with new filename)
+			
+			//save bytes to the created path(with new filename)
             byte[] bytes = file.getBytes();
             Path path = Paths.get(directory + newFileName);
             Files.write(path, bytes);   

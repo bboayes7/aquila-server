@@ -38,7 +38,7 @@ public class BudgetFileController {
 	
 	
 	
-	@RequestMapping(value = "/proposal/budget/upload/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/budget/{id}/upload", method = RequestMethod.PUT)
 	public String uploadSaveFile(@RequestParam("file") MultipartFile file, @PathVariable Long id)throws IOException
 	{
 		
@@ -47,7 +47,7 @@ public class BudgetFileController {
 		
 		if(file.isEmpty())
 		{
-			return "no file!";
+			return "Please Choose A Valid File!";
 		}
 		
 		try

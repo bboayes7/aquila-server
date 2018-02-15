@@ -11,9 +11,9 @@ public interface FileInfoDao {
 	
 	public FileInfo getFile(Long id);
 	
-	public void addFileToDB(Long id, String filename);
+	public FileInfo addFileToDB(Long id, String filename);
 	
-	public String saveFileToDisk(Long id, List<MultipartFile> files) throws IOException;
+	public String saveFileToDisk(List<MultipartFile> files, Long id) throws IOException;
 	
 	public void returnFile(String filename);
 

@@ -23,11 +23,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "budget")
-public class BudgetFile extends FileInfo implements Serializable{
+public class BudgetFile implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "budget_id")
+	private Long Id;
 	
 	@Column(name = "status")
 	private String status;
@@ -46,9 +49,9 @@ public class BudgetFile extends FileInfo implements Serializable{
 	private Map<String,Date> filePaths;
 	
 	//proposal relationship
-	@JsonIgnore
-	@OneToOne(mappedBy="budget")
-	Proposal proposal;
+	//@JsonIgnore
+	//@OneToOne(mappedBy="budget")
+	//Proposal proposal;
 
 	
 	
@@ -89,15 +92,6 @@ public class BudgetFile extends FileInfo implements Serializable{
 		this.filePaths = filePaths;
 	}
 
-
-	public Proposal getProposal() {
-		return proposal;
-	}
-
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
-	}
 
 	
 	
