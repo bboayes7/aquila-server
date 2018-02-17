@@ -99,10 +99,7 @@ public class Proposal implements Serializable{
 //	private Timeline timeline;
 //
 	
-	/*@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name="budget_id")
-	BudgetFile budget;
-*/
+
 	public Proposal(){}
 	
 	public Proposal(String proposalName, User user, String status, Date dateCreated) {
