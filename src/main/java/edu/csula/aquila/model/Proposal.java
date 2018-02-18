@@ -2,15 +2,19 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -38,6 +42,7 @@ public class Proposal implements Serializable{
 	@Column(name="date_created")
 	Date dateCreated;
 	
+	
 	@Column(name="status")
 	String status;
 	
@@ -49,8 +54,8 @@ public class Proposal implements Serializable{
 	@JoinColumn(name="intake_form_id")
 	IntakeForm intakeForm;
 	
-	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.MERGE})
+//	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="timeline_id")
 	Timeline timeline;
 //	
@@ -83,10 +88,10 @@ public class Proposal implements Serializable{
 	@JoinColumn(name="economic_interest_id")
 	EconomicInterestPI economicInterest;
 //
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="equipment_form_id")
-//	private EquipmentForm equipmentForm;
+	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.MERGE})
+	@JoinColumn(name="equipment_form_id")
+	private EquipmentForm equipmentForm;
 //
 //	@JsonIgnore
 //	@OneToOne
@@ -94,9 +99,6 @@ public class Proposal implements Serializable{
 //	private Timeline timeline;
 //
 	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name="budget_id")
-	BudgetFile budget;
 
 	public Proposal(){}
 	
@@ -141,6 +143,7 @@ public class Proposal implements Serializable{
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+	
 
 	public String getStatus() {
 		return status;
@@ -198,15 +201,15 @@ public class Proposal implements Serializable{
 //	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
 //		this.coiPhs = coiPhs;
 //	}
-//
-//	public EquipmentForm getEquipmentForm() {
-//		return equipmentForm;
-//	}
-//
-//	public void setEquipmentForm(EquipmentForm equipmentForm) {
-//		this.equipmentForm = equipmentForm;
-//	}
-//
+
+	public EquipmentForm getEquipmentForm() {
+		return equipmentForm;
+	}
+
+	public void setEquipmentForm(EquipmentForm equipmentForm) {
+		this.equipmentForm = equipmentForm;
+	}
+
 	public Timeline getTimeline() {
 		return timeline;
 	}

@@ -2,8 +2,11 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -14,10 +17,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -31,8 +38,8 @@ public class Timeline implements Serializable {
 	@Column(name = "timeline_id")
 	private Long Id;
 
-	@Column(name = "pi")
-	String pI;
+	@Column(name = "principal_investigator")
+	String principalInvestigator;
 
 	@ElementCollection
 	@Column(name = "co_pis")
@@ -59,17 +66,87 @@ public class Timeline implements Serializable {
 	
 
 	// proposal relationship
-//	@JsonIgnore
-	 @OneToOne(mappedBy="timeline")
-	 Proposal proposalForm;
+	@JsonIgnore
+	@OneToOne(cascade = {CascadeType.ALL}, mappedBy="timeline")
+	@JoinColumn(name="proposal_id", nullable = false)
+	Proposal proposalForm;
+	
 
-	public Timeline() {
+	public Timeline()
+	{
+	 
 	}
+	
+	//default timeline , still in progress
+	public Timeline(Date uasDueDate) 
+	{
+		//list of default stages
+		List<Timeline.Stage> preFill = new ArrayList<Timeline.Stage>();
+		
+		//create instance of date
+		Calendar deadline = Calendar.getInstance();
+		Date dueDate = uasDueDate;
+		
+		//15 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -15);
+		Date deadline1 = deadline.getTime();
+		
+		//11 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -11);
+		Date deadline2 = deadline.getTime();
+		
+		//7 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -7);
+		Date deadline3 = deadline.getTime();
+		/*
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -2);
+		Date deadline4 = deadline.getTime();
+		*/
+		
+		//file lists and form lists for each stage
+		Map<String,FileInfo> files1 = new HashMap<>();
+		Map<String,FileInfo> files2 = new HashMap<>();
+		Map<String,FileInfo> files3 = new HashMap<>();
+		Map<String,Form> forms2 = new HashMap<>();
+		Map<String,Form> forms3 = new HashMap<>();
+		
+		//put filename with empty file into map
+		/*files1.put("Budget", new FileInfo(""));
+		files2.put("Sub Contract Documents", new FileInfo(""));
+		files2.put("Equipment Quotes & Specs", new FileInfo(""));
+		files3.put("Supporting Letters", new FileInfo(""));
+		files3.put("Signatures PDF", new FileInfo(""));
+		
+		//put forms into map
+		forms2.put("Budget");
+		forms2.put("Equipment");
+		forms3.put("Intake Form");
+		forms3.put("Conflict of Interest");
+		forms3.put("Approval");
+		*/
+		
+		//create default stages
+		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
+		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
+		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
+		
+		
+		//add default stages
+		preFill.add(stage1);
+		preFill.add(stage2);
+		preFill.add(stage3);
+		this.setStages(preFill);
+		
+	}
+	
 
-	public Timeline(String pI, List<String> coPI, String proposal, String fundingAgency, Date uasDueDate,
-			Date sponsorDueDate, Date finalSign, List<Stage> stages, User user) {
-		super();
-		this.pI = pI;
+	public Timeline(String principalInvestigator, List<String> coPI, String proposal, String fundingAgency,
+			Date uasDueDate, Date sponsorDueDate, Date finalSign, List<Stage> stages) {
+		this.principalInvestigator = principalInvestigator;
 		this.coPI = coPI;
 		this.proposal = proposal;
 		this.fundingAgency = fundingAgency;
@@ -77,19 +154,6 @@ public class Timeline implements Serializable {
 		this.sponsorDueDate = sponsorDueDate;
 		this.finalSign = finalSign;
 		this.stages = stages;
-	}
-
-	// premade PI stages
-	// String name,
-	// Date expectedDate,
-	// Date completedDate,
-	// List<Form> forms,
-	// List<String> addComments
-	public List<Stage> piStages() {
-		this.stages = new ArrayList<Stage>();
-		// what are these stages even
-
-		return this.stages;
 	}
 
 	public Long getId() {
@@ -100,12 +164,12 @@ public class Timeline implements Serializable {
 		Id = id;
 	}
 
-	public String getpI() {
-		return pI;
+	public String getPrincipalInvestigator() {
+		return principalInvestigator;
 	}
 
-	public void setpI(String pI) {
-		this.pI = pI;
+	public void setPrincipalInvestigator(String principalInvestigator) {
+		this.principalInvestigator = principalInvestigator;
 	}
 
 	public List<String> getCoPI() {
@@ -172,9 +236,6 @@ public class Timeline implements Serializable {
 		this.proposalForm = proposalForm;
 	}
 
-
-
-
 	// Timeline contains a list of stages
 	// This is the innerclass of stage to help a uas member
 	// manage the timeline
@@ -212,48 +273,62 @@ public class Timeline implements Serializable {
 		//Deadline Type (for PI or ORSP)
 		@Column(name = "deadline_type")
 		String deadlineType;
-
-		// allows uas member to add a needed form
-		@ElementCollection
-		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "timeline_id"))
-		@Column(name = "form_name")
-		List<String> requiredForms;
 		
-		@OneToMany(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "stage_id", nullable = true)
-		List<Form> forms;
+		//Forms as a map (Test)
+		@ElementCollection
+		@MapKeyColumn(name = "form_name")
+		@Column(name = "form_id")
+	    @JoinTable(
+	            name = "required_forms",
+	            joinColumns = @JoinColumn(name = "form_id"),
+	            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
+		Map<String, Form> requiredForms;
 
-		// allows uas member to add needed file
+		//Files as a map 
+		@ElementCollection
+		@MapKeyColumn(name = "file_name")
+		@Column(name = "file")
+		@JoinTable(
+		            name = "required_files",
+		            joinColumns = @JoinColumn(name = "file_info_id"),
+		            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
+		Map<String, FileInfo> requiredFiles;
 
 		// allows uas member to add comments to a stage if needed
-		@ElementCollection
-		@CollectionTable(name = "add_columns", joinColumns = @JoinColumn(name = "timeline_id"))
-		@Column(name = "comment")
-		List<String> addComments;
+		@Column(name = "comments")
+		String addComments;
 		
+		@JsonIgnore
 		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "timeline_id", nullable = true)
+		@JoinColumn(name = "timeline_id")
 		Timeline timeline;
 
 		public Stage() {
 		}
+		
+		public Stage(String name, Date expectedDate, String deadlineType, Map<String,Form> requiredForms, Map<String,FileInfo> requiredFiles) 
+		{
+			this.name = name;
+			this.expectedDate = expectedDate;
+			this.deadlineType = deadlineType;
+			this.requiredForms = requiredForms;
+			this.requiredFiles = requiredFiles;
+		}
 
-	
 
-		public Stage(Long id, String name, Date expectedDate, Date completedDate, boolean uasReviewRequired,
-				boolean uasReviewed, List<String> requiredForms, List<Form> forms, List<String> addComments) {
-			super();
+		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
+				String deadlineType, Map<String, Form> requiredForms, Map<String, FileInfo> requiredFiles,
+				String addComments) {
 			this.name = name;
 			this.expectedDate = expectedDate;
 			this.completedDate = completedDate;
 			this.uasReviewRequired = uasReviewRequired;
 			this.uasReviewed = uasReviewed;
+			this.deadlineType = deadlineType;
 			this.requiredForms = requiredForms;
-			this.forms = forms;
+			this.requiredFiles = requiredFiles;
 			this.addComments = addComments;
 		}
-
-
 
 		public Long getId() {
 			return Id;
@@ -287,59 +362,62 @@ public class Timeline implements Serializable {
 			this.completedDate = completedDate;
 		}
 
-		public List<Form> getForms() {
-			return forms;
-		}
 
-		public void setForms(List<Form> forms) {
-			this.forms = forms;
-		}
-
-		public List<String> getAddComments() {
+		public String getAddComments() {
 			return addComments;
 		}
 
-		public void setAddComments(List<String> addComments) {
+		public void setAddComments(String addComments) {
 			this.addComments = addComments;
 		}
-
-
 
 		public boolean isUasReviewRequired() {
 			return uasReviewRequired;
 		}
 
-
-
 		public void setUasReviewRequired(boolean uasReviewRequired) {
 			this.uasReviewRequired = uasReviewRequired;
 		}
-
-
 
 		public boolean isUasReviewed() {
 			return uasReviewed;
 		}
 
-
-
 		public void setUasReviewed(boolean uasReviewed) {
 			this.uasReviewed = uasReviewed;
 		}
 
+		public String getDeadlineType() {
+			return deadlineType;
+		}
 
+		public void setDeadlineType(String deadlineType) {
+			this.deadlineType = deadlineType;
+		}
 
-		public List<String> getRequiredForms() {
+		public Timeline getTimeline() {
+			return timeline;
+		}
+
+		public void setTimeline(Timeline timeline) {
+			this.timeline = timeline;
+		}
+
+		public Map<String, Form> getRequiredForms() {
 			return requiredForms;
 		}
 
-
-
-		public void setRequiredForms(List<String> requiredForms) {
+		public void setRequiredForms(Map<String, Form> requiredForms) {
 			this.requiredForms = requiredForms;
 		}
-		
-		
+
+		public Map<String, FileInfo> getRequiredFiles() {
+			return requiredFiles;
+		}
+
+		public void setRequiredFiles(Map<String, FileInfo> requiredFiles) {
+			this.requiredFiles = requiredFiles;
+		}
 
 	}
 
