@@ -47,6 +47,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		Date fileAddDate = new Date();
 		String path = directory + filename;
 		
+		//create new file then merge, filetype in progress
 		FileInfo fileInfo = new FileInfo(nameOfUploader, filename,"filetype", path, fileAddDate);
 		
 		fileInfo = entityManager.merge(fileInfo);

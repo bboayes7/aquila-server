@@ -49,6 +49,11 @@ public class FileInfo implements Serializable{
 		this.filePath = filePath;
 		this.uploadDate = uploadDate;
 	}
+	
+	public FileInfo(String fileName)
+	{
+		this.fileName = fileName;
+	}
 
 	public Long getId() {
 		return Id;

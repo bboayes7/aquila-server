@@ -77,6 +77,7 @@ public class Timeline implements Serializable {
 	 
 	}
 	
+	//default timeline , still in progress
 	public Timeline(Date uasDueDate) 
 	{
 		//list of default stages
@@ -113,18 +114,21 @@ public class Timeline implements Serializable {
 		Map<String,Form> forms2 = new HashMap<>();
 		Map<String,Form> forms3 = new HashMap<>();
 		
-		/*files1.put("Budget");
-		files2.put("Sub Contract Documents");
-		files2.put("Equipment Quotes & Specs");
-		files3.put("Supporting Letters");
-		files3.put("Signatures PDF");
+		//put filename with empty file into map
+		/*files1.put("Budget", new FileInfo(""));
+		files2.put("Sub Contract Documents", new FileInfo(""));
+		files2.put("Equipment Quotes & Specs", new FileInfo(""));
+		files3.put("Supporting Letters", new FileInfo(""));
+		files3.put("Signatures PDF", new FileInfo(""));
 		
+		//put forms into map
 		forms2.put("Budget");
 		forms2.put("Equipment");
 		forms3.put("Intake Form");
 		forms3.put("Conflict of Interest");
 		forms3.put("Approval");
 		*/
+		
 		//create default stages
 		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
 		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
