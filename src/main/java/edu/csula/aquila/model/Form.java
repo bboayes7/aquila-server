@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import edu.csula.aquila.model.Timeline.Stage;
 
 @Entity
@@ -28,20 +30,17 @@ public class Form implements Serializable{
 	@Column(name = "is_complete")
 	boolean isComplete;
 	
+	@JsonIgnore
 	@ManyToOne(cascade = { CascadeType.ALL })
 	@JoinColumn(name = "stage_id")
 	Timeline.Stage stage;
 	
 	public Form() {}
 	
-	
-	
 	public Form(boolean isComplete, Stage stage) {
 		this.isComplete = isComplete;
 		this.stage = stage;
 	}
-
-
 
 	public Long getId() {
 		return Id;

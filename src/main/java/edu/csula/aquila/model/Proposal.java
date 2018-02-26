@@ -24,8 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "proposal")
 public class Proposal implements Serializable{
 	
-	 private static final long serialVersionUID = 2L;
-	
+	private static final long serialVersionUID = -1631828272936137622L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="proposal_id")

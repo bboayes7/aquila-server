@@ -483,16 +483,16 @@
 
     create table required_files (
        file_info_id bigint not null,
-        timeline_id bigint not null,
+        stage_id bigint not null,
         file_name varchar(255) not null,
         primary key (file_info_id, file_name)
     ) engine=MyISAM;
 
     create table required_forms (
-       form_id bigint not null,
-        timeline_id bigint not null,
-        form_name varchar(255) not null,
-        primary key (form_id, form_name)
+       required_form_id bigint not null,
+        form_name bigint,
+        form_id varchar(255) not null,
+        primary key (required_form_id, form_id)
     ) engine=MyISAM;
 
     create table sig_fin_interest_excluded (
@@ -583,10 +583,7 @@
        add constraint UK_qyf2ekbfpnddm6f3rkgt39i9o unique (department_name);
 
     alter table required_files 
-       add constraint UK_7idbrsli9ohasp39vo3qkpwmi unique (timeline_id);
-
-    alter table required_forms 
-       add constraint UK_hmpweb396ie6b8oc07mlb725p unique (timeline_id);
+       add constraint UK_rf9r0r3onpjma6i45y5kpuow7 unique (stage_id);
 
     alter table users 
        add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email);
@@ -720,8 +717,8 @@
        references form (form_id);
 
     alter table required_files 
-       add constraint FKn6y4kmh4615rhab8cnusye8dp 
-       foreign key (timeline_id) 
+       add constraint FKn19nd56194eln6rsudhbr8jgt 
+       foreign key (stage_id) 
        references file_info (file_info_id);
 
     alter table required_files 
@@ -730,13 +727,8 @@
        references stage (stage_id);
 
     alter table required_forms 
-       add constraint FKrgr2cybf75mcl9ehcgsr7dg29 
-       foreign key (timeline_id) 
-       references form (form_id);
-
-    alter table required_forms 
-       add constraint FK2kx2uuab24l4o0ujnrnlbh6wr 
-       foreign key (form_id) 
+       add constraint FKdk35n33rnimyx430k14b33pq0 
+       foreign key (required_form_id) 
        references stage (stage_id);
 
     alter table sig_fin_interest_excluded 

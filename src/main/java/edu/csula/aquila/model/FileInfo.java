@@ -96,6 +96,14 @@ public class FileInfo implements Serializable{
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
 	}
+
+	public boolean isUploaded() {
+		return isUploaded;
+	}
+
+	public void setUploaded(boolean isUploaded) {
+		this.isUploaded = isUploaded;
+	}
 	
 	
 }

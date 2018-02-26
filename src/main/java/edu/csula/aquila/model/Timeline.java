@@ -24,6 +24,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
+
 @Entity
 @Table(name = "timeline")
 public class Timeline implements Serializable {
@@ -203,24 +204,19 @@ public class Timeline implements Serializable {
 		
 		//Forms as a map (Test)
 		@ElementCollection
-		@MapKeyColumn(name = "form_name")
-		@Column(name = "form_id")
-//		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_forms_id"))
-	    @JoinTable(
-	            name = "required_forms",
-	            joinColumns = @JoinColumn(name = "form_id"),
-	            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
-		Map<String, Form> requiredForms;
+		@MapKeyColumn(name = "form_id")
+		@Column(name = "form_name")
+		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_form_id"))
+		Map<String, Long> requiredForms;
 
 		//Files as a map (Test)
 		@ElementCollection
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
-//		@CollectionTable(name = "required_files", joinColumns = @JoinColumn(name = "required_files_id"))
-		 @JoinTable(
+		@JoinTable(
 		            name = "required_files",
 		            joinColumns = @JoinColumn(name = "file_info_id"),
-		            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
+		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
 		Map<String, FileInfo> requiredFiles;
 
 		// allows uas member to add comments to a stage if needed
@@ -238,7 +234,7 @@ public class Timeline implements Serializable {
 		}
 
 		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
-				String deadlineType, Map<String, Form> requiredForms, Map<String, FileInfo> requiredFiles,
+				String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles,
 				List<String> addComments) {
 			this.name = name;
 			this.expectedDate = expectedDate;
@@ -324,11 +320,11 @@ public class Timeline implements Serializable {
 			this.timeline = timeline;
 		}
 
-		public Map<String, Form> getRequiredForms() {
+		public Map<String, Long> getRequiredForms() {
 			return requiredForms;
 		}
 
-		public void setRequiredForms(Map<String, Form> requiredForms) {
+		public void setRequiredForms(Map<String, Long> requiredForms) {
 			this.requiredForms = requiredForms;
 		}
 
@@ -338,6 +334,54 @@ public class Timeline implements Serializable {
 
 		public void setRequiredFiles(Map<String, FileInfo> requiredFiles) {
 			this.requiredFiles = requiredFiles;
+		}
+		
+
+		public void stageCheck() {
+			// check if all forms are completed through the isComplete boolean
+			boolean formsComplete = false;
+			boolean filesUploaded = false; // consider if stages dont have required files or required forms
+			
+			System.out.println("HEYYYY ");
+
+			List<Long> forms = (List<Long>) getRequiredForms().keySet();
+			List<FileInfo> files = (List<FileInfo>) getRequiredFiles().values(); // get a list of budgets too
+
+			// check if all forms are complete (maybe add a condition if form list is 0 then
+			// dont call this?)
+			if (forms.size() != 0) {
+				for (Form form : forms) {
+					if (!form.isComplete()) {
+						break;
+					} else {
+						formsComplete = true; // if all forms are complete, have a boolean called formsCompleted and set it to true
+
+					}
+				}
+			}
+
+			// check if all files are uploaded
+			if (files.size() != 0) {
+				for (FileInfo file : files) {
+					if (!file.isUploaded()) {
+						break;
+					} else {
+						filesUploaded = true; // if all files are uploaded, have a boolean called filesUploaded and set it to true
+
+					}
+				}
+			}
+
+			// find out how to implement budget checking
+
+			// when formsCompleted && filesUploaded is true
+			if (formsComplete && filesUploaded) {
+				// set uasReviewRequired to true
+				setUasReviewRequired(true);
+				// send an email to UAS
+				// for now just print email sent
+				System.out.println("Email 'sent'");
+			}
 		}
 
 	}
