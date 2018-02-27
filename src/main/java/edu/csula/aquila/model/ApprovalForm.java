@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "approval_form")
+@DiscriminatorValue("approval")
 public class ApprovalForm extends Form implements Serializable{
 	
 	private static final long serialVersionUID = 2L;
@@ -244,21 +245,8 @@ public class ApprovalForm extends Form implements Serializable{
 
 	@Column(name = "cfda_number")
 	private int cfdaNumber;
-	
-	
-	//proposal relationship
-//	@OneToOne(mappedBy="approvalForm")
-//	Proposal proposalForm;
 
 	public ApprovalForm(){}
-
-//	public Long getId() {
-//		return Id;
-//	}
-//
-//	public void setId(Long id) {
-//		Id = id;
-//	}
 
 	public int getProgress() {
 		return progress;

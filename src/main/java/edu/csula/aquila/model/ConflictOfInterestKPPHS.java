@@ -1,39 +1,30 @@
 package edu.csula.aquila.model;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
-
-
 
 @Entity
-@Table(name = "conflict_of_interest_kp_phs")
-public class ConflictOfInterestKPPHS implements Serializable{
+@DiscriminatorValue("conflict_of_interest_kp_phs")
+public class ConflictOfInterestKPPHS extends Form implements Serializable{
 
 	//identical to Non PHS, excludes bool subaward, sponsor as Map<Boolean,String>
 	
 
 	private static final long serialVersionUID = 1630516463656275117L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="conflict_of_interest_kp_phs")
-	private Long id;
-	
 	private int progress;
 
 	@Column(name = "pi")
-	private User pI;
+	private String pi;
 
 	@Column(name="proposal_number")
 	private long proposalNumber;
@@ -86,16 +77,44 @@ public class ConflictOfInterestKPPHS implements Serializable{
 	@Column(name = "ari_date")
 	private Date aRIDate;
 	
-	//proposal relationship
-//	@OneToOne(mappedBy="coiKpPhs")
-//	Proposal proposalForm;
-	
 	public ConflictOfInterestKPPHS() {}
 
-	public Long getId() {
-		return id;
+	public ConflictOfInterestKPPHS(int progress, String pi, long proposalNumber, String proposalTitle,
+			Map<Boolean, String> sponsor, Map<Boolean, String> disclosureReasons, Date budgetPeriodStart,
+			Date budgetPeriodEnd, Date projectPeriodStart, Date projectPeriodEnd, Integer amountRequested,
+			long iRBACUCIBCNo, boolean significantFinInterest, Signature keyPersonnelSign, Date keyPersonnelDate,
+			boolean aRIOfficial, Date aRIDate) {
+		super();
+		this.progress = progress;
+		this.pi = pi;
+		this.proposalNumber = proposalNumber;
+		this.proposalTitle = proposalTitle;
+		this.sponsor = sponsor;
+		this.disclosureReasons = disclosureReasons;
+		this.budgetPeriodStart = budgetPeriodStart;
+		this.budgetPeriodEnd = budgetPeriodEnd;
+		this.projectPeriodStart = projectPeriodStart;
+		this.projectPeriodEnd = projectPeriodEnd;
+		this.amountRequested = amountRequested;
+		this.iRBACUCIBCNo = iRBACUCIBCNo;
+		this.significantFinInterest = significantFinInterest;
+		this.keyPersonnelSign = keyPersonnelSign;
+		this.keyPersonnelDate = keyPersonnelDate;
+		this.aRIOfficial = aRIOfficial;
+		this.aRIDate = aRIDate;
 	}
-	
+
+
+	public String getPi() {
+		return pi;
+	}
+
+
+	public void setPi(String pi) {
+		this.pi = pi;
+	}
+
+
 	public int getProgress() {
 		return progress;
 	}
@@ -104,17 +123,6 @@ public class ConflictOfInterestKPPHS implements Serializable{
 		this.progress = progress;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public User getpI() {
-		return pI;
-	}
-
-	public void setpI(User pI) {
-		this.pI = pI;
-	}
 
 	public long getProposalNumber() {
 		return proposalNumber;

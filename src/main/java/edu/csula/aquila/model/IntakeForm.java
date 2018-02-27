@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,46 +25,45 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "intake_form")
+@DiscriminatorValue("intake")
 public class IntakeForm extends Form implements Serializable {
 
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 6478586527102789226L;
 
 	// A
 	@Column(name = "pi")
-	String principleInvestigator;
+	private String principleInvestigator;
 
 	@Column
-	String department;
+	private String department;
 
 	@Column
-	String college;
+	private String college;
 
 	@Column(name = "project_title")
-	String projectTitle;
+	private String projectTitle;
 
 	@Column(name = "proposed_funding_amount")
-	Integer proposedFundingAmount;
+	private int proposedFundingAmount;
 
 	@Temporal(value = TemporalType.DATE)
 	@Column(name = "start_date")
-	Date startDate;
+	private Date startDate;
 
 	@Temporal(value = TemporalType.DATE)
 	@Column(name = "end_date")
-	Date endDate;
+	private Date endDate;
 
 	// B
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "intake_form_id", nullable = true)
-	List<Personnel> personnel;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	private List<Personnel> personnel;
 
 	// C
 	// Question 1:
 	// Do you anticipate any participation stipends as a part
 	// of your proposal?
 	@Column(name = "anticipate_stipend")
-	boolean anticipateStipend;
+	private boolean anticipateStipend;
 
 	// Question 2:
 	// If Yes, please identitify type of Stipend:
@@ -72,7 +71,7 @@ public class IntakeForm extends Form implements Serializable {
 	// and provide your Participation Stipend eligiblity criteria
 	// and selection process below
 	@Column(name = "stipend")
-	String stipend;
+	private String stipend;
 
 	// Question 3:
 	// Faculty-Student Research/Creative Activities
@@ -84,63 +83,60 @@ public class IntakeForm extends Form implements Serializable {
 	// Research, Scholarly, or Creative Activities (RSCA)
 	// including non-paid activities?
 	@Column(name = "students_involved")
-	boolean studentsInvolved;
+	private boolean studentsInvolved;
 
 	// How many Graduate Students?
 	@Column(name = "number_of_graduate_students")
-	int noOfGradStudents;
+	private int noOfGradStudents;
 
 	// How many Undergrad Students?
 	@Column(name = "number_of_undergrad_students")
-	int noOfUndergradStudents;
+	private int noOfUndergradStudents;
 
 	// What Types of RSCA activities will be incorporated?
 	@Column(name = "lab_assistance")
-	boolean laboratoryAssistance;
+	private boolean laboratoryAssistance;
 
 	@Column(name = "data_collection")
-	boolean dataCollection;
+	private boolean dataCollection;
 
 	@Column(name = "report_writing")
-	boolean reportWriting;
+	private boolean reportWriting;
 
 	@Column(name = "literature_review")
-	boolean literatureReview;
+	private boolean literatureReview;
 
 	@Column(name = "coding_or_data_entry")
-	boolean codingOrDataEntry;
+	private boolean codingOrDataEntry;
 
 	@Column
-	boolean presentations;
+	private boolean presentations;
 
 	@Column(name = "archival_research")
-	boolean archivalResearch;
+	private boolean archivalResearch;
 
 	@Column(name = "data_analysis")
-	boolean dataAnalysis;
+	private boolean dataAnalysis;
 
 	@Column(name = "other_activities")
-	boolean otherActivities;
+	private boolean otherActivities;
 
 	@ElementCollection
 	@CollectionTable(name = "other_activities", joinColumns = @JoinColumn(name = "intake_form_id"))
 	@Column(name = "other_activity")
-	List<String> otherActivitiesList;
+	private List<String> otherActivitiesList;
 
 	// D
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "intake_form_id", nullable = true)
-	List<SubgrantsOrSubcontracts> subgrantsOrSubcontracts;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	private List<SubgrantsOrSubcontracts> subgrantsOrSubcontracts;
 
 	// E
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "intake_form_id", nullable = true)
-	List<ProjectLocations> projectLocations;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	private List<ProjectLocations> projectLocations;
 
 	// F
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "intake_form_id", nullable = true)
-	List<AdditionalPartiesInvolved> additionalPartiesInvolved;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	private List<AdditionalPartiesInvolved> additionalPartiesInvolved;
 
 	// G
 	// Agency's F&A (Indirect) Cost Rate
@@ -148,7 +144,7 @@ public class IntakeForm extends Form implements Serializable {
 	// INFORM THE USER(PI) TO CONTACT
 	// THE ASSOCIATE VICE PRESIDENT FOR RESEARCH
 	@Column(name = "agency_cost_rate_percentage")
-	int agencyCostRatePercentage;
+	private int agencyCostRatePercentage;
 
 	// IF THE NEXT TWO ATTRIBUTES ARE TRUE INFORM USER(PI)
 	// TO INFORM DEPT CHAIR, COLLEGE DEAN/ASSOCIATE DEAN
@@ -156,56 +152,55 @@ public class IntakeForm extends Form implements Serializable {
 
 	// Is costsharing required by the agency?
 	@Column(name = "agency_cost_sharing")
-	boolean agencyCostSharing;
+	private boolean agencyCostSharing;
 
 	// Is costsharing requested by the PI?
 	@Column(name = "pi_cost_sharing")
-	boolean piCostSharing;
+	private boolean piCostSharing;
 
 	// Computers to be requested. How Many?
 	@Column(name = "computers_requested")
-	int computersRequested;
+	private int computersRequested;
 
 	// Equipment to be requested. How Many?
 	@ElementCollection // fixed you can follow this example for all other maps
 	@MapKeyColumn(name = "equipment_name")
 	@Column(name = "amount")
 	@CollectionTable(name = "requested_equipment", joinColumns = @JoinColumn(name = "requested_equipment_id"))
-	Map<String, Integer> requestedEquipment;
+	private Map<String, Integer> requestedEquipment;
 
 	// H
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "intake_form_id", nullable = true)
-	List<Space> space;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy ="intakeForm")
+	private List<Space> space;
 
 	// I
 	@ElementCollection
 	@MapKeyColumn(name = "name_of_agent")
 	@Column(name = "substance_type")
 	@CollectionTable(name = "hazardous_substances", joinColumns = @JoinColumn(name = "hazardous_substances_id"))
-	Map<String, String> hazardousSubstances;
+	private Map<String, String> hazardousSubstances;
 
 	// J
 	// Human Subjects?
 	// If true, inform User(PI) to consult with IRB Compliance Specialist
 	@Column(name = "human_subjects")
-	boolean humanSubjects;
+	private boolean humanSubjects;
 
 	// Vertebrate Animals?
 	// If true, inform User(PI) to consult with IACUC Compliance Specialist
 	@Column(name = "vertebrate_animals")
-	boolean vertebrateAnimals;
+	private boolean vertebrateAnimals;
 
 	// National Center for Education Statistics (NCES)
 	// Classification of Instructional Programs (CIP)
 	// *see separate "Crosswalk" handout for Science, Engineering,
 	// and non-Science, non-Engineering Fields
 	@Column(name = "questionnaire")
-	String questionnaireField;
+	private String questionnaireField;
 	@Column(name = "cip_category_title")
-	String cipCategoryTitle;
+	private String cipCategoryTitle;
 	@Column(name = "cip_classification")
-	String cipClassification;
+	private String cipClassification;
 
 	// Assistance with proposal development(e.g. conceptualization, writing,
 	// editing)
@@ -213,48 +208,42 @@ public class IntakeForm extends Form implements Serializable {
 	// and/or the Associate Vice President for Research at least
 	// one month in advance
 	@Column(name = "assistance_with_proposal_development")
-	boolean assistanceWithProposalDevelopment;
+	private boolean assistanceWithProposalDevelopment;
 
 	// Technical Assistance
 	@Column(name = "technical_assistance")
-	boolean technicalAssistance;
+	private boolean technicalAssistance;
 
 	// Letters of Support
 	// President
 	@Column(name = "letter_of_support_president")
-	boolean letterOfSupportPresident;
+	private boolean letterOfSupportPresident;
 
 	// Provost
 	@Column(name = "letter_of_support_provost")
-	boolean letterOfSupportProvost;
+	private boolean letterOfSupportProvost;
 
 	// Associate Vice President for Research
 	@Column(name = "letter_of_support_assoc_vp_of_research")
-	boolean letterOfSupportAssocVPOfResearch;
+	private boolean letterOfSupportAssocVPOfResearch;
 
 	// Duplication of final document package
 	@Column(name = "duplication_of_final_document_package")
-	boolean duplicationfFinalDocumentPackage;
+	private boolean duplicationfFinalDocumentPackage;
 
 	// # of copies needed for your files
 	@Column(name = "number_of_copies")
-	int noOfCopies;
+	private int noOfCopies;
 
 	// L
 	@Column(name = "project_summary")
-	String projectSummary;
-
-	// proposal relationship
-	@JsonIgnore
-	@OneToOne(mappedBy = "intakeForm")
-	Proposal proposal;
-	
+	private String projectSummary;
 
 	public IntakeForm() {
 	}
 
 	public IntakeForm(String principleInvestigator, String department, String college, String projectTitle,
-			Integer proposedFundingAmount, Date startDate, Date endDate, List<Personnel> personnel,
+			int proposedFundingAmount, Date startDate, Date endDate, List<Personnel> personnel,
 			boolean anticipateStipend, String stipend, boolean facultyStudentResearchCreativeActivities,
 			boolean studentsInvolved, int noOfGradStudents, int noOfUndergradStudents, boolean laboratoryAssistance,
 			boolean dataCollection, boolean reportWriting, boolean literatureReview, boolean codingOrDataEntry,
@@ -317,6 +306,7 @@ public class IntakeForm extends Form implements Serializable {
 		this.projectSummary = projectSummary;
 	}
 
+
 	public String getPrincipleInvestigator() {
 		return principleInvestigator;
 	}
@@ -349,11 +339,11 @@ public class IntakeForm extends Form implements Serializable {
 		this.projectTitle = projectTitle;
 	}
 
-	public Integer getProposedFundingAmount() {
+	public int getProposedFundingAmount() {
 		return proposedFundingAmount;
 	}
 
-	public void setProposedFundingAmount(Integer proposedFundingAmount) {
+	public void setProposedFundingAmount(int proposedFundingAmount) {
 		this.proposedFundingAmount = proposedFundingAmount;
 	}
 
@@ -693,13 +683,6 @@ public class IntakeForm extends Form implements Serializable {
 		this.projectSummary = projectSummary;
 	}
 
-	public Proposal getProposal() {
-		return proposal;
-	}
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
-	}
 
 	// Section B needs an inner class of Personnel for each personnel in the list
 	// This class contains the name, employer, position, and time of a person
@@ -728,8 +711,8 @@ public class IntakeForm extends Form implements Serializable {
 
 		// relation
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "intake_form_id")
+		@ManyToOne
+		@JoinColumn(name = "intake_form_id", nullable = true)
 		IntakeForm intakeForm;
 
 		public Personnel() {
@@ -836,8 +819,8 @@ public class IntakeForm extends Form implements Serializable {
 		long contactPersonPhone;
 
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "intake_form_id")
+		@ManyToOne
+		@JoinColumn(name = "intake_form_id", nullable = true)
 		IntakeForm intakeForm;
 
 		public SubgrantsOrSubcontracts() {
@@ -950,8 +933,8 @@ public class IntakeForm extends Form implements Serializable {
 		boolean agreementArranged;
 
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "intake_form_id")
+		@ManyToOne
+		@JoinColumn(name = "intake_form_id", nullable = true)
 		IntakeForm intakeForm;
 
 		public ProjectLocations() {
@@ -1039,8 +1022,8 @@ public class IntakeForm extends Form implements Serializable {
 		String explanationOfInvolvement;
 
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "intake_form_id")
+		@ManyToOne
+		@JoinColumn(name = "intake_form_id", nullable = true)
 		IntakeForm intakeForm;
 
 		public AdditionalPartiesInvolved() {
@@ -1119,8 +1102,8 @@ public class IntakeForm extends Form implements Serializable {
 		String sourceOfFunds;
 
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "intake_form_id")
+		@ManyToOne
+		@JoinColumn(name = "intake_form_id", nullable = true)
 		IntakeForm intakeForm;
 
 		public Space() {

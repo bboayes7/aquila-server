@@ -64,14 +64,13 @@ public class ProposalController {
 		IntakeForm intakeForm = new IntakeForm();
 		intakeForm.setProjectTitle(proposalInstantiate.getProposalName());
 		intakeForm.setPrincipleInvestigator(user.getFirstName() + " " + user.getLastName());
-//		intakeDao.saveIntakeForm(intakeForm);
 		proposal.setIntakeForm(intakeForm);
 		
 		//create a null timeline
 		Timeline timeline = new Timeline();
-		timeline.setProposal(proposal.getProposalName());
+		timeline.setProposalName(proposal.getProposalName());
 		timeline.setPrincipalInvestigator(user.getFirstName() + " " + user.getLastName());
-//		timelineDao.saveTimelineForm(timeline);
+		timeline.setProposal(proposal);
 		proposal.setTimeline(timeline);
 		
 		

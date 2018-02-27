@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
+
 @Entity
 @Table(name = "proposal")
 public class Proposal implements Serializable{
@@ -41,59 +42,47 @@ public class Proposal implements Serializable{
 	@Column(name="status")
 	String status;
 	
-	@ManyToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name="user_id")
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	User user;
 	
 	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name="intake_form_id")
+	@JoinColumn(name = "intake_form_id")
 	IntakeForm intakeForm;
 	
 //	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name="timeline_id")
+	@OneToOne(mappedBy = "proposal", cascade = {CascadeType.MERGE})
 	Timeline timeline;
-//	
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="approval_form_id")
-//	private ApprovalForm approvalForm;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="coi_kp_non_phs_id")
-//	private ConflictOfInterestKPNonPHS coiKpNonPhs;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="coi_kp_phs_id")
-//	private ConflictOfInterestKPPHS coiKpPhs;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="coi_pi_non_phs_id")
-//	private ConflictOfInterestPINonPHS coiPiNonphs;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="coi_phs_id")
-//	private ConflictOfInterestPHS coiPhs;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="equipment_form_id")
-//	private EquipmentForm equipmentForm;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="timeline_id")
-//	private Timeline timeline;
-//
-//	@JsonIgnore
-//	@OneToOne
-//	@JoinColumn(name="budget_form_id")
-//	BudgetFile budgetForm;
 
+	@OneToOne
+	@JoinColumn(name = "approval_form_id")
+	ApprovalForm approvalForm;
+	
+	@OneToOne
+	@JoinColumn(name = "coi_kp_non_phs_id")
+	ConflictOfInterestKPNonPHS coiKpNonPhs;
+	
+	@OneToOne
+	@JoinColumn(name = "coi_kp_phs_id")
+	ConflictOfInterestKPPHS coiKpPhs;
+	
+	@OneToOne
+	@JoinColumn(name = "coi_phs_id")
+	ConflictOfInterestPHS coiPhs;
+	
+	@OneToOne
+	@JoinColumn(name = "coi_pi_non_phs_id")
+	ConflictOfInterestPINonPHS coiPiNonPhs;
+	
+	@OneToOne
+	@JoinColumn(name = "economic_interest_pi_id")
+	EconomicInterestPI economicInterestPi;
+	
+	@OneToOne
+	@JoinColumn(name = "equipment_id")
+	EquipmentForm equipmentForm;
+	
 	public Proposal(){}
 	
 	public Proposal(String proposalName, User user, String status, Date dateCreated) {
@@ -102,7 +91,7 @@ public class Proposal implements Serializable{
 		this.user = user;
 		this.dateCreated = dateCreated;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -111,20 +100,9 @@ public class Proposal implements Serializable{
 		this.id = id;
 	}
 
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
 	public String getProposalName() {
 		return proposalName;
 	}
-
-
 
 	public void setProposalName(String proposalName) {
 		this.proposalName = proposalName;
@@ -146,6 +124,13 @@ public class Proposal implements Serializable{
 		this.status = status;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public IntakeForm getIntakeForm() {
 		return intakeForm;
@@ -155,54 +140,6 @@ public class Proposal implements Serializable{
 		this.intakeForm = intakeForm;
 	}
 
-//	public ApprovalForm getApprovalForm() {
-//		return approvalForm;
-//	}
-//
-//	public void setApprovalForm(ApprovalForm approvalForm) {
-//		this.approvalForm = approvalForm;
-//	}
-//
-//	public ConflictOfInterestKPNonPHS getCoiKpNonPhs() {
-//		return coiKpNonPhs;
-//	}
-//
-//	public void setCoiKpNonPhs(ConflictOfInterestKPNonPHS coiKpNonPhs) {
-//		this.coiKpNonPhs = coiKpNonPhs;
-//	}
-//
-//	public ConflictOfInterestKPPHS getCoiKpPhs() {
-//		return coiKpPhs;
-//	}
-//
-//	public void setCoiKpPhs(ConflictOfInterestKPPHS coiKpPhs) {
-//		this.coiKpPhs = coiKpPhs;
-//	}
-//
-//	public ConflictOfInterestPINonPHS getCoiPiNonphs() {
-//		return coiPiNonphs;
-//	}
-//
-//	public void setCoiPiNonphs(ConflictOfInterestPINonPHS coiPiNonphs) {
-//		this.coiPiNonphs = coiPiNonphs;
-//	}
-//
-//	public ConflictOfInterestPHS getCoiPhs() {
-//		return coiPhs;
-//	}
-//
-//	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
-//		this.coiPhs = coiPhs;
-//	}
-//
-//	public EquipmentForm getEquipmentForm() {
-//		return equipmentForm;
-//	}
-//
-//	public void setEquipmentForm(EquipmentForm equipmentForm) {
-//		this.equipmentForm = equipmentForm;
-//	}
-//
 	public Timeline getTimeline() {
 		return timeline;
 	}
@@ -210,14 +147,57 @@ public class Proposal implements Serializable{
 	public void setTimeline(Timeline timeline) {
 		this.timeline = timeline;
 	}
-//
-//	public BudgetFile getBudgetForm() {
-//		return budgetForm;
-//	}
-//
-//	public void setBudgetForm(BudgetFile budgetForm) {
-//		this.budgetForm = budgetForm;
-//	
+
+	public ApprovalForm getApprovalForm() {
+		return approvalForm;
+	}
+
+	public void setApprovalForm(ApprovalForm approvalForm) {
+		this.approvalForm = approvalForm;
+	}
+
+	public ConflictOfInterestKPNonPHS getCoiKpNonPhs() {
+		return coiKpNonPhs;
+	}
+
+	public void setCoiKpNonPhs(ConflictOfInterestKPNonPHS coiKpNonPhs) {
+		this.coiKpNonPhs = coiKpNonPhs;
+	}
+
+	public ConflictOfInterestKPPHS getCoiKpPhs() {
+		return coiKpPhs;
+	}
+
+	public void setCoiKpPhs(ConflictOfInterestKPPHS coiKpPhs) {
+		this.coiKpPhs = coiKpPhs;
+	}
+
+	public ConflictOfInterestPHS getCoiPhs() {
+		return coiPhs;
+	}
+
+	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
+		this.coiPhs = coiPhs;
+	}
+
+	public ConflictOfInterestPINonPHS getCoiPiNonPhs() {
+		return coiPiNonPhs;
+	}
+
+	public void setCoiPiNonPhs(ConflictOfInterestPINonPHS coiPiNonPhs) {
+		this.coiPiNonPhs = coiPiNonPhs;
+	}
+
+	public EconomicInterestPI getEconomicInterestPi() {
+		return economicInterestPi;
+	}
+
+	public void setEconomicInterestPi(EconomicInterestPI economicInterestPi) {
+		this.economicInterestPi = economicInterestPi;
+	}
+	
+	
+	
 
 
 }

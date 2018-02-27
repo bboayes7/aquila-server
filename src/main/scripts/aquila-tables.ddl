@@ -49,145 +49,17 @@
 
     create table colleges (
        college_id bigint not null,
-        dean tinyblob,
         college_name varchar(255),
+        dean_id bigint,
         primary key (college_id)
-    ) engine=MyISAM;
-
-    create table conflict_of_interest_kp_non_phs (
-       conflict_of_interest_non_phs_id bigint not null auto_increment,
-        ari_date datetime,
-        ari_official bit,
-        amount_requested double precision,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        iRBACUCIBCNo bigint,
-        key_personnel_date datetime,
-        key_personnel_sign tinyblob,
-        pi tinyblob,
-        progress integer not null,
-        project_period_end datetime,
-        project_period_start datetime,
-        proposal_number bigint not null,
-        proposal_title varchar(255),
-        significat_fin_interest bit,
-        sponsor varchar(255),
-        sub_award bit,
-        subaward_agency varchar(255),
-        subaward_sponsor varchar(255),
-        primary key (conflict_of_interest_non_phs_id)
-    ) engine=MyISAM;
-
-    create table conflict_of_interest_kp_phs (
-       conflict_of_interest_kp_phs bigint not null auto_increment,
-        ari_date datetime,
-        ari_official bit,
-        amount_requested integer,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        iRBACUCIBCNo bigint,
-        key_personnel_date datetime,
-        key_personnel_sign tinyblob,
-        pi tinyblob,
-        progress integer not null,
-        project_period_end datetime,
-        project_period_start datetime,
-        proposal_number bigint,
-        proposal_title varchar(255),
-        significant_fin_interest bit,
-        primary key (conflict_of_interest_kp_phs)
-    ) engine=MyISAM;
-
-    create table conflict_of_interest_pi_non_phs (
-       conflict_of_interest_pi_non_phs_id bigint not null auto_increment,
-        amount_requested integer,
-        ari_date datetime,
-        ari_official varchar(255),
-        ari_official_approved bit,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        disclosure_reason varchar(255),
-        irb_iacuc_ibc_no bigint,
-        other_personnel_contribution bit,
-        pi_name tinyblob,
-        pi_signature tinyblob,
-        progress integer not null,
-        project_period_end datetime,
-        project_period_start datetime,
-        proposal_title varchar(255),
-        signature_date datetime,
-        significant_financial_interest bit,
-        subaward_with_federal_agency_pass_through varchar(255),
-        primary key (conflict_of_interest_pi_non_phs_id)
-    ) engine=MyISAM;
-
-    create table conflict_of_interest_pi_phs (
-       conflict_of_interest_phs_id bigint not null auto_increment,
-        ari_date datetime,
-        ari_official bit,
-        amount_requested double precision,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        irb_iacuc_ibc_no bigint,
-        pi_date datetime,
-        pi_sign tinyblob,
-        progress integer not null,
-        project_period_end datetime,
-        project_period_start datetime,
-        proposal_title varchar(255),
-        siginificant_financial_interest bit,
-        primary key (conflict_of_interest_phs_id)
     ) engine=MyISAM;
 
     create table departments (
        department_id bigint not null,
-        college tinyblob,
-        department_chair tinyblob,
         department_name varchar(255) not null,
+        college_id bigint,
+        dept_chair_id bigint,
         primary key (department_id)
-    ) engine=MyISAM;
-
-    create table economic_interest_pi (
-       economic_interest_pi_id bigint not null auto_increment,
-        actual_amount bit,
-        travel_payment_amount integer,
-        date_signed datetime,
-        department tinyblob,
-        email varchar(255),
-        entity_address varchar(255),
-        entity_name varchar(255),
-        first_name varchar(255),
-        fund_date datetime,
-        funding_amount integer,
-        gifts_description varchar(255),
-        gifts_received bit,
-        gifts_received_date datetime,
-        gifts_value integer,
-        invest_amount integer,
-        investment_greater_than bit,
-        last_name varchar(255),
-        loan_amount integer,
-        loan_interest double precision,
-        loan_paid_off bit,
-        loan_type varchar(255),
-        mail_code varchar(255),
-        middle_initial varchar(255),
-        phone_number varchar(255),
-        position_held bit,
-        position_title varchar(255),
-        principal_business varchar(255),
-        progress integer not null,
-        project_title varchar(255),
-        received_amount integer,
-        received_income bit,
-        received_through_entity bit,
-        received_through_spouse bit,
-        signature varchar(255),
-        statement_type varchar(255),
-        travel_description varchar(255),
-        travel_payment_type varchar(255),
-        travel_through_entity bit,
-        primary key (economic_interest_pi_id)
     ) engine=MyISAM;
 
     create table EquipmentForm_listOfRequirements (
@@ -219,9 +91,40 @@
     ) engine=MyISAM;
 
     create table form (
-       DTYPE varchar(31) not null,
+       form_type varchar(31) not null,
         form_id bigint not null auto_increment,
         is_complete bit,
+        amount_requested integer,
+        ari_date datetime,
+        ari_official varchar(255),
+        ari_official_approved bit,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        disclosure_reason varchar(255),
+        irb_iacuc_ibc_no bigint,
+        other_personnel_contribution bit,
+        pi_name tinyblob,
+        pi_signature tinyblob,
+        progress integer,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_title varchar(255),
+        signature_date datetime,
+        significant_financial_interest bit,
+        subaward_with_federal_agency_pass_through varchar(255),
+        pi_date datetime,
+        pi_sign tinyblob,
+        siginificant_financial_interest bit,
+        iRBACUCIBCNo bigint,
+        key_personnel_date datetime,
+        key_personnel_sign tinyblob,
+        pi varchar(255),
+        proposal_number bigint,
+        significat_fin_interest bit,
+        sponsor varchar(255),
+        sub_award bit,
+        subaward_agency varchar(255),
+        subaward_sponsor varchar(255),
         FWR bit,
         air_chilled_water_flow bit,
         amps bit,
@@ -262,8 +165,6 @@
         plumbing bit,
         pressure bit,
         previous_use varchar(255),
-        progress integer,
-        proposal_title varchar(255),
         pump_compressor_motor bit,
         radiation_use varchar(255),
         room_location varchar(255),
@@ -276,6 +177,43 @@
         temperature bit,
         volts bit,
         width integer,
+        significant_fin_interest bit,
+        actual_amount bit,
+        travel_payment_amount integer,
+        date_signed datetime,
+        email varchar(255),
+        entity_address varchar(255),
+        entity_name varchar(255),
+        first_name varchar(255),
+        fund_date datetime,
+        funding_amount integer,
+        gifts_description varchar(255),
+        gifts_received bit,
+        gifts_received_date datetime,
+        gifts_value integer,
+        invest_amount integer,
+        investment_greater_than bit,
+        last_name varchar(255),
+        loan_amount integer,
+        loan_interest double precision,
+        loan_paid_off bit,
+        loan_type varchar(255),
+        mail_code varchar(255),
+        middle_initial varchar(255),
+        phone_number varchar(255),
+        position_held bit,
+        position_title varchar(255),
+        principal_business varchar(255),
+        project_title varchar(255),
+        received_amount integer,
+        received_income bit,
+        received_through_entity bit,
+        received_through_spouse bit,
+        signature varchar(255),
+        statement_type varchar(255),
+        travel_description varchar(255),
+        travel_payment_type varchar(255),
+        travel_through_entity bit,
         uas_exec_director_signature tinyblob,
         uas_exec_director_signature_date datetime,
         additional_space bit,
@@ -307,15 +245,11 @@
         dep_chair_signature_date datetime,
         director_signature tinyblob,
         director_signature_date datetime,
-        email varchar(255),
         human_subjects bit,
         human_subjects_approved varchar(255),
-        pi_name tinyblob,
-        pi_signature tinyblob,
         pi_signature_date datetime,
         prepared_by varchar(255),
         prepared_date datetime,
-        project_title varchar(255),
         proposal_code float,
         proposal_personnel_signature tinyblob,
         provost_vp_academic_affairs tinyblob,
@@ -362,7 +296,6 @@
         other_activities bit,
         pi_cost_sharing bit,
         presentations bit,
-        pi varchar(255),
         project_summary varchar(255),
         proposed_funding_amount integer,
         questionnaire varchar(255),
@@ -468,8 +401,14 @@
         date_created date,
         proposal_name varchar(255),
         status varchar(255),
+        approval_form_id bigint,
+        coi_kp_non_phs_id bigint,
+        coi_kp_phs_id bigint,
+        coi_phs_id bigint,
+        coi_pi_non_phs_id bigint,
+        economic_interest_pi_id bigint,
+        equipment_id bigint,
         intake_form_id bigint,
-        timeline_id bigint,
         user_id bigint,
         primary key (proposal_id)
     ) engine=MyISAM;
@@ -549,9 +488,10 @@
         final_sign_date datetime,
         funding_agency varchar(255),
         principal_investigator varchar(255),
-        proposal varchar(255),
+        proposal_name varchar(255),
         sponsor_date datetime,
         uas_date datetime,
+        proposal_id bigint not null,
         primary key (timeline_id)
     ) engine=MyISAM;
 
@@ -573,11 +513,10 @@
         password varchar(255),
         phone_number varchar(255),
         username varchar(255) not null,
+        college_id bigint,
+        dept_id bigint,
         primary key (user_id)
     ) engine=MyISAM;
-
-    alter table conflict_of_interest_kp_non_phs 
-       add constraint UK_axuy1mntk6qi21l0o05onnfo3 unique (proposal_number);
 
     alter table departments 
        add constraint UK_qyf2ekbfpnddm6f3rkgt39i9o unique (department_name);
@@ -621,6 +560,21 @@
        foreign key (id) 
        references form (form_id);
 
+    alter table colleges 
+       add constraint FKdlv4ccbbno8eyoh5e85jkguwh 
+       foreign key (dean_id) 
+       references users (user_id);
+
+    alter table departments 
+       add constraint FKsmh4d91rvr9whcb3j8e40xrr5 
+       foreign key (college_id) 
+       references colleges (college_id);
+
+    alter table departments 
+       add constraint FKiy7pha5u3qk8pu2qvxyen3lr3 
+       foreign key (dept_chair_id) 
+       references users (user_id);
+
     alter table EquipmentForm_listOfRequirements 
        add constraint FK4ful3bdtw6hd0vv1a8i9bcc0l 
        foreign key (EquipmentForm_form_id) 
@@ -647,24 +601,24 @@
        references form (form_id);
 
     alter table investigators_names 
-       add constraint FK3ryy8p8kan8t596q51il5coxq 
+       add constraint FK9b5u6ccv8s2jn5x4kltj9w3kd 
        foreign key (investigators_names_id) 
-       references conflict_of_interest_pi_non_phs (conflict_of_interest_pi_non_phs_id);
+       references form (form_id);
 
     alter table kp_disclosure_reasons 
-       add constraint FKq9er3dtj28de4vy1irsbx340f 
+       add constraint FKt26yxbdm4bljrwgy4qvxx6fka 
        foreign key (kp_disclosure_reasons_id) 
-       references conflict_of_interest_kp_phs (conflict_of_interest_kp_phs);
+       references form (form_id);
 
     alter table kp_nonphs_disclosure_reasons 
-       add constraint FKngc2wmxq3dgdj8loh6ij9p89h 
+       add constraint FK4dhc85rj0y6ajf4way6phnini 
        foreign key (kp_nophs_disclosure_reasons_id) 
-       references conflict_of_interest_kp_non_phs (conflict_of_interest_non_phs_id);
+       references form (form_id);
 
     alter table kp_sponsor 
-       add constraint FK9bwjuy5jy3g3j085rvshnmb2f 
+       add constraint FKor6wq9yxmt0fn3nlyirys41tt 
        foreign key (kp_sponsor_id) 
-       references conflict_of_interest_kp_phs (conflict_of_interest_kp_phs);
+       references form (form_id);
 
     alter table other_activities 
        add constraint FK6jy4q546it2biinxtce13cxt7 
@@ -677,18 +631,53 @@
        references form (form_id);
 
     alter table phs_sponsor 
-       add constraint FKllruu91w31g4v4r9427xpufah 
+       add constraint FKlpx4i5tf0pyskddn6e04av4id 
        foreign key (phs_sponsor_id) 
-       references conflict_of_interest_pi_phs (conflict_of_interest_phs_id);
+       references form (form_id);
 
     alter table pi_phs_disclosure_reasons 
-       add constraint FKhsf4gvrb3v979d5bqmdef4971 
+       add constraint FKt4879o54qd3iifta79hdqg85n 
        foreign key (pi_phs_disclosure_reasons_id) 
-       references conflict_of_interest_pi_phs (conflict_of_interest_phs_id);
+       references form (form_id);
 
     alter table project_locations 
        add constraint FK7ldg8ugry3in3gt9e4quby1y4 
        foreign key (intake_form_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKbtgd421g9vmo8l1jqlnele96r 
+       foreign key (approval_form_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKpdf6inses5f83aglsq7gh47yr 
+       foreign key (coi_kp_non_phs_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKbato9ehsxklee8sg6hsoa1yh6 
+       foreign key (coi_kp_phs_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FK448ttl86edple84c4axi90d1o 
+       foreign key (coi_phs_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKffbay1fpn9gr69s51xmgsnotu 
+       foreign key (coi_pi_non_phs_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FK5woki94xlbt2d53lt7nnrsa7f 
+       foreign key (economic_interest_pi_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FK9oglo48162wqfddwio0goens0 
+       foreign key (equipment_id) 
        references form (form_id);
 
     alter table proposal 
@@ -697,18 +686,8 @@
        references form (form_id);
 
     alter table proposal 
-       add constraint FK1uiqx36h5gwmixwcdm62k6nqk 
-       foreign key (timeline_id) 
-       references timeline (timeline_id);
-
-    alter table proposal 
        add constraint FKemv61ye7eke2swbwg3to7fmg3 
        foreign key (user_id) 
-       references users (user_id);
-
-    alter table proposal 
-       add constraint FKbwvl70focwr531ksyn4h6n9pg 
-       foreign key (proposal_id) 
        references users (user_id);
 
     alter table requested_equipment 
@@ -732,14 +711,14 @@
        references stage (stage_id);
 
     alter table sig_fin_interest_excluded 
-       add constraint FKr3g38i97um9sjg0lpd8qqbxgr 
+       add constraint FKrvcte1sfdq7saqvcrujweqr2f 
        foreign key (sig_fin_interest_excluded_id) 
-       references conflict_of_interest_pi_non_phs (conflict_of_interest_pi_non_phs_id);
+       references form (form_id);
 
     alter table significant_fin_interest 
-       add constraint FK4kx9tmi2yw63y6lwqhlly4r8i 
+       add constraint FKgmicpud79a40d61eif8mjxw4u 
        foreign key (significant_fin_interest_id) 
-       references conflict_of_interest_pi_non_phs (conflict_of_interest_pi_non_phs_id);
+       references form (form_id);
 
     alter table space 
        add constraint FKmphxnucd6y15dab1kkud99kca 
@@ -756,12 +735,27 @@
        foreign key (intake_form_id) 
        references form (form_id);
 
+    alter table timeline 
+       add constraint FKt06p82rdf58dw8uhn53cw7swn 
+       foreign key (proposal_id) 
+       references proposal (proposal_id);
+
     alter table Timeline_coPI 
        add constraint FK6c981s1inlvmxia9judmtkgfu 
        foreign key (Timeline_timeline_id) 
        references timeline (timeline_id);
 
     alter table travel_payment_dates 
-       add constraint FKvbuekp0ghddk01gso5jea9tu 
+       add constraint FK1uxk9ka1tyw8jrrk7e1nx1hic 
        foreign key (tpd_id) 
-       references economic_interest_pi (economic_interest_pi_id);
+       references form (form_id);
+
+    alter table users 
+       add constraint FKq8c77pl7fllv195wbwqn13375 
+       foreign key (college_id) 
+       references colleges (college_id);
+
+    alter table users 
+       add constraint FKny8a9c8evadqjfx8jvetc73gs 
+       foreign key (dept_id) 
+       references departments (department_id);

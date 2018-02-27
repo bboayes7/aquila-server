@@ -54,46 +54,46 @@ public class TimelineController {
 
 		List<Timeline.Stage> stages = timeline.getStages();
 
-		// go through each stage
-		for (int i = 0; i < stages.size(); i++) {
-			// get the map from a stage
-			Map<String, Form> forms = stages.get(i).getRequiredForms();
-			// go through the map
-			for (Map.Entry<String, Form> form : forms.entrySet()) {
-				// get the form name
-				String key = form.getKey();
-
-				switch (key) {
-				// if form name is intake form, add the form value
-				case "Intake Form":
-					IntakeForm intakeForm = proposal.getIntakeForm();
-					Timeline.Stage stage = stages.get(i);
-					intakeForm.setStage(stage);
-					form.setValue(intakeForm);
-
-					System.out.println("intake form linked!");
-					break;
-
-				// if form name is equipment form, add the form value
-				case "Equipment Form":
-					// needs to be related
-					EquipmentForm equipmentForm = new EquipmentForm();
-					Long equipmentId = equipmentDao.saveEquipmentForm(equipmentForm).getId();
-					equipmentForm = equipmentDao.getEquipmentForm(equipmentId);
-					form.setValue(equipmentForm);
-
-					System.out.println("equipment form linked!");
-					break;
-
-				default:
-					System.out.println("Invalid Form name");
-				}
-
-			}
-
-			// set the map of forms for the stage
-			stages.get(i).setRequiredForms(forms);
-		}
+//		// go through each stage
+//		for (int i = 0; i < stages.size(); i++) {
+//			// get the map from a stage
+//			Map<String, Form> forms = stages.get(i).getRequiredForms();
+//			// go through the map
+//			for (Map.Entry<String, Form> form : forms.entrySet()) {
+//				// get the form name
+//				String key = form.getKey();
+//
+//				switch (key) {
+//				// if form name is intake form, add the form value
+//				case "Intake Form":
+//					IntakeForm intakeForm = proposal.getIntakeForm();
+//					Timeline.Stage stage = stages.get(i);
+//					intakeForm.setStage(stage);
+//					form.setValue(intakeForm);
+//
+//					System.out.println("intake form linked!");
+//					break;
+//
+//				// if form name is equipment form, add the form value
+//				case "Equipment Form":
+//					// needs to be related
+//					EquipmentForm equipmentForm = new EquipmentForm();
+//					Long equipmentId = equipmentDao.saveEquipmentForm(equipmentForm).getId();
+//					equipmentForm = equipmentDao.getEquipmentForm(equipmentId);
+//					form.setValue(equipmentForm);
+//
+//					System.out.println("equipment form linked!");
+//					break;
+//
+//				default:
+//					System.out.println("Invalid Form name");
+//				}
+//
+//			}
+//
+//			// set the map of forms for the stage
+//			stages.get(i).setRequiredForms(forms);
+//		}
 
 		// set stages
 		timeline.setStages(stages);
@@ -105,15 +105,6 @@ public class TimelineController {
 	// return a timeline
 	@RequestMapping(value = "timeline/{id}", method = RequestMethod.GET)
 	public Timeline getTimeline(@PathVariable Long id) {
-		if (timelineDao.getTimelineForm(id).getProposalForm() == null) {
-			System.out.println("no proposal");
-
-		} else {
-			System.out.println("There's a proposal form linked.");
-			if (timelineDao.getTimelineForm(id).getProposalForm().getIntakeForm() != null) {
-				System.out.println("there's also an intake form linked");
-			}
-		}
 		return timelineDao.getTimelineForm(id);
 	}
 

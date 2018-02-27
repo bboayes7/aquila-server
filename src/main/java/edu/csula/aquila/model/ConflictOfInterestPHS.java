@@ -6,27 +6,19 @@ import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "conflict_of_interest_pi_phs")
-public class ConflictOfInterestPHS implements Serializable{
+@DiscriminatorValue("conflict_of_interest_pi_phs")
+public class ConflictOfInterestPHS extends Form implements Serializable{
 
 	//identical to Non PHS, excludes bool subaward, sponsor as Map<Boolean,String>
 	
 	private static final long serialVersionUID = -8195316383450056859L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="conflict_of_interest_phs_id")
-	private Long id;
 	
 	private int progress;
 	
@@ -64,27 +56,45 @@ public class ConflictOfInterestPHS implements Serializable{
 	private long iRBACUCIBCNo; //name unclear
 	
 	@Column(name = "siginificant_financial_interest")
-	boolean significantFinInterest;
+	private boolean significantFinInterest;
 	
 	@Column(name = "pi_sign")
 	private Signature piSign; 
 	
 	@Column(name = "pi_date")
-	Date piDate;
+	private Date piDate;
 	
 	@Column(name = "ari_official")
-	boolean aRIOfficial;
+	private boolean aRIOfficial;
 	
 	@Column(name = "ari_date")
-	Date aRIDate;
+	private Date aRIDate;
 	
-	//proposal relationship
-//	@OneToOne(mappedBy="coiPhs")
-//	Proposal proposalForm;
-
-	public Long getId() {
-		return id;
+	public ConflictOfInterestPHS() {}
+	
+	public ConflictOfInterestPHS(int progress, Map<Boolean, String> sponsor, Map<Boolean, String> disclosureReasons,
+			String proposalTitle, Date budgetPeriodStart, Date budgetPeriodEnd, Date projectPeriodStart,
+			Date projectPeriodEnd, double amountRequested, long iRBACUCIBCNo, boolean significantFinInterest,
+			Signature piSign, Date piDate, boolean aRIOfficial, Date aRIDate) {
+		super();
+		this.progress = progress;
+		this.sponsor = sponsor;
+		this.disclosureReasons = disclosureReasons;
+		this.proposalTitle = proposalTitle;
+		this.budgetPeriodStart = budgetPeriodStart;
+		this.budgetPeriodEnd = budgetPeriodEnd;
+		this.projectPeriodStart = projectPeriodStart;
+		this.projectPeriodEnd = projectPeriodEnd;
+		this.amountRequested = amountRequested;
+		this.iRBACUCIBCNo = iRBACUCIBCNo;
+		this.significantFinInterest = significantFinInterest;
+		this.piSign = piSign;
+		this.piDate = piDate;
+		this.aRIOfficial = aRIOfficial;
+		this.aRIDate = aRIDate;
 	}
+
+
 
 	public int getProgress() {
 		return progress;
@@ -93,11 +103,6 @@ public class ConflictOfInterestPHS implements Serializable{
 	public void setProgress(int progress) {
 		this.progress = progress;
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	
 	public String getProposalTitle() {
 		return proposalTitle;

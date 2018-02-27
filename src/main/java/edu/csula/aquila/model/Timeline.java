@@ -43,8 +43,8 @@ public class Timeline implements Serializable {
 	@Column(name = "co_pis")
 	List<String> coPI;
 
-	@Column(name = "proposal")
-	String proposal;// unclear if proposal name or code
+	@Column(name = "proposal_name")
+	String proposalName;// unclear if proposal name or code
 
 	@Column(name = "funding_agency")
 	String fundingAgency;
@@ -65,18 +65,18 @@ public class Timeline implements Serializable {
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.MERGE}, mappedBy="timeline")
+	@OneToOne
 	@JoinColumn(name="proposal_id", nullable = false)
-	Proposal proposalForm;
+	Proposal proposal;
 
 	public Timeline() {
 	}
 
-	public Timeline(String principalInvestigator, List<String> coPI, String proposal, String fundingAgency,
+	public Timeline(String principalInvestigator, List<String> coPI, String proposalName, String fundingAgency,
 			Date uasDueDate, Date sponsorDueDate, Date finalSign, List<Stage> stages) {
 		this.principalInvestigator = principalInvestigator;
 		this.coPI = coPI;
-		this.proposal = proposal;
+		this.proposalName = proposalName;
 		this.fundingAgency = fundingAgency;
 		this.uasDueDate = uasDueDate;
 		this.sponsorDueDate = sponsorDueDate;
@@ -108,11 +108,19 @@ public class Timeline implements Serializable {
 		this.coPI = coPI;
 	}
 
-	public String getProposal() {
+	public String getProposalName() {
+		return proposalName;
+	}
+
+	public void setProposalName(String proposalName) {
+		this.proposalName = proposalName;
+	}
+
+	public Proposal getProposal() {
 		return proposal;
 	}
 
-	public void setProposal(String proposal) {
+	public void setProposal(Proposal proposal) {
 		this.proposal = proposal;
 	}
 
@@ -156,13 +164,6 @@ public class Timeline implements Serializable {
 		this.stages = stages;
 	}
 
-	public Proposal getProposalForm() {
-		return proposalForm;
-	}
-
-	public void setProposalForm(Proposal proposalForm) {
-		this.proposalForm = proposalForm;
-	}
 
 	// Timeline contains a list of stages
 	// This is the innerclass of stage to help a uas member
@@ -337,52 +338,52 @@ public class Timeline implements Serializable {
 		}
 		
 
-		public void stageCheck() {
-			// check if all forms are completed through the isComplete boolean
-			boolean formsComplete = false;
-			boolean filesUploaded = false; // consider if stages dont have required files or required forms
-			
-			System.out.println("HEYYYY ");
-
-			List<Long> forms = (List<Long>) getRequiredForms().keySet();
-			List<FileInfo> files = (List<FileInfo>) getRequiredFiles().values(); // get a list of budgets too
-
-			// check if all forms are complete (maybe add a condition if form list is 0 then
-			// dont call this?)
-			if (forms.size() != 0) {
-				for (Form form : forms) {
-					if (!form.isComplete()) {
-						break;
-					} else {
-						formsComplete = true; // if all forms are complete, have a boolean called formsCompleted and set it to true
-
-					}
-				}
-			}
-
-			// check if all files are uploaded
-			if (files.size() != 0) {
-				for (FileInfo file : files) {
-					if (!file.isUploaded()) {
-						break;
-					} else {
-						filesUploaded = true; // if all files are uploaded, have a boolean called filesUploaded and set it to true
-
-					}
-				}
-			}
-
-			// find out how to implement budget checking
-
-			// when formsCompleted && filesUploaded is true
-			if (formsComplete && filesUploaded) {
-				// set uasReviewRequired to true
-				setUasReviewRequired(true);
-				// send an email to UAS
-				// for now just print email sent
-				System.out.println("Email 'sent'");
-			}
-		}
+//		public void stageCheck() {
+//			// check if all forms are completed through the isComplete boolean
+//			boolean formsComplete = false;
+//			boolean filesUploaded = false; // consider if stages dont have required files or required forms
+//			
+//			System.out.println("HEYYYY ");
+//
+//			List<Long> forms = (List<Long>) getRequiredForms().keySet();
+//			List<FileInfo> files = (List<FileInfo>) getRequiredFiles().values(); // get a list of budgets too
+//
+//			// check if all forms are complete (maybe add a condition if form list is 0 then
+//			// dont call this?)
+//			if (forms.size() != 0) {
+//				for (Form form : forms) {
+//					if (!form.isComplete()) {
+//						break;
+//					} else {
+//						formsComplete = true; // if all forms are complete, have a boolean called formsCompleted and set it to true
+//
+//					}
+//				}
+//			}
+//
+//			// check if all files are uploaded
+//			if (files.size() != 0) {
+//				for (FileInfo file : files) {
+//					if (!file.isUploaded()) {
+//						break;
+//					} else {
+//						filesUploaded = true; // if all files are uploaded, have a boolean called filesUploaded and set it to true
+//
+//					}
+//				}
+//			}
+//
+//			// find out how to implement budget checking
+//
+//			// when formsCompleted && filesUploaded is true
+//			if (formsComplete && filesUploaded) {
+//				// set uasReviewRequired to true
+//				setUasReviewRequired(true);
+//				// send an email to UAS
+//				// for now just print email sent
+//				System.out.println("Email 'sent'");
+//			}
+//		}
 
 	}
 
