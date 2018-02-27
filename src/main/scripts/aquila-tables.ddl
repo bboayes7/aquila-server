@@ -495,9 +495,9 @@
         primary key (timeline_id)
     ) engine=MyISAM;
 
-    create table Timeline_coPI (
-       Timeline_timeline_id bigint not null,
-        co_pis varchar(255)
+    create table timeline_co_pis (
+       timeline_id bigint not null,
+        coPI varchar(255)
     ) engine=MyISAM;
 
     create table travel_payment_dates (
@@ -740,9 +740,9 @@
        foreign key (proposal_id) 
        references proposal (proposal_id);
 
-    alter table Timeline_coPI 
-       add constraint FK6c981s1inlvmxia9judmtkgfu 
-       foreign key (Timeline_timeline_id) 
+    alter table timeline_co_pis 
+       add constraint FKl4h44ni0ebnjel9b22607ccte 
+       foreign key (timeline_id) 
        references timeline (timeline_id);
 
     alter table travel_payment_dates 

@@ -40,7 +40,7 @@ public class Timeline implements Serializable {
 	String principalInvestigator;
 
 	@ElementCollection
-	@Column(name = "co_pis")
+	@CollectionTable(name = "timeline_co_pis", joinColumns=@JoinColumn(name = "timeline_id"))
 	List<String> coPI;
 
 	@Column(name = "proposal_name")
