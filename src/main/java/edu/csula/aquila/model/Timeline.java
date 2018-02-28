@@ -2,6 +2,7 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -25,6 +25,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import edu.csula.aquila.daos.FileInfoDao;
 
 
 @Entity
@@ -78,8 +80,10 @@ public class Timeline implements Serializable {
 	}
 	
 	//default timeline , still in progress
-	public Timeline(Date uasDueDate) 
+	public Timeline(Long id, Date uasDueDate) 
 	{
+		String directory = "C:\\Proposals_UAS\\";
+		
 		//list of default stages
 		List<Timeline.Stage> preFill = new ArrayList<Timeline.Stage>();
 		
@@ -89,6 +93,7 @@ public class Timeline implements Serializable {
 		
 		//15 days before shipping date
 		deadline.setTime(dueDate);
+		int year = deadline.get(Calendar.YEAR);
 		deadline.add(Calendar.DATE, -15);
 		Date deadline1 = deadline.getTime();
 		
@@ -114,15 +119,25 @@ public class Timeline implements Serializable {
 		Map<String,Form> forms2 = new HashMap<>();
 		Map<String,Form> forms3 = new HashMap<>();
 		
+		//empty files
+		/*FileInfo firstBudget = new FileInfo(directory + year + "ProposalID_" + id + "FirstBudget");
+		FileInfo subContractDocs = new FileInfo(directory + year + "ProposalID_" + id + "SubContractDoc");
+		FileInfo finalBudget = new FileInfo(directory + year + "ProposalID_" + id + "FinalBudget");
+		FileInfo equipmentQuotesSpecs = new FileInfo(directory + year + "ProposalID_" + id + "EquipmentQuotesSpecs");
+		FileInfo supportingLetter = new FileInfo(directory + year + "ProposalID_" + id + "SupportingLetter");
+		FileInfo signatures = new FileInfo(directory + year + "ProposalID_" + id + "Signatures");
+		*/
+		
 		//put filename with empty file into map
-		/*files1.put("Budget", new FileInfo(""));
-		files2.put("Sub Contract Documents", new FileInfo(""));
-		files2.put("Equipment Quotes & Specs", new FileInfo(""));
-		files3.put("Supporting Letters", new FileInfo(""));
-		files3.put("Signatures PDF", new FileInfo(""));
+		files1.put("First Budget", null);
+		files2.put("Sub Contract Documents", null);
+		files2.put("Final Budget", null);
+		files2.put("Equipment Quotes & Specs", null);
+		files3.put("Supporting Letters", null);
+		files3.put("Signatures PDF", null);
 		
 		//put forms into map
-		forms2.put("Budget");
+		/*forms2.put("Budget");
 		forms2.put("Equipment");
 		forms3.put("Intake Form");
 		forms3.put("Conflict of Interest");

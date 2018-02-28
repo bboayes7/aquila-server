@@ -36,6 +36,13 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		return entityManager.find(FileInfo.class, id);
 	}
 	
+	@Override
+	@Transactional
+	public FileInfo saveFile( FileInfo fileInfo )
+	{
+		return entityManager.merge(fileInfo);
+	}
+	
 
 	@Override
 	@Transactional
@@ -44,11 +51,17 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		//find proposal by id
 		Proposal proposal = entityManager.find(Proposal.class, id);
 		String nameOfUploader = proposal.getUser().getFirstName() + proposal.getUser().getLastName();
+		
+		//get file type
+		String [] ext = filename.split("\\.");
+		int extIndex = ext.length - 1;
+		String fileType = ext[extIndex].toUpperCase();
+		
 		Date fileAddDate = new Date();
 		String path = directory + filename;
 		
-		//create new file then merge, filetype in progress
-		FileInfo fileInfo = new FileInfo(nameOfUploader, filename,"filetype", path, fileAddDate);
+		//create new file then merge, file type in progress
+		FileInfo fileInfo = new FileInfo(nameOfUploader, filename,fileType, path, fileAddDate);
 		
 		fileInfo = entityManager.merge(fileInfo);
 		return fileInfo;
@@ -57,13 +70,13 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	
 	
 	@Override
-	public String saveFileToDisk(List<MultipartFile> files, Long id) throws IOException 
+	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException 
 	{
 		//initialize counter for file control
-		int count = 1;
-			
+		int count = 0;
+		String extension = null;
 		String checkName =  Calendar.getInstance().get(Calendar.YEAR) + "Proposal_ID" +
-								id + "file" + count ;
+								id + fileName ;
 
 		
 		//checks if filename already exists, increments file counter if it does
@@ -71,7 +84,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		{
 			count++;
 			checkName =  Calendar.getInstance().get(Calendar.YEAR) + "Proposal_ID" + 
-							id + "file" + count ;
+							id + fileName + count ;
 		}
 		String newFileName = checkName;
 		
@@ -83,15 +96,21 @@ public class FileInfoDaoImpl implements FileInfoDao{
 			{
 				continue; 
 	        }
+			
+			//get file type
+			String filename = file.getOriginalFilename();
+			String [] ext = filename.split("\\.");
+			int extIndex = ext.length - 1;
+			extension = ext[extIndex];
+			
 			//save bytes to the created path(with new filename)
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(directory + newFileName);
+            Path path = Paths.get(directory + newFileName );
             Files.write(path, bytes); 
             
 		}
 		
-		
-		return newFileName;
+		return newFileName + "." + extension;
 		
 	}
 

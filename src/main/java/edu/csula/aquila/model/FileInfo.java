@@ -27,7 +27,7 @@ public class FileInfo implements Serializable{
 	@Column(name ="file_name")
 	String fileName;
 	
-	@Column(name = "file_Type")
+	@Column(name = "file_type")
 	String fileType;
 	
 	@Column(name = "file_path")
@@ -50,9 +50,9 @@ public class FileInfo implements Serializable{
 		this.uploadDate = uploadDate;
 	}
 	
-	public FileInfo(String fileName)
+	public FileInfo(String filePath)
 	{
-		this.fileName = fileName;
+		this.filePath = filePath;
 	}
 
 	public Long getId() {

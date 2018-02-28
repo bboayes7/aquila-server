@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.ConflictOfInterestPHS;
@@ -29,13 +30,17 @@ public class TimelineController {
 	@Autowired
 	private TimelineDao timelineDao;
 	
-	@Autowired ProposalDao proposalDao;
+	@Autowired 
+	ProposalDao proposalDao;
+	
+	@Autowired
+	private FileInfoDao fileInfoDao;
 	
 
-	@RequestMapping(value="timelinedefault/{uasDueDate}", method = RequestMethod.POST)
-	public Timeline defTimeline(@PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date uasDueDate)
+	@RequestMapping(value="/proposal/{proposalId}/timelinedefault/{uasDueDate}", method = RequestMethod.POST)
+	public Timeline defaultTimeline(@PathVariable Long proposalId, @PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date uasDueDate)
 	{
-		Timeline defaultTimeline = new Timeline(uasDueDate);
+		Timeline defaultTimeline = new Timeline(proposalId, uasDueDate);
 		return timelineDao.saveTimelineForm(defaultTimeline);
 	}
 
