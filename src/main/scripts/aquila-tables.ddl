@@ -191,11 +191,6 @@
         primary key (economic_interest_pi_id)
     ) engine=MyISAM;
 
-    create table EquipmentForm_listOfRequirements (
-       EquipmentForm_form_id bigint not null,
-        list_of_requirements varchar(255)
-    ) engine=MyISAM;
-
     create table file_description (
        budget_id bigint not null,
         file_date datetime,
@@ -412,6 +407,11 @@
         sponsor_name varchar(255),
         sponsor_type bit not null,
         primary key (kp_sponsor_id, sponsor_type)
+    ) engine=MyISAM;
+
+    create table list_of_requirements (
+       equipment_form_id bigint not null,
+        requirement varchar(255)
     ) engine=MyISAM;
 
     create table other_activities (
@@ -632,11 +632,6 @@
        foreign key (chemicals_id) 
        references form (form_id);
 
-    alter table EquipmentForm_listOfRequirements 
-       add constraint FK4ful3bdtw6hd0vv1a8i9bcc0l 
-       foreign key (EquipmentForm_form_id) 
-       references form (form_id);
-
     alter table file_description 
        add constraint FKlnyjam9mnuagnhcak3ubxm9li 
        foreign key (budget_id) 
@@ -671,6 +666,11 @@
        add constraint FK9bwjuy5jy3g3j085rvshnmb2f 
        foreign key (kp_sponsor_id) 
        references conflict_of_interest_kp_phs (conflict_of_interest_kp_phs);
+
+    alter table list_of_requirements 
+       add constraint FK7pl9fsvb440uqu0torn3me8rt 
+       foreign key (equipment_form_id) 
+       references form (form_id);
 
     alter table other_activities 
        add constraint FK6jy4q546it2biinxtce13cxt7 
@@ -771,11 +771,6 @@
        add constraint FK4kx9tmi2yw63y6lwqhlly4r8i 
        foreign key (significant_fin_interest_id) 
        references conflict_of_interest_pi_non_phs (conflict_of_interest_pi_non_phs_id);
-
-    alter table size_of_equipment 
-       add constraint FKdojilm47eil541d232t0uoe6j 
-       foreign key (size_of_equipment_id) 
-       references form (form_id);
 
     alter table size_of_equipment 
        add constraint FKefg2wlvnpduc7i2r1vhacrrl5 

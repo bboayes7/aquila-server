@@ -26,7 +26,7 @@ public class EquipmentController {
 		return equipmentDao.saveEquipmentForm(equipmentForm);
 	}
 	
-	@RequestMapping(value= "equipment/{id}", method = RequestMethod.POST)
+	@RequestMapping(value= "equipment/{id}", method = RequestMethod.PUT)
 	public EquipmentForm updateEquipmentForm(@RequestBody EquipmentForm equipmentForm, @PathVariable Long id) {
 		equipmentForm.setId(id);	
 		return equipmentDao.saveEquipmentForm(equipmentForm);

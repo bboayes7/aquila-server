@@ -58,8 +58,7 @@ public class EquipmentForm extends Form implements Serializable{
 	//this name, spec/quote
 	//this needs string url
 	
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "equipment_form_id", nullable = true)
+	@OneToMany(cascade = { CascadeType.ALL },mappedBy= "equipmentForm")
 	List<TypeOfEquipment> typeOfEquipment; 
 
 	// location
@@ -164,13 +163,13 @@ public class EquipmentForm extends Form implements Serializable{
 	boolean maintenanceRequirement;
 
 	@ElementCollection
-	@Column(name = "list_of_requirements")
+	@CollectionTable(name = "list_of_requirements", joinColumns = @JoinColumn(name = "equipment_form_id"))
+	@Column(name = "requirement")
 	List<String> listOfRequirements;
 
 	//List of size of Equipment
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "equipment_form_id", nullable = true)
-	List<SizeOfEquipment> SizeOfEquipment;
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "equipmentForm")
+	List<SizeOfEquipment> sizeOfEquipment;
 
 
 
@@ -256,7 +255,7 @@ public class EquipmentForm extends Form implements Serializable{
 		this.radiation = radiation;
 		this.maintenanceRequirement = maintenanceRequirement;
 		this.listOfRequirements = listOfRequirements;
-		SizeOfEquipment = sizeOfEquipment;
+		this.sizeOfEquipment = sizeOfEquipment;
 		this.directorOfResearchDevelopmentSignature = directorOfResearchDevelopmentSignature;
 		this.directorOfResearchDevelopmentSignatureDate = directorOfResearchDevelopmentSignatureDate;
 		this.directorOfFacilitiesServicesSignature = directorOfFacilitiesServicesSignature;
@@ -267,11 +266,11 @@ public class EquipmentForm extends Form implements Serializable{
 
 
 	public List<SizeOfEquipment> getSizeOfEquipment() {
-		return SizeOfEquipment;
+		return sizeOfEquipment;
 	}
 
 	public void setSizeOfEquipment(List<SizeOfEquipment> sizeOfEquipment) {
-		SizeOfEquipment = sizeOfEquipment;
+		this.sizeOfEquipment = sizeOfEquipment;
 	}
 
 	public int getProgress() {
