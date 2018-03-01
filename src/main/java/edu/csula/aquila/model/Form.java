@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import edu.csula.aquila.model.Timeline.Stage;
+
 @Entity
 @Table(name = "form")
 public class Form implements Serializable{
@@ -32,9 +34,14 @@ public class Form implements Serializable{
 	
 	public Form() {}
 	
-	public Form(boolean isComplete) {
+	
+	
+	public Form(boolean isComplete, Stage stage) {
 		this.isComplete = isComplete;
+		this.stage = stage;
 	}
+
+
 
 	public Long getId() {
 		return Id;

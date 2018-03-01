@@ -185,8 +185,6 @@ public class EquipmentForm extends Form implements Serializable{
 	@Column(name = "director_of_facilities_services_signature_date")
 	Date directorOfFacilitiesServicesSignatureDate;
 
-
-	
 	public EquipmentForm() {
 
 	}
@@ -272,6 +270,11 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setSizeOfEquipment(List<SizeOfEquipment> sizeOfEquipment) {
 		this.sizeOfEquipment = sizeOfEquipment;
 	}
+	//proposal relationship
+	@OneToOne(mappedBy="equipmentForm")
+	Proposal proposalForm;
+
+
 
 	public int getProgress() {
 		return progress;

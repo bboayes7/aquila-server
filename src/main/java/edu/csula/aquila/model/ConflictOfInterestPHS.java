@@ -8,9 +8,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
@@ -20,16 +17,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "conflict_of_interest_pi_phs")
-public class ConflictOfInterestPHS implements Serializable{
+public class ConflictOfInterestPHS extends Form implements Serializable{
 
 	//identical to Non PHS, excludes bool subaward, sponsor as Map<Boolean,String>
 	
 	private static final long serialVersionUID = -8195316383450056859L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="conflict_of_interest_phs_id")
-	private Long id;
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@Column(name="conflict_of_interest_phs_id")
+//	private Long id;
 	
 	private int progress;
 	
@@ -86,9 +83,9 @@ public class ConflictOfInterestPHS implements Serializable{
 	@OneToOne(mappedBy="coiPhs")
 	Proposal proposal;
 
-	public Long getId() {
-		return id;
-	}
+//	public Long getId() {
+//		return id;
+//	}
 
 	public int getProgress() {
 		return progress;
@@ -98,9 +95,9 @@ public class ConflictOfInterestPHS implements Serializable{
 		this.progress = progress;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	
 	public String getProposalTitle() {

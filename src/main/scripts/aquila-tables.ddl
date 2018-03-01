@@ -122,24 +122,6 @@
         primary key (conflict_of_interest_pi_non_phs_id)
     ) engine=MyISAM;
 
-    create table conflict_of_interest_pi_phs (
-       conflict_of_interest_phs_id bigint not null auto_increment,
-        ari_date datetime,
-        ari_official bit,
-        amount_requested double precision,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        irb_iacuc_ibc_no bigint,
-        pi_date datetime,
-        pi_sign tinyblob,
-        progress integer not null,
-        project_period_end datetime,
-        project_period_start datetime,
-        proposal_title varchar(255),
-        siginificant_financial_interest bit,
-        primary key (conflict_of_interest_phs_id)
-    ) engine=MyISAM;
-
     create table departments (
        department_id bigint not null,
         college tinyblob,
@@ -213,6 +195,20 @@
        DTYPE varchar(31) not null,
         form_id bigint not null auto_increment,
         is_complete bit,
+        ari_date datetime,
+        ari_official bit,
+        amount_requested double precision,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        irb_iacuc_ibc_no bigint,
+        pi_date datetime,
+        pi_sign tinyblob,
+        progress integer,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_title varchar(255),
+        siginificant_financial_interest bit,
+        FWR bit,
         air_chilled_water_flow bit,
         amps bit,
         building_location varchar(255),
@@ -251,8 +247,6 @@
         plumbing bit,
         pressure bit,
         previous_use varchar(255),
-        progress integer,
-        proposal_title varchar(255),
         pump_compressor_motor bit,
         room_location varchar(255),
         space_modification_requirement bit,
@@ -465,6 +459,7 @@
         coi_phs_id bigint,
         coi_pi_non_phs_id bigint,
         economic_interest_id bigint,
+        equipment_form_id bigint,
         intake_form_id bigint,
         timeline_id bigint,
         user_id bigint,
@@ -485,9 +480,18 @@
         primary key (requested_equipment_id, equipment_name)
     ) engine=MyISAM;
 
+    create table required_files (
+       file_info_id bigint not null,
+        timeline_id bigint not null,
+        file_name varchar(255) not null,
+        primary key (file_info_id, file_name)
+    ) engine=MyISAM;
+
     create table required_forms (
-       timeline_id bigint not null,
-        form_name varchar(255)
+       form_id bigint not null,
+        timeline_id bigint not null,
+        form_name varchar(255) not null,
+        primary key (form_id, form_name)
     ) engine=MyISAM;
 
     create table sig_fin_interest_excluded (
@@ -553,7 +557,7 @@
        timeline_id bigint not null auto_increment,
         final_sign_date datetime,
         funding_agency varchar(255),
-        pi varchar(255),
+        principal_investigator varchar(255),
         proposal varchar(255),
         sponsor_date datetime,
         uas_date datetime,
@@ -595,6 +599,12 @@
 
     alter table departments 
        add constraint UK_qyf2ekbfpnddm6f3rkgt39i9o unique (department_name);
+
+    alter table required_files 
+       add constraint UK_7idbrsli9ohasp39vo3qkpwmi unique (timeline_id);
+
+    alter table required_forms 
+       add constraint UK_hmpweb396ie6b8oc07mlb725p unique (timeline_id);
 
     alter table users 
        add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email);
@@ -683,14 +693,14 @@
        references form (form_id);
 
     alter table phs_sponsor 
-       add constraint FKllruu91w31g4v4r9427xpufah 
+       add constraint FKlpx4i5tf0pyskddn6e04av4id 
        foreign key (phs_sponsor_id) 
-       references conflict_of_interest_pi_phs (conflict_of_interest_phs_id);
+       references form (form_id);
 
     alter table pi_phs_disclosure_reasons 
-       add constraint FKhsf4gvrb3v979d5bqmdef4971 
+       add constraint FKt4879o54qd3iifta79hdqg85n 
        foreign key (pi_phs_disclosure_reasons_id) 
-       references conflict_of_interest_pi_phs (conflict_of_interest_phs_id);
+       references form (form_id);
 
     alter table project_locations 
        add constraint FK7ldg8ugry3in3gt9e4quby1y4 
@@ -757,9 +767,24 @@
        foreign key (requested_equipment_id) 
        references form (form_id);
 
-    alter table required_forms 
-       add constraint FKe4hmcrcjnts57x9grx3y8bomg 
+    alter table required_files 
+       add constraint FKn6y4kmh4615rhab8cnusye8dp 
        foreign key (timeline_id) 
+       references file_info (file_info_id);
+
+    alter table required_files 
+       add constraint FKc5n09xspoc82m37p2dyqkv49c 
+       foreign key (file_info_id) 
+       references stage (stage_id);
+
+    alter table required_forms 
+       add constraint FKrgr2cybf75mcl9ehcgsr7dg29 
+       foreign key (timeline_id) 
+       references form (form_id);
+
+    alter table required_forms 
+       add constraint FK2kx2uuab24l4o0ujnrnlbh6wr 
+       foreign key (form_id) 
        references stage (stage_id);
 
     alter table sig_fin_interest_excluded 
