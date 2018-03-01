@@ -67,11 +67,6 @@
         list_of_requirements varchar(255)
     ) engine=MyISAM;
 
-    create table EquipmentForm_typeOfEquipment (
-       EquipmentForm_form_id bigint not null,
-        type_of_equipment varchar(255)
-    ) engine=MyISAM;
-
     create table file_description (
        budget_id bigint not null,
         file_date datetime,
@@ -429,9 +424,9 @@
 
     create table required_forms (
        required_form_id bigint not null,
-        form_name bigint,
-        form_id varchar(255) not null,
-        primary key (required_form_id, form_id)
+        form_id bigint,
+        form_name varchar(255) not null,
+        primary key (required_form_id, form_name)
     ) engine=MyISAM;
 
     create table sig_fin_interest_excluded (
@@ -503,6 +498,11 @@
     create table travel_payment_dates (
        tpd_id bigint not null,
         dates datetime
+    ) engine=MyISAM;
+
+    create table type_of_equipment (
+       equipment_id bigint not null,
+        type_of_equipment varchar(255)
     ) engine=MyISAM;
 
     create table users (
@@ -577,11 +577,6 @@
 
     alter table EquipmentForm_listOfRequirements 
        add constraint FK4ful3bdtw6hd0vv1a8i9bcc0l 
-       foreign key (EquipmentForm_form_id) 
-       references form (form_id);
-
-    alter table EquipmentForm_typeOfEquipment 
-       add constraint FKb0ql7yie14shqa01xr79hw3xe 
        foreign key (EquipmentForm_form_id) 
        references form (form_id);
 
@@ -748,6 +743,11 @@
     alter table travel_payment_dates 
        add constraint FK1uxk9ka1tyw8jrrk7e1nx1hic 
        foreign key (tpd_id) 
+       references form (form_id);
+
+    alter table type_of_equipment 
+       add constraint FK8m9wm61u230rqrgenk0fc67qu 
+       foreign key (equipment_id) 
        references form (form_id);
 
     alter table users 

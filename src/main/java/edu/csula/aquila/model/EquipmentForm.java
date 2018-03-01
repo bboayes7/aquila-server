@@ -47,6 +47,7 @@ public class EquipmentForm extends Form implements Serializable{
 	// type of equipment
 	
 	@ElementCollection
+	@CollectionTable(name = "type_of_equipment", joinColumns=@JoinColumn(name = "equipment_id"))
 	@Column(name="type_of_equipment")
 	List<String> typeOfEquipment; 
 	
@@ -169,6 +170,85 @@ public class EquipmentForm extends Form implements Serializable{
 	@Column(name = "director_of_facilities_services_signature_date")
 	Date directorOfFacilitiesServicesSignatureDate;
 	
+	public EquipmentForm() {}
+	
+	public EquipmentForm(int progress, String facultyName, String department, String proposalTitle, boolean extension,
+			String extensionValue, boolean costShare, boolean donation, boolean newEquipment,
+			List<String> typeOfEquipment, String buildingLocation, String roomLocation, boolean isDonation,
+			String companyDonating, String previousUse, boolean spaceModificationRequirement,
+			boolean electricalModification, boolean volts, boolean amps, boolean phase, boolean dedicatedPower,
+			boolean circuitBreakerSpecification, boolean motorCompressorSpecification, boolean specialNeeds,
+			boolean fWR, String specialNeedsString, String fwrPaidBy, boolean hvac, boolean airChilledWaterFlow,
+			boolean temperature, boolean humidityControl, boolean supplyPressure, boolean centralPackageUnit,
+			boolean specialWork, boolean noiseRequirement, boolean plumbing, boolean fluid, boolean flowRate,
+			boolean pressure, boolean fluidTemperature, boolean pumpCompressorMotor, boolean maintenance,
+			boolean licenseRequirements, boolean hardware, boolean hazardousMaterial, Map<Integer, String> chemicals,
+			String radiationUse, boolean maintenanceRequirement, List<String> listOfRequirements,
+			boolean sizeOfEquipment, int height, int width, int length,
+			Signature directorOfResearchDevelopmentSignature, Date directorOfResearchDevelopmentSignatureDate,
+			Signature directorOfFacilitiesServicesSignature, Date directorOfFacilitiesServicesSignatureDate) {
+		super();
+		this.progress = progress;
+		this.facultyName = facultyName;
+		this.department = department;
+		this.proposalTitle = proposalTitle;
+		this.extension = extension;
+		this.extensionValue = extensionValue;
+		this.costShare = costShare;
+		this.donation = donation;
+		this.newEquipment = newEquipment;
+		this.typeOfEquipment = typeOfEquipment;
+		this.buildingLocation = buildingLocation;
+		this.roomLocation = roomLocation;
+		this.isDonation = isDonation;
+		this.companyDonating = companyDonating;
+		this.previousUse = previousUse;
+		this.spaceModificationRequirement = spaceModificationRequirement;
+		this.electricalModification = electricalModification;
+		this.volts = volts;
+		this.amps = amps;
+		this.phase = phase;
+		this.dedicatedPower = dedicatedPower;
+		this.circuitBreakerSpecification = circuitBreakerSpecification;
+		this.motorCompressorSpecification = motorCompressorSpecification;
+		this.specialNeeds = specialNeeds;
+		FWR = fWR;
+		this.specialNeedsString = specialNeedsString;
+		this.fwrPaidBy = fwrPaidBy;
+		this.hvac = hvac;
+		this.airChilledWaterFlow = airChilledWaterFlow;
+		this.temperature = temperature;
+		this.humidityControl = humidityControl;
+		this.supplyPressure = supplyPressure;
+		this.centralPackageUnit = centralPackageUnit;
+		this.specialWork = specialWork;
+		this.noiseRequirement = noiseRequirement;
+		this.plumbing = plumbing;
+		this.fluid = fluid;
+		this.flowRate = flowRate;
+		this.pressure = pressure;
+		this.fluidTemperature = fluidTemperature;
+		this.pumpCompressorMotor = pumpCompressorMotor;
+		this.maintenance = maintenance;
+		this.licenseRequirements = licenseRequirements;
+		this.hardware = hardware;
+		this.hazardousMaterial = hazardousMaterial;
+		this.chemicals = chemicals;
+		this.radiationUse = radiationUse;
+		this.maintenanceRequirement = maintenanceRequirement;
+		this.listOfRequirements = listOfRequirements;
+		this.sizeOfEquipment = sizeOfEquipment;
+		this.height = height;
+		this.width = width;
+		this.length = length;
+		this.directorOfResearchDevelopmentSignature = directorOfResearchDevelopmentSignature;
+		this.directorOfResearchDevelopmentSignatureDate = directorOfResearchDevelopmentSignatureDate;
+		this.directorOfFacilitiesServicesSignature = directorOfFacilitiesServicesSignature;
+		this.directorOfFacilitiesServicesSignatureDate = directorOfFacilitiesServicesSignatureDate;
+	}
+
+
+
 	public int getProgress() {
 		return progress;
 	}

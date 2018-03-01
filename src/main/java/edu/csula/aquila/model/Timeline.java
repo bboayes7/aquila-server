@@ -58,8 +58,7 @@ public class Timeline implements Serializable {
 	@Column(name = "final_sign_date")
 	Date finalSign;
 
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "timeline_id", nullable = true)
+	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
 	List<Stage> stages;
 	
 
@@ -205,8 +204,8 @@ public class Timeline implements Serializable {
 		
 		//Forms as a map (Test)
 		@ElementCollection
-		@MapKeyColumn(name = "form_id")
-		@Column(name = "form_name")
+		@MapKeyColumn(name = "form_name")
+		@Column(name = "form_id")
 		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_form_id"))
 		Map<String, Long> requiredForms;
 
@@ -214,8 +213,7 @@ public class Timeline implements Serializable {
 		@ElementCollection
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
-		@JoinTable(
-		            name = "required_files",
+		@JoinTable( name = "required_files",
 		            joinColumns = @JoinColumn(name = "file_info_id"),
 		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
 		Map<String, FileInfo> requiredFiles;
@@ -227,9 +225,11 @@ public class Timeline implements Serializable {
 		List<String> addComments;
 		
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
+		@ManyToOne
 		@JoinColumn(name = "timeline_id")
 		Timeline timeline;
+		
+		
 
 		public Stage() {
 		}

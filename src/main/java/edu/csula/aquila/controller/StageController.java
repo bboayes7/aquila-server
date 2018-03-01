@@ -5,13 +5,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.StageDao;
 import edu.csula.aquila.model.Timeline;
 
+@RestController
 public class StageController {
 	@Autowired
 	private StageDao stageDao;
+	
+	@Autowired
+	private ProposalDao proposalDao;
 	
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
@@ -20,8 +26,12 @@ public class StageController {
 	}
 
 	// create a stage
-	@RequestMapping(value = "timeline/stage/", method = RequestMethod.POST)
-	public Timeline.Stage createStage(Timeline.Stage stage) {
+	@RequestMapping(value = "timeline/proposal/{id}/stage/", method = RequestMethod.POST)
+	public Timeline.Stage createStage(Timeline.Stage stage, @PathVariable Long id) {
+		Timeline timeline = proposalDao.getProposal(id).getTimeline();
+		stage.setTimeline(timeline);
+		
+		
 		return stageDao.createStage(stage);
 	}
 

@@ -820,7 +820,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "intake_form_id")
 		IntakeForm intakeForm;
 
 		public SubgrantsOrSubcontracts() {

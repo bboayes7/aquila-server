@@ -51,38 +51,46 @@ public class Proposal implements Serializable{
 	@JoinColumn(name = "intake_form_id")
 	IntakeForm intakeForm;
 	
-//	@JsonIgnore
+	@JsonIgnore
 	@OneToOne(mappedBy = "proposal", cascade = {CascadeType.MERGE})
 	Timeline timeline;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "approval_form_id")
 	ApprovalForm approvalForm;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "coi_kp_non_phs_id")
 	ConflictOfInterestKPNonPHS coiKpNonPhs;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "coi_kp_phs_id")
 	ConflictOfInterestKPPHS coiKpPhs;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "coi_phs_id")
 	ConflictOfInterestPHS coiPhs;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "coi_pi_non_phs_id")
 	ConflictOfInterestPINonPHS coiPiNonPhs;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "economic_interest_pi_id")
 	EconomicInterestPI economicInterestPi;
 	
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "equipment_id")
 	EquipmentForm equipmentForm;
 	
+	public EquipmentForm getEquipmentForm() {
+		return equipmentForm;
+	}
+
+	public void setEquipmentForm(EquipmentForm equipmentForm) {
+		this.equipmentForm = equipmentForm;
+	}
+
 	public Proposal(){}
 	
 	public Proposal(String proposalName, User user, String status, Date dateCreated) {
