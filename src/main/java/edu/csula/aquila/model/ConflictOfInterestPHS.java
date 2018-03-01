@@ -94,8 +94,6 @@ public class ConflictOfInterestPHS extends Form implements Serializable{
 		this.aRIDate = aRIDate;
 	}
 
-
-
 	public int getProgress() {
 		return progress;
 	}

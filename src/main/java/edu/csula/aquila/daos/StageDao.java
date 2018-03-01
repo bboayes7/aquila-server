@@ -10,4 +10,5 @@ public interface StageDao {
 	Stage updateStage(Stage stage);
 
 	Stage deleteStage(Stage stage);
+	
 }

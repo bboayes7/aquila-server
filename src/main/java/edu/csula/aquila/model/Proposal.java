@@ -18,9 +18,6 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
-
 @Entity
 @Table(name = "proposal")
 public class Proposal implements Serializable{
@@ -38,6 +35,7 @@ public class Proposal implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_created")
 	Date dateCreated;
+	
 	
 	@Column(name="status")
 	String status;
@@ -137,6 +135,7 @@ public class Proposal implements Serializable{
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+	
 
 	public String getStatus() {
 		return status;

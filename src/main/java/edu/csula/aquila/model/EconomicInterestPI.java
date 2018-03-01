@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+
+
 import javax.persistence.JoinColumn;
 
 @Entity

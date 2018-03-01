@@ -1,9 +1,4 @@
 
-    create table add_columns (
-       timeline_id bigint not null,
-        comment varchar(255)
-    ) engine=MyISAM;
-
     create table additional_parties_involved (
        additional_parties_involved_id bigint not null auto_increment,
         explanation_of_involvement varchar(255),
@@ -31,13 +26,6 @@
     create table ApprovalForm_internalNotes (
        ApprovalForm_form_id bigint not null,
         internal_notes varchar(255)
-    ) engine=MyISAM;
-
-    create table budget (
-       budget_form_id bigint not null auto_increment,
-        uploader varchar(255),
-        status varchar(255),
-        primary key (budget_form_id)
     ) engine=MyISAM;
 
     create table chemicals (
@@ -137,21 +125,27 @@
         list_of_requirements varchar(255)
     ) engine=MyISAM;
 
+<<<<<<< HEAD
     create table file_description (
        budget_id bigint not null,
         file_date datetime,
         file_path varchar(255) not null,
         primary key (budget_id, file_path)
+=======
+    create table EquipmentForm_typeOfEquipment (
+       EquipmentForm_form_id bigint not null,
+        type_of_equipment varchar(255)
+>>>>>>> 8af810fb07c99b2f1952f808bc3a70d3ec0c17f0
     ) engine=MyISAM;
 
     create table file_info (
-       file_info_id bigint not null,
+       file_info_id bigint not null auto_increment,
         file_name varchar(255),
         file_path varchar(255),
-        file_Type varchar(255),
+        file_type varchar(255),
         is_uploaded bit,
         uploader varchar(255),
-        upload_date date,
+        upload_date datetime,
         primary key (file_info_id)
     ) engine=MyISAM;
 
@@ -402,8 +396,6 @@
 
     insert into hibernate_sequence values ( 1 );
 
-    insert into hibernate_sequence values ( 1 );
-
     create table investigators_names (
        investigators_names_id bigint not null,
         names_of_other_investigators varchar(255)
@@ -476,14 +468,21 @@
         proposal_name varchar(255),
         status varchar(255),
 <<<<<<< HEAD
+<<<<<<< HEAD
         approval_form_id bigint,
+=======
+>>>>>>> 8af810fb07c99b2f1952f808bc3a70d3ec0c17f0
         coi_kp_non_phs_id bigint,
         coi_kp_phs_id bigint,
         coi_phs_id bigint,
         coi_pi_non_phs_id bigint,
+<<<<<<< HEAD
         economic_interest_pi_id bigint,
         equipment_id bigint,
 =======
+=======
+        economic_interest_id bigint,
+>>>>>>> 8af810fb07c99b2f1952f808bc3a70d3ec0c17f0
         equipment_form_id bigint,
 >>>>>>> master
         intake_form_id bigint,
@@ -539,6 +538,7 @@
 
     create table stage (
        stage_id bigint not null auto_increment,
+        comments varchar(255),
         completed_date datetime,
         deadline_type varchar(255),
         expected_date datetime,
@@ -613,11 +613,6 @@
     alter table users 
        add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username);
 
-    alter table add_columns 
-       add constraint FKtfmxc5h86h6ga3vhx3nelp8on 
-       foreign key (timeline_id) 
-       references stage (stage_id);
-
     alter table additional_parties_involved 
        add constraint FKrtaab9m7i4m49rphge66b1xs8 
        foreign key (intake_form_id) 
@@ -663,10 +658,17 @@
        foreign key (EquipmentForm_form_id) 
        references form (form_id);
 
+<<<<<<< HEAD
     alter table file_description 
        add constraint FKlnyjam9mnuagnhcak3ubxm9li 
        foreign key (budget_id) 
        references budget (budget_form_id);
+=======
+    alter table EquipmentForm_typeOfEquipment 
+       add constraint FKb0ql7yie14shqa01xr79hw3xe 
+       foreign key (EquipmentForm_form_id) 
+       references form (form_id);
+>>>>>>> 8af810fb07c99b2f1952f808bc3a70d3ec0c17f0
 
     alter table form 
        add constraint FKjr3t0ti0w8f8ch6brn9pgpokc 
@@ -725,9 +727,37 @@
 
     alter table proposal 
 <<<<<<< HEAD
+<<<<<<< HEAD
        add constraint FKbtgd421g9vmo8l1jqlnele96r 
        foreign key (approval_form_id) 
 =======
+=======
+       add constraint FKr9w5phxj6oxqqy9k5g0n1n6d0 
+       foreign key (coi_kp_non_phs_id) 
+       references conflict_of_interest_kp_non_phs (conflict_of_interest_non_phs_id);
+
+    alter table proposal 
+       add constraint FKd6sjh3qqy7snc3ccdv1wdbe68 
+       foreign key (coi_kp_phs_id) 
+       references conflict_of_interest_kp_phs (conflict_of_interest_kp_phs);
+
+    alter table proposal 
+       add constraint FK448ttl86edple84c4axi90d1o 
+       foreign key (coi_phs_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKc54r6r702a586cvhgg8opym1l 
+       foreign key (coi_pi_non_phs_id) 
+       references conflict_of_interest_pi_non_phs (conflict_of_interest_pi_non_phs_id);
+
+    alter table proposal 
+       add constraint FKrgvvi6bqe7cy8oqnfih3b5l2s 
+       foreign key (economic_interest_id) 
+       references economic_interest_pi (economic_interest_pi_id);
+
+    alter table proposal 
+>>>>>>> 8af810fb07c99b2f1952f808bc3a70d3ec0c17f0
        add constraint FKs64cij1el62ay7u3q5hcoe5h1 
        foreign key (equipment_form_id) 
        references form (form_id);

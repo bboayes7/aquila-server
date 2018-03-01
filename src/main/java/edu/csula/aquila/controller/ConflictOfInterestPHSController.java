@@ -1,6 +1,7 @@
 package edu.csula.aquila.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,8 +17,8 @@ public class ConflictOfInterestPHSController {
 	@Autowired
 	private ConflictOfInterestPHSDao conflictOfInterestPHSDao;
 	
-	@RequestMapping(value = "/proposal/coiphs", method = RequestMethod.GET)
-	public ConflictOfInterestPHS getConflictOfInterestPHSById( @RequestParam Long id )
+	@RequestMapping(value = "/proposal/coiphs/{id}", method = RequestMethod.GET)
+	public ConflictOfInterestPHS getConflictOfInterestPHSById( @PathVariable Long id )
 	{
 		return conflictOfInterestPHSDao.getConflictOfInterestPHSById(id);
 	}

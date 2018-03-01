@@ -37,11 +37,13 @@ public class LoginDaoImpl implements LoginDao {
 
 		String query = "from User u where u.username = :username and u.password = :password";
 
+		//set username and password parameters to query from DB
 		List<User> results = entityManager.createQuery(query, User.class).setParameter( "username", username.toLowerCase()).setParameter( "password", password ).getResultList();
 		
 
 		if(results.size()>0 && results != null) 
 		{
+			//if user with username/password combo is found
 			userVerified = true;
 		}
 
@@ -58,6 +60,7 @@ public class LoginDaoImpl implements LoginDao {
 		{
 			user = returnUser(username);
 		}
+		
 		return user;
 	}
 	
