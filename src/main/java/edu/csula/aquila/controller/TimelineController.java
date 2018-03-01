@@ -116,32 +116,32 @@ public class TimelineController {
 	}
 	
 	
-	//Get a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
-	public Timeline.Stage getStage(@PathVariable Long id){
-		return timelineDao.getStage(id);
-	}
-	
-	//create a stage
-	@RequestMapping(value = "timeline/stage/", method = RequestMethod.POST)
-	public Timeline.Stage createStage(Timeline.Stage stage){
-		return timelineDao.createStage(stage);
-	}
-	
-	//update a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
-	public Timeline.Stage updateStage(Timeline.Stage stage, @PathVariable Long id){
-		return timelineDao.updateStage(stage);
-	}
-	
-	//delete a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id){
-		stage = timelineDao.getStage(id);
-		timelineDao.deleteStage(stage);
-		return new DeleteResponse("Stage Deleted!");
-	}
+//	//Get a stage
+//	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
+//	public Timeline.Stage getStage(@PathVariable Long id){
+//		return timelineDao.getStage(id);
+//	}
+//	
+//	//create a stage
+//	@RequestMapping(value = "timeline/stage/", method = RequestMethod.POST)
+//	public Timeline.Stage createStage(Timeline.Stage stage){
+//		return timelineDao.createStage(stage);
+//	}
+//	
+//	//update a stage
+//	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
+//	public Timeline.Stage updateStage(Timeline.Stage stage, @PathVariable Long id){
+//		return timelineDao.updateStage(stage);
+//	}
+//	
+//	//delete a stage
+//	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
+//	@ResponseBody
+//	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id){
+//		stage = timelineDao.getStage(id);
+//		timelineDao.deleteStage(stage);
+//		return new DeleteResponse("Stage Deleted!");
+//	}
 	
 	
 	//message to send when a stage is deleted
@@ -162,7 +162,7 @@ public class TimelineController {
 
 	}
 	
-	public void stageCheck(Timeline.Stage stage) {
+	//public void stageCheck(Timeline.Stage stage) {
 		//pseudo code
 		//get the stage
 		//check if all forms are completed through the isComplete boolean
@@ -172,7 +172,7 @@ public class TimelineController {
 		//when formsCompleted && filesUploaded is true
 		//set uasReviewRequired to true
 		//send an email to UAS
-	}
+	//}
 }
 
 

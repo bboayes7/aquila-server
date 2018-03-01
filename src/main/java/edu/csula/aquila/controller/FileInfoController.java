@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.daos.FileInfoDao;
+import edu.csula.aquila.daos.StageDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.FileInfo;
+import edu.csula.aquila.model.Timeline.Stage;
 
 @RestController
 public class FileInfoController {
@@ -22,12 +24,12 @@ public class FileInfoController {
 	private FileInfoDao fileInfoDao;
 	
 	@Autowired
-	private TimelineDao timelineDao;
+	private StageDao stageDao;
 
 	
 	//save file to disk , then add filename and date under proposal
-	@RequestMapping(value= "/proposal/{id}/fileupload/{fileName}/{stage}" , method = RequestMethod.PUT)
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long id, @PathVariable String fileName, @PathVariable Long stage)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileName}/{stageId}" , method = RequestMethod.PUT)
+	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
 		String filename = null ;
@@ -36,7 +38,7 @@ public class FileInfoController {
 		try
 		{
 			//saveFile saves file to disk and returns new fileName 
-			filename = fileInfoDao.saveFileToDisk( Arrays.asList(file), id, fileName );		
+			filename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
 
         } 
 		catch (IOException e) 
@@ -47,8 +49,10 @@ public class FileInfoController {
 		System.out.println(filename);
 		
 		//save file info to db
-		FileInfo fileInfo =	fileInfoDao.addFileToDB(id,filename);
-		timelineDao.getStage(stage).getRequiredFiles().put(fileName, fileInfo);
+		FileInfo fileInfo =	fileInfoDao.addFileToDB(propId,filename);
+		Stage stage = stageDao.getStage(stageId);
+		stage.getRequiredFiles().put(fileName, fileInfo);
+		stageDao.saveStage(stage);
 		
 		
 		uploadStatus = "success! - " + filename + " has been uploaded";

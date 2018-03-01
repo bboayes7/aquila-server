@@ -26,29 +26,29 @@ public class TimelineDaoImpl implements TimelineDao{
 		return entityManager.merge(timeline);
 	}
 
-	@Override
-	public Stage getStage(Long id) {
-		return entityManager.find(Timeline.Stage.class, id);
-	}
+//	@Override
+//	public Stage getStage(Long id) {
+//		return entityManager.find(Timeline.Stage.class, id);
+//	}
 
-	@Override
-	@Transactional
-	public Stage createStage(Timeline.Stage stage) {
-		return entityManager.merge(stage);
-	}
-
-	@Override
-	@Transactional
-	public Stage updateStage(Timeline.Stage stage) {
-		return entityManager.merge(stage);
-	}
-
-	@Override
-	@Transactional
-	public Stage deleteStage(Timeline.Stage stage) {
-		entityManager.remove(stage);
-		return null;
-	}
+//	@Override
+//	@Transactional
+//	public Stage createStage(Timeline.Stage stage) {
+//		return entityManager.merge(stage);
+//	}
+//
+//	@Override
+//	@Transactional
+//	public Stage updateStage(Timeline.Stage stage) {
+//		return entityManager.merge(stage);
+//	}
+//
+//	@Override
+//	@Transactional
+//	public Stage deleteStage(Timeline.Stage stage) {
+//		entityManager.remove(stage);
+//		return null;
+//	}
 	
 	
 	

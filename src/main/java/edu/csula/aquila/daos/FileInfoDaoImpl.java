@@ -50,7 +50,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	{
 		//find proposal by id
 		Proposal proposal = entityManager.find(Proposal.class, id);
-		String nameOfUploader = proposal.getUser().getFirstName() + proposal.getUser().getLastName();
+		String nameOfUploader = proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName();
 		
 		//get file type
 		String [] ext = filename.split("\\.");
