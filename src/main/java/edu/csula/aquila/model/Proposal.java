@@ -83,13 +83,7 @@ public class Proposal implements Serializable{
 	@JoinColumn(name = "equipment_id")
 	EquipmentForm equipmentForm;
 	
-	public EquipmentForm getEquipmentForm() {
-		return equipmentForm;
-	}
 
-	public void setEquipmentForm(EquipmentForm equipmentForm) {
-		this.equipmentForm = equipmentForm;
-	}
 
 	public Proposal(){}
 	
@@ -98,6 +92,26 @@ public class Proposal implements Serializable{
 		this.status = status;
 		this.user = user;
 		this.dateCreated = dateCreated;
+	}
+	
+	public Proposal(String proposalName, Date dateCreated, String status, User user, IntakeForm intakeForm,
+			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestKPNonPHS coiKpNonPhs,
+			ConflictOfInterestKPPHS coiKpPhs, ConflictOfInterestPHS coiPhs, ConflictOfInterestPINonPHS coiPiNonPhs,
+			EconomicInterestPI economicInterestPi, EquipmentForm equipmentForm) {
+		super();
+		this.proposalName = proposalName;
+		this.dateCreated = dateCreated;
+		this.status = status;
+		this.user = user;
+		this.intakeForm = intakeForm;
+		this.timeline = timeline;
+		this.approvalForm = approvalForm;
+		this.coiKpNonPhs = coiKpNonPhs;
+		this.coiKpPhs = coiKpPhs;
+		this.coiPhs = coiPhs;
+		this.coiPiNonPhs = coiPiNonPhs;
+		this.economicInterestPi = economicInterestPi;
+		this.equipmentForm = equipmentForm;
 	}
 
 	public Long getId() {
@@ -139,6 +153,14 @@ public class Proposal implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	public EquipmentForm getEquipmentForm() {
+		return equipmentForm;
+	}
+
+	public void setEquipmentForm(EquipmentForm equipmentForm) {
+		this.equipmentForm = equipmentForm;
+	}
 
 	public IntakeForm getIntakeForm() {
 		return intakeForm;
@@ -147,7 +169,6 @@ public class Proposal implements Serializable{
 	public void setIntakeForm(IntakeForm intakeForm) {
 		this.intakeForm = intakeForm;
 	}
-
 	public Timeline getTimeline() {
 		return timeline;
 	}

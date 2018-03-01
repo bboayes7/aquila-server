@@ -64,7 +64,7 @@ public class Timeline implements Serializable {
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.ALL}, mappedBy="timeline")
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposal;
 
@@ -209,11 +209,12 @@ public class Timeline implements Serializable {
 		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_form_id"))
 		Map<String, Long> requiredForms;
 
-		//Files as a map (Test)
+		//Files as a map 
 		@ElementCollection
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
-		@JoinTable( name = "required_files",
+		@JoinTable(
+		            name = "required_files",
 		            joinColumns = @JoinColumn(name = "file_info_id"),
 		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
 		Map<String, FileInfo> requiredFiles;

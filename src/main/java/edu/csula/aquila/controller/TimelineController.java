@@ -8,16 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.csula.aquila.daos.EquipmentDao;
-import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.EquipmentForm;
-import edu.csula.aquila.model.FileInfo;
-import edu.csula.aquila.model.Form;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
@@ -115,9 +110,23 @@ public class TimelineController {
 	// return a timeline
 	@RequestMapping(value = "timeline/{id}", method = RequestMethod.GET)
 	public Timeline getTimeline(@PathVariable Long id) {
+
 		return timelineDao.getTimelineForm(id);
 	}
 
 
+
+	
+	public void stageCheck(Timeline.Stage stage) {
+		//pseudo code
+		//get the stage
+		//check if all forms are completed through the isComplete boolean
+		//if all forms are complete, have a boolean called formsCompleted and set it to true
+		//check if all the files are uploaded through the isUploaded boolean
+		//if all files are uploaded, have a boolean called filesUploaded and set it to true
+		//when formsCompleted && filesUploaded is true
+		//set uasReviewRequired to true
+		//send an email to UAS
+	}
 
 }

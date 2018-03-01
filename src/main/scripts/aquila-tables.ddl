@@ -54,6 +54,76 @@
         primary key (college_id)
     ) engine=MyISAM;
 
+<<<<<<< HEAD
+=======
+    create table conflict_of_interest_kp_non_phs (
+       conflict_of_interest_non_phs_id bigint not null auto_increment,
+        ari_date datetime,
+        ari_official bit,
+        amount_requested double precision,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        iRBACUCIBCNo bigint,
+        key_personnel_date datetime,
+        key_personnel_sign tinyblob,
+        pi tinyblob,
+        progress integer not null,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_number bigint not null,
+        proposal_title varchar(255),
+        significat_fin_interest bit,
+        sponsor varchar(255),
+        sub_award bit,
+        subaward_agency varchar(255),
+        subaward_sponsor varchar(255),
+        primary key (conflict_of_interest_non_phs_id)
+    ) engine=MyISAM;
+
+    create table conflict_of_interest_kp_phs (
+       conflict_of_interest_kp_phs bigint not null auto_increment,
+        ari_date datetime,
+        ari_official bit,
+        amount_requested integer,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        iRBACUCIBCNo bigint,
+        key_personnel_date datetime,
+        key_personnel_sign tinyblob,
+        pi tinyblob,
+        progress integer not null,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_number bigint,
+        proposal_title varchar(255),
+        significant_fin_interest bit,
+        primary key (conflict_of_interest_kp_phs)
+    ) engine=MyISAM;
+
+    create table conflict_of_interest_pi_non_phs (
+       conflict_of_interest_pi_non_phs_id bigint not null auto_increment,
+        amount_requested integer,
+        ari_date datetime,
+        ari_official varchar(255),
+        ari_official_approved bit,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        disclosure_reason varchar(255),
+        irb_iacuc_ibc_no bigint,
+        other_personnel_contribution bit,
+        pi_name tinyblob,
+        pi_signature tinyblob,
+        progress integer not null,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_title varchar(255),
+        signature_date datetime,
+        significant_financial_interest bit,
+        subaward_with_federal_agency_pass_through varchar(255),
+        primary key (conflict_of_interest_pi_non_phs_id)
+    ) engine=MyISAM;
+
+>>>>>>> master
     create table departments (
        department_id bigint not null,
         department_name varchar(255) not null,
@@ -100,6 +170,14 @@
         other_personnel_contribution bit,
         pi_name tinyblob,
         pi_signature tinyblob,
+        ari_date datetime,
+        ari_official bit,
+        amount_requested double precision,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        irb_iacuc_ibc_no bigint,
+        pi_date datetime,
+        pi_sign tinyblob,
         progress integer,
         project_period_end datetime,
         project_period_start datetime,
@@ -120,6 +198,7 @@
         sub_award bit,
         subaward_agency varchar(255),
         subaward_sponsor varchar(255),
+        siginificant_financial_interest bit,
         FWR bit,
         air_chilled_water_flow bit,
         amps bit,
@@ -396,6 +475,7 @@
         date_created date,
         proposal_name varchar(255),
         status varchar(255),
+<<<<<<< HEAD
         approval_form_id bigint,
         coi_kp_non_phs_id bigint,
         coi_kp_phs_id bigint,
@@ -403,6 +483,9 @@
         coi_pi_non_phs_id bigint,
         economic_interest_pi_id bigint,
         equipment_id bigint,
+=======
+        equipment_form_id bigint,
+>>>>>>> master
         intake_form_id bigint,
         user_id bigint,
         primary key (proposal_id)
@@ -641,8 +724,18 @@
        references form (form_id);
 
     alter table proposal 
+<<<<<<< HEAD
        add constraint FKbtgd421g9vmo8l1jqlnele96r 
        foreign key (approval_form_id) 
+=======
+       add constraint FKs64cij1el62ay7u3q5hcoe5h1 
+       foreign key (equipment_form_id) 
+       references form (form_id);
+
+    alter table proposal 
+       add constraint FKcy7vdy9wo7ph6fq2jf03twat9 
+       foreign key (intake_form_id) 
+>>>>>>> master
        references form (form_id);
 
     alter table proposal 
