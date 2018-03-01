@@ -1,7 +1,10 @@
 package edu.csula.aquila.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 
@@ -68,8 +72,90 @@ public class Timeline implements Serializable {
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposal;
 
-	public Timeline() {
+	public Timeline()
+	{
+	 
 	}
+	
+	//default timeline , still in progress
+	public Timeline(Long id, Date uasDueDate) 
+	{
+		String directory = "C:\\Proposals_UAS\\";
+		
+		//list of default stages
+		List<Timeline.Stage> preFill = new ArrayList<Timeline.Stage>();
+		
+		//create instance of date
+		Calendar deadline = Calendar.getInstance();
+		Date dueDate = uasDueDate;
+		
+		//15 days before shipping date
+		deadline.setTime(dueDate);
+		int year = deadline.get(Calendar.YEAR);
+		deadline.add(Calendar.DATE, -15);
+		Date deadline1 = deadline.getTime();
+		
+		//11 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -11);
+		Date deadline2 = deadline.getTime();
+		
+		//7 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -7);
+		Date deadline3 = deadline.getTime();
+		/*
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -2);
+		Date deadline4 = deadline.getTime();
+		*/
+		
+		//file lists and form lists for each stage
+		Map<String,FileInfo> files1 = new HashMap<>();
+		Map<String,FileInfo> files2 = new HashMap<>();
+		Map<String,FileInfo> files3 = new HashMap<>();
+		Map<String,Form> forms2 = new HashMap<>();
+		Map<String,Form> forms3 = new HashMap<>();
+		
+		//empty files
+		/*FileInfo firstBudget = new FileInfo(directory + year + "ProposalID_" + id + "FirstBudget");
+		FileInfo subContractDocs = new FileInfo(directory + year + "ProposalID_" + id + "SubContractDoc");
+		FileInfo finalBudget = new FileInfo(directory + year + "ProposalID_" + id + "FinalBudget");
+		FileInfo equipmentQuotesSpecs = new FileInfo(directory + year + "ProposalID_" + id + "EquipmentQuotesSpecs");
+		FileInfo supportingLetter = new FileInfo(directory + year + "ProposalID_" + id + "SupportingLetter");
+		FileInfo signatures = new FileInfo(directory + year + "ProposalID_" + id + "Signatures");
+		*/
+		
+		//put filename with empty file into map
+		files1.put("First Budget", null);
+		files2.put("Sub Contract Documents", null);
+		files2.put("Final Budget", null);
+		files2.put("Equipment Quotes & Specs", null);
+		files3.put("Supporting Letters", null);
+		files3.put("Signatures PDF", null);
+		
+		//put forms into map
+		/*forms2.put("Budget");
+		forms2.put("Equipment");
+		forms3.put("Intake Form");
+		forms3.put("Conflict of Interest");
+		forms3.put("Approval");
+		*/
+		
+		//create default stages
+		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
+//		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
+//		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
+		
+		
+		//add default stages
+		preFill.add(stage1);
+//		preFill.add(stage2);
+//		preFill.add(stage3);
+		this.setStages(preFill);
+		
+	}
+	
 
 	public Timeline(String principalInvestigator, List<String> coPI, String proposalName, String fundingAgency,
 			Date uasDueDate, Date sponsorDueDate, Date finalSign, List<Stage> stages) {
@@ -220,10 +306,8 @@ public class Timeline implements Serializable {
 		Map<String, FileInfo> requiredFiles;
 
 		// allows uas member to add comments to a stage if needed
-		@ElementCollection
-		@CollectionTable(name = "add_columns", joinColumns = @JoinColumn(name = "timeline_id"))
-		@Column(name = "comment")
-		List<String> addComments;
+		@Column(name = "comments")
+		String addComments;
 		
 		@JsonIgnore
 		@ManyToOne
@@ -234,10 +318,21 @@ public class Timeline implements Serializable {
 
 		public Stage() {
 		}
+		
+		public Stage(String name, Date expectedDate, String deadlineType, Map<String,Long> requiredForms, Map<String,FileInfo> requiredFiles) 
+		{
+			this.name = name;
+			this.expectedDate = expectedDate;
+			this.deadlineType = deadlineType;
+			this.requiredForms = requiredForms;
+			this.requiredFiles = requiredFiles;
+		}
+
 
 		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
 				String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles,
-				List<String> addComments) {
+				String addComments) {
+
 			this.name = name;
 			this.expectedDate = expectedDate;
 			this.completedDate = completedDate;
@@ -281,15 +376,6 @@ public class Timeline implements Serializable {
 			this.completedDate = completedDate;
 		}
 
-
-		public List<String> getAddComments() {
-			return addComments;
-		}
-
-		public void setAddComments(List<String> addComments) {
-			this.addComments = addComments;
-		}
-
 		public boolean isUasReviewRequired() {
 			return uasReviewRequired;
 		}
@@ -314,14 +400,6 @@ public class Timeline implements Serializable {
 			this.deadlineType = deadlineType;
 		}
 
-		public Timeline getTimeline() {
-			return timeline;
-		}
-
-		public void setTimeline(Timeline timeline) {
-			this.timeline = timeline;
-		}
-
 		public Map<String, Long> getRequiredForms() {
 			return requiredForms;
 		}
@@ -337,7 +415,24 @@ public class Timeline implements Serializable {
 		public void setRequiredFiles(Map<String, FileInfo> requiredFiles) {
 			this.requiredFiles = requiredFiles;
 		}
-		
+
+		public String getAddComments() {
+			return addComments;
+		}
+
+		public void setAddComments(String addComments) {
+			this.addComments = addComments;
+		}
+
+		public Timeline getTimeline() {
+			return timeline;
+		}
+
+		public void setTimeline(Timeline timeline) {
+			this.timeline = timeline;
+		}
+
+	
 
 //		public void stageCheck() {
 //			// check if all forms are completed through the isComplete boolean

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.model.IntakeForm;
-import edu.csula.aquila.model.Timeline;
 
 @RestController
 public class IntakeController {

@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.daos.ProposalDao;
-import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.daos.UserDao;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
@@ -28,11 +26,6 @@ public class ProposalController {
 	@Autowired
 	private UserDao userDao;
 	
-	@Autowired
-	private IntakeDao intakeDao;
-	
-	@Autowired
-	private TimelineDao timelineDao;
 	
 	//Get a proposal
 	@RequestMapping(value = "proposal/{id}", method = RequestMethod.GET)
@@ -73,6 +66,7 @@ public class ProposalController {
 		timeline.setProposal(proposal);
 		proposal.setTimeline(timeline);
 		
+
 		
 		return proposal = proposalDao.saveProposal(proposal);
 	}

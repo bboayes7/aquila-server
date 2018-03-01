@@ -1,15 +1,18 @@
 package edu.csula.aquila.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.EquipmentForm;
@@ -23,8 +26,19 @@ public class TimelineController {
 	@Autowired
 	private TimelineDao timelineDao;
 
+	@Autowired 
+	ProposalDao proposalDao;
+	
 	@Autowired
-	private ProposalDao proposalDao;
+	private FileInfoDao fileInfoDao;
+	
+
+	@RequestMapping(value="/proposal/{proposalId}/timelinedefault/{uasDueDate}", method = RequestMethod.POST)
+	public Timeline defaultTimeline(@PathVariable Long proposalId, @PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date uasDueDate)
+	{
+		Timeline defaultTimeline = new Timeline(proposalId, uasDueDate);
+		return timelineDao.saveTimelineForm(defaultTimeline);
+	}
 
 
 	// create a new timeline
@@ -114,10 +128,22 @@ public class TimelineController {
 		return timelineDao.getTimelineForm(id);
 	}
 
+	
+	
+	//message to send when a stage is deleted
+	public class DeleteResponse{
+		private String message;
+		
+		public DeleteResponse(String message){
+			this.message = message;
+		}
+	}
+
+
 
 
 	
-	public void stageCheck(Timeline.Stage stage) {
+	//public void stageCheck(Timeline.Stage stage) {
 		//pseudo code
 		//get the stage
 		//check if all forms are completed through the isComplete boolean
@@ -127,6 +153,7 @@ public class TimelineController {
 		//when formsCompleted && filesUploaded is true
 		//set uasReviewRequired to true
 		//send an email to UAS
-	}
+	//}
+
 
 }

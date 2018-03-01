@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 
+
 @Entity
 @DiscriminatorValue("conflict_of_interest_kp_phs")
 public class ConflictOfInterestKPPHS extends Form implements Serializable{

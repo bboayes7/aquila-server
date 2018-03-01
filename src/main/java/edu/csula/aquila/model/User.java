@@ -15,7 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -64,27 +63,19 @@ public class User implements Serializable {
     
 	public User(){}
    
-    public User(String username, String password, String lastName, String firstName, String phoneNumber, String email) {
+    
+	public User(String username, String password, String lastName, String firstName, String phoneNumber, String email,
+			List<Proposal> proposals, Department department, College college) {
 		this.username = username;
 		this.password = password;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
+		this.proposals = proposals;
+		this.department = department;
+		this.college = college;
 	}
-    
-//	public User(String username, String password, String lastName, String firstName, String phoneNumber, String email,
-//			List<Proposal> proposals, Department department, College college) {
-//		this.username = username;
-//		this.password = password;
-//		this.lastName = lastName;
-//		this.firstName = firstName;
-//		this.phoneNumber = phoneNumber;
-//		this.email = email;
-//		this.proposals = proposals;
-//		this.department = department;
-//		this.college = college;
-//	}
 
 	public Long getId() {
 		return id;
