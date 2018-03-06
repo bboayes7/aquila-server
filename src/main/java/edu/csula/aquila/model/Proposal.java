@@ -34,11 +34,11 @@ public class Proposal implements Serializable{
 	
 	@Temporal(TemporalType.DATE)
 	@Column(name="date_created")
-	Date dateCreated;
+	private Date dateCreated;
 	
 	
 	@Column(name="status")
-	String status;
+	private String status;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -50,7 +50,7 @@ public class Proposal implements Serializable{
 	IntakeForm intakeForm;
 	
 	@JsonIgnore
-	@OneToOne(mappedBy = "proposal", cascade = {CascadeType.MERGE})
+	@OneToOne( cascade = {CascadeType.MERGE})
 	Timeline timeline;
 
 	@OneToOne(cascade = {CascadeType.MERGE})
@@ -91,7 +91,7 @@ public class Proposal implements Serializable{
 		this.user = user;
 		this.dateCreated = dateCreated;
 	}
-	
+
 	public Proposal(String proposalName, Date dateCreated, String status, User user, IntakeForm intakeForm,
 			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestKPNonPHS coiKpNonPhs,
 			ConflictOfInterestKPPHS coiKpPhs, ConflictOfInterestPHS coiPhs, ConflictOfInterestPINonPHS coiPiNonPhs,
@@ -135,7 +135,6 @@ public class Proposal implements Serializable{
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	
 
 	public String getStatus() {
 		return status;
@@ -152,14 +151,6 @@ public class Proposal implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	public EquipmentForm getEquipmentForm() {
-		return equipmentForm;
-	}
-
-	public void setEquipmentForm(EquipmentForm equipmentForm) {
-		this.equipmentForm = equipmentForm;
-	}
 
 	public IntakeForm getIntakeForm() {
 		return intakeForm;
@@ -168,6 +159,7 @@ public class Proposal implements Serializable{
 	public void setIntakeForm(IntakeForm intakeForm) {
 		this.intakeForm = intakeForm;
 	}
+
 	public Timeline getTimeline() {
 		return timeline;
 	}
@@ -223,7 +215,14 @@ public class Proposal implements Serializable{
 	public void setEconomicInterestPi(EconomicInterestPI economicInterestPi) {
 		this.economicInterestPi = economicInterestPi;
 	}
-	
+
+	public EquipmentForm getEquipmentForm() {
+		return equipmentForm;
+	}
+
+	public void setEquipmentForm(EquipmentForm equipmentForm) {
+		this.equipmentForm = equipmentForm;
+	}
 	
 	
 

@@ -4,8 +4,8 @@ import edu.csula.aquila.model.Timeline;
 
 public interface TimelineDao {
 
-	Timeline getTimelineForm(Long id);
+	Timeline getTimeline(Long id);
 	
-	Timeline saveTimelineForm(Timeline timeline);
+	Timeline saveTimeline(Timeline timeline);
 
 }

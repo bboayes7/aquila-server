@@ -76,7 +76,7 @@ public class IntakeForm extends Form implements Serializable {
 	// Question 3:
 	// Faculty-Student Research/Creative Activities
 	@Column(name = "faculty_student_research_creative_activities")
-	boolean facultyStudentResearchCreativeActivities;
+	private boolean facultyStudentResearchCreativeActivities;
 
 	// If Yes, please answer the following two sections:
 	// Will this project actively involve students in

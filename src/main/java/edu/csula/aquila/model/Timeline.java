@@ -41,34 +41,34 @@ public class Timeline implements Serializable {
 	private Long Id;
 
 	@Column(name = "principal_investigator")
-	String principalInvestigator;
+	private String principalInvestigator;
 
 	@ElementCollection
 	@CollectionTable(name = "timeline_co_pis", joinColumns=@JoinColumn(name = "timeline_id"))
-	List<String> coPI;
+	private List<String> coPI;
 
 	@Column(name = "proposal_name")
-	String proposalName;// unclear if proposal name or code
+	private String proposalName;// unclear if proposal name or code
 
 	@Column(name = "funding_agency")
-	String fundingAgency;
+	private String fundingAgency;
 
 	@Column(name = "uas_date")
-	Date uasDueDate;
+	private Date uasDueDate;
 
 	@Column(name = "sponsor_date")
-	Date sponsorDueDate;
+	private Date sponsorDueDate;
 
 	@Column(name = "final_sign_date")
-	Date finalSign;
+	private Date finalSign;
 
 	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
-	List<Stage> stages;
+	private List<Stage> stages;
 	
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.ALL}, mappedBy="timeline")
+	@OneToOne(mappedBy="timeline")
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposal;
 
@@ -104,11 +104,6 @@ public class Timeline implements Serializable {
 		deadline.setTime(dueDate);
 		deadline.add(Calendar.DATE, -7);
 		Date deadline3 = deadline.getTime();
-		/*
-		deadline.setTime(dueDate);
-		deadline.add(Calendar.DATE, -2);
-		Date deadline4 = deadline.getTime();
-		*/
 		
 		//file lists and form lists for each stage
 		Map<String,FileInfo> files1 = new HashMap<>();
@@ -201,13 +196,6 @@ public class Timeline implements Serializable {
 		this.proposalName = proposalName;
 	}
 
-	public Proposal getProposal() {
-		return proposal;
-	}
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
-	}
 
 	public String getFundingAgency() {
 		return fundingAgency;
@@ -248,6 +236,15 @@ public class Timeline implements Serializable {
 	public void setStages(List<Stage> stages) {
 		this.stages = stages;
 	}
+	
+	public Proposal getProposal() {
+		return proposal;
+	}
+
+	public void setProposal(Proposal proposal) {
+		this.proposal = proposal;
+	}
+
 
 
 	// Timeline contains a list of stages

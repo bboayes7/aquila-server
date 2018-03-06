@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.StageDao;
+import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.Timeline;
+import edu.csula.aquila.model.Timeline.Stage;
 
 @RestController
 public class StageController {
@@ -17,36 +18,37 @@ public class StageController {
 	private StageDao stageDao;
 	
 	@Autowired
-	private ProposalDao proposalDao;
+	private TimelineDao timelineDao;
 	
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
-	public Timeline.Stage getStage(@PathVariable Long id) {
+	public Stage getStage(@PathVariable Long id) {
 		return stageDao.getStage(id);
 	}
 
 	// create a stage
-	@RequestMapping(value = "timeline/proposal/{id}/stage/", method = RequestMethod.POST)
-	public Timeline.Stage createStage(Timeline.Stage stage, @PathVariable Long id) {
-		Timeline timeline = proposalDao.getProposal(id).getTimeline();
+	@RequestMapping(value = "proposal/timeline/{timelineId}/stage/", method = RequestMethod.POST)
+	public Stage createStage(Stage stage, @PathVariable Long timelineId) {
+		Timeline timeline = timelineDao.getTimeline(timelineId);
 		stage.setTimeline(timeline);
 		
 		
-		return stageDao.createStage(stage);
+		return stageDao.saveStage(stage);
 	}
 
 	// update a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
-	public Timeline.Stage updateStage(Timeline.Stage stage, @PathVariable Long id) {
-		return stageDao.updateStage(stage);
+	public Stage updateStage(Timeline.Stage stage, @PathVariable Long id) {
+		stage.setId(id);
+		return stageDao.saveStage(stage);
 	}
 
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
 	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id) {
-		stage = stageDao.getStage(id);
-		stageDao.deleteStage(stage);
+		
+		stageDao.deleteStage(id);
 		return new DeleteResponse("Stage Deleted!");
 	}
 

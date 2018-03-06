@@ -5,189 +5,204 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
-@DiscriminatorValue("equipment")
+@DiscriminatorValue(value = "equipment")
 public class EquipmentForm extends Form implements Serializable{
-	
+
 	private static final long serialVersionUID = -639475707169544047L;
-	
+
 	private int progress;
-	
+
 	@Column(name = "faculty_name")
-	String facultyName;
-	
+	private String facultyName;
+
 	@Column
-	String department;
-	
+	private String department;
+
 	@Column(name = "proposal_title")
-	String proposalTitle;
-	
+	private String proposalTitle;
+
 	@Column
-	boolean extension;
-	
+	private boolean extension;
+
 	@Column(name = "extension_value")
-	String extensionValue;
-	
+	private String extensionValue;
+
 	@Column(name = "cost_share")
-	boolean costShare;
-	
+	private boolean costShare;
+
 	@Column
-	boolean donation;
-	
+	private boolean donation;
+
 	@Column(name = "new_equipment")
-	boolean newEquipment;
-	// type of equipment
+	private boolean newEquipment;
+
+	// type of equipment First
+	//this name, spec/quote
+	//this needs string url
 	
-	@ElementCollection
-	@CollectionTable(name = "type_of_equipment", joinColumns=@JoinColumn(name = "equipment_id"))
-	@Column(name="type_of_equipment")
-	List<String> typeOfEquipment; 
-	
+	@OneToMany(cascade = { CascadeType.ALL },mappedBy= "equipmentForm")
+	private List<TypeOfEquipment> typeOfEquipment; 
+
 	// location
 	@Column(name = "building_location")
-	String buildingLocation;
+	private String buildingLocation;
 	@Column(name = "room_location")
-	String roomLocation;
+	private String roomLocation;
 	// donation
 	@Column(name = "is_donation")
-	boolean isDonation;
+	private boolean isDonation;
 	@Column(name = "company_donating")
-	String companyDonating;
+	private String companyDonating;
 	@Column(name = "previous_use")
-	String previousUse;
+	private String previousUse;
 	// please check all that apply
 	@Column(name = "space_modification_requirement")
-	boolean spaceModificationRequirement;
+	private boolean spaceModificationRequirement;
 	// electrical modification
 	@Column(name = "electrical_modification")
-	boolean electricalModification;
+	private boolean electricalModification;
 	@Column
-	boolean volts;
+	private boolean volts;
 	@Column
-	boolean amps;
+	private boolean amps;
 	@Column
-	boolean phase;
-	
+	private boolean phase;
+
 	@Column(name = "dedicated_power")
-	boolean dedicatedPower;
+	private boolean dedicatedPower;
 	@Column(name = "circuit_breaker_specification")
-	boolean circuitBreakerSpecification;
+	private boolean circuitBreakerSpecification;
 	@Column(name = "motor_compressor_specification")
-	boolean motorCompressorSpecification;
+	private boolean motorCompressorSpecification;
 	@Column(name = "special_needs")
-	boolean specialNeeds;
+	private boolean specialNeeds;
 	@Column
-	boolean FWR;
-	
+	private boolean fwr;
+
+
+
 	@Column(name = "special_needs_string")
-	String specialNeedsString;
+	private String specialNeedsString;
 	@Column(name = "fwr_paid_by")
-	String fwrPaidBy;
+	private String fwrPaidBy;
 	// hvac
 	@Column
-	boolean hvac;
+	private boolean hvac;
 	@Column(name = "air_chilled_water_flow")
-	boolean airChilledWaterFlow;
+	private boolean airChilledWaterFlow;
 	@Column
-	boolean temperature;
+	private boolean temperature;
 	@Column(name = "humidity_control")
-	boolean humidityControl;
+	private boolean humidityControl;
 	@Column(name = "supply_pressure")
-	boolean supplyPressure;
+	private boolean supplyPressure;
 	@Column(name = "central_package_unit")
-	boolean centralPackageUnit;
+	private boolean centralPackageUnit;
 	@Column(name = "special_work")
-	boolean specialWork;
+	private boolean specialWork;
 	@Column(name = "noise_requirement")
-	boolean noiseRequirement;
+	private boolean noiseRequirement;
 
 	// plumbing
 	@Column
-	boolean plumbing;
+	private boolean plumbing;
 	@Column
-	boolean fluid;
+	private boolean fluid;
 	@Column(name = "flow_rate")
-	boolean flowRate;
+	private boolean flowRate;
 	@Column
-	boolean pressure;
+	private boolean pressure;
 	@Column(name = "fluid_temperature")
-	boolean fluidTemperature;
+	private boolean fluidTemperature;
 	@Column(name = "pump_compressor_motor")
-	boolean pumpCompressorMotor;
+	private boolean pumpCompressorMotor;
 	// NetworkRequirements
 	@Column
-	boolean maintenance;
+	private boolean maintenance;
 	@Column(name = "license_requirements")
-	boolean licenseRequirements;
+	private boolean licenseRequirements;
 	@Column
-	boolean hardware;
+	private boolean hardware;
+
 	// hazardous material
 	@Column(name = "hazardous_material")
-	boolean hazardousMaterial;
-	
+	private boolean hazardousMaterial;
+
 	@ElementCollection
 	@MapKeyColumn(name="chemical_name")
 	@Column(name = "amount")
-	@CollectionTable(name="chemicals", joinColumns=@JoinColumn(name="id"))
-	Map<Integer, String> chemicals; // chem/quantity
-	
-	@Column(name = "radiation_use")
-	String radiationUse;
-	
-	@Column(name = "maintenance_requirement")
-	boolean maintenanceRequirement;
-	
+	@CollectionTable(name="chemicals", joinColumns=@JoinColumn(name="chemicals_id"))
+	private Map<Integer, String> chemicals; // chem/quantity
+
 	@ElementCollection
-	@Column(name = "list_of_requirements")
-	List<String> listOfRequirements;
-	
-	@Column(name = "size_of_equipment")
-	boolean sizeOfEquipment;
-	@Column
-	int height;
-	@Column
-	int width; 
-	@Column
-	int length;
-	
+	@MapKeyColumn(name="radiation_name")
+	@Column(name = "source")
+	@CollectionTable(name="radiation", joinColumns=@JoinColumn(name="radiation_id"))
+	private Map<String, String> radiation; // radiation/source
+
+
+	@Column(name = "maintenance_requirement")
+	private boolean maintenanceRequirement;
+
+	@ElementCollection
+	@CollectionTable(name = "list_of_requirements", joinColumns = @JoinColumn(name = "equipment_form_id"))
+	@Column(name = "requirement")
+	private List<String> listOfRequirements;
+
+	//List of size of Equipment
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "equipmentForm")
+	private List<SizeOfEquipment> sizeOfEquipment;
+
 	@Column(name = "director_of_research_development_signature")
-	Signature directorOfResearchDevelopmentSignature;
-	
+	private Signature directorOfResearchDevelopmentSignature;
+
 	@Column(name = "director_of_research_development_signature_date")
-	Date directorOfResearchDevelopmentSignatureDate;
-	
+	private Date directorOfResearchDevelopmentSignatureDate;
+
 	@Column(name = "director_of_facilities_services_signature")
-	Signature directorOfFacilitiesServicesSignature;
-	
+	private Signature directorOfFacilitiesServicesSignature;
+
 	@Column(name = "director_of_facilities_services_signature_date")
-	Date directorOfFacilitiesServicesSignatureDate;
-	
-	public EquipmentForm() {}
-	
+	private Date directorOfFacilitiesServicesSignatureDate;
+
+	public EquipmentForm() {
+
+	}
+
 	public EquipmentForm(int progress, String facultyName, String department, String proposalTitle, boolean extension,
 			String extensionValue, boolean costShare, boolean donation, boolean newEquipment,
-			List<String> typeOfEquipment, String buildingLocation, String roomLocation, boolean isDonation,
+			List<TypeOfEquipment> typeOfEquipment, String buildingLocation, String roomLocation, boolean isDonation,
 			String companyDonating, String previousUse, boolean spaceModificationRequirement,
 			boolean electricalModification, boolean volts, boolean amps, boolean phase, boolean dedicatedPower,
 			boolean circuitBreakerSpecification, boolean motorCompressorSpecification, boolean specialNeeds,
-			boolean fWR, String specialNeedsString, String fwrPaidBy, boolean hvac, boolean airChilledWaterFlow,
+			boolean fwr, String specialNeedsString, String fwrPaidBy, boolean hvac, boolean airChilledWaterFlow,
 			boolean temperature, boolean humidityControl, boolean supplyPressure, boolean centralPackageUnit,
 			boolean specialWork, boolean noiseRequirement, boolean plumbing, boolean fluid, boolean flowRate,
 			boolean pressure, boolean fluidTemperature, boolean pumpCompressorMotor, boolean maintenance,
 			boolean licenseRequirements, boolean hardware, boolean hazardousMaterial, Map<Integer, String> chemicals,
-			String radiationUse, boolean maintenanceRequirement, List<String> listOfRequirements,
-			boolean sizeOfEquipment, int height, int width, int length,
+			Map<String, String> radiation, boolean maintenanceRequirement,
+			List<String> listOfRequirements, List<SizeOfEquipment> sizeOfEquipment,
 			Signature directorOfResearchDevelopmentSignature, Date directorOfResearchDevelopmentSignatureDate,
 			Signature directorOfFacilitiesServicesSignature, Date directorOfFacilitiesServicesSignatureDate) {
-		super();
 		this.progress = progress;
 		this.facultyName = facultyName;
 		this.department = department;
@@ -212,7 +227,7 @@ public class EquipmentForm extends Form implements Serializable{
 		this.circuitBreakerSpecification = circuitBreakerSpecification;
 		this.motorCompressorSpecification = motorCompressorSpecification;
 		this.specialNeeds = specialNeeds;
-		FWR = fWR;
+		this.fwr = fwr;
 		this.specialNeedsString = specialNeedsString;
 		this.fwrPaidBy = fwrPaidBy;
 		this.hvac = hvac;
@@ -234,19 +249,26 @@ public class EquipmentForm extends Form implements Serializable{
 		this.hardware = hardware;
 		this.hazardousMaterial = hazardousMaterial;
 		this.chemicals = chemicals;
-		this.radiationUse = radiationUse;
+		this.radiation = radiation;
 		this.maintenanceRequirement = maintenanceRequirement;
 		this.listOfRequirements = listOfRequirements;
 		this.sizeOfEquipment = sizeOfEquipment;
-		this.height = height;
-		this.width = width;
-		this.length = length;
 		this.directorOfResearchDevelopmentSignature = directorOfResearchDevelopmentSignature;
 		this.directorOfResearchDevelopmentSignatureDate = directorOfResearchDevelopmentSignatureDate;
 		this.directorOfFacilitiesServicesSignature = directorOfFacilitiesServicesSignature;
 		this.directorOfFacilitiesServicesSignatureDate = directorOfFacilitiesServicesSignatureDate;
 	}
 
+
+
+
+	public List<SizeOfEquipment> getSizeOfEquipment() {
+		return sizeOfEquipment;
+	}
+
+	public void setSizeOfEquipment(List<SizeOfEquipment> sizeOfEquipment) {
+		this.sizeOfEquipment = sizeOfEquipment;
+	}
 
 	public int getProgress() {
 		return progress;
@@ -294,6 +316,71 @@ public class EquipmentForm extends Form implements Serializable{
 
 	public void setExtensionValue(String extensionValue) {
 		this.extensionValue = extensionValue;
+	}
+	public List<TypeOfEquipment> getTypeOfEquipment() {
+		return typeOfEquipment;
+	}
+
+	public void setTypeOfEquipment(List<TypeOfEquipment> typeOfEquipment) {
+		this.typeOfEquipment = typeOfEquipment;
+	}
+	// Section B needs an inner class of Personnel for each personnel in the list
+	// This class contains the name, employer, position, and time of a person
+	// working on the project
+	@Entity
+	@Table(name = "type_of_equipment")
+	public static class TypeOfEquipment implements Serializable {
+
+		private static final long serialVersionUID = -7320343762569192082L;
+
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		@Column(name = "type_of_equipment_id")
+		private Long Id;
+
+		@Column
+		private String name;
+		@Column(name = "specification")
+		private String specification;
+		@Column
+		private String url;
+
+		// relation
+		@JsonIgnore
+		@ManyToOne(cascade = { CascadeType.ALL })
+		@JoinColumn(name = "equipment_form_id")
+		EquipmentForm equipmentForm;
+
+		public TypeOfEquipment() {
+		}
+
+		public TypeOfEquipment(String name, String specification, String url) {
+			this.name = name; 
+			this.specification = specification;
+			this.url = url;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getSpecification() {
+			return specification;
+		}
+
+		public void setSpecification(String specification) {
+			this.specification= specification;
+		}
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
 	}
 
 	public boolean isCostShare() {
@@ -424,14 +511,14 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setSpecialNeeds(boolean specialNeeds) {
 		this.specialNeeds = specialNeeds;
 	}
-
-	public boolean isFWR() {
-		return FWR;
+	public boolean isFwr() {
+		return fwr;
 	}
 
-	public void setFWR(boolean fWR) {
-		FWR = fWR;
+	public void setFwr(boolean fwr) {
+		this.fwr = fwr;
 	}
+
 
 	public String getSpecialNeedsString() {
 		return specialNeedsString;
@@ -593,14 +680,6 @@ public class EquipmentForm extends Form implements Serializable{
 		this.hazardousMaterial = hazardousMaterial;
 	}
 
-	public String getRadiationUse() {
-		return radiationUse;
-	}
-
-	public void setRadiationUse(String radiationUse) {
-		this.radiationUse = radiationUse;
-	}
-
 	public boolean isMaintenanceRequirement() {
 		return maintenanceRequirement;
 	}
@@ -609,36 +688,88 @@ public class EquipmentForm extends Form implements Serializable{
 		this.maintenanceRequirement = maintenanceRequirement;
 	}
 
-	public boolean isSizeOfEquipment() {
-		return sizeOfEquipment;
-	}
+	//SIZE OF EQUIPMENT LIST
+	@Entity
+	@Table(name = "size_of_equipment")
+	public static class SizeOfEquipment  implements Serializable {
 
-	public void setSizeOfEquipment(boolean sizeOfEquipment) {
-		this.sizeOfEquipment = sizeOfEquipment;
-	}
+		private static final long serialVersionUID = 6L;
 
-	public int getHeight() {
-		return height;
-	}
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		@Column(name = "size_of_equipment_id")
+		private Long Id;
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+		@Column(name = "size_of_equipment")
+		private boolean sizeOfEquipment;
 
-	public int getWidth() {
-		return width;
-	}
+		@Column
+		private int height;
+		@Column
+		private int width; 
+		@Column
+		private int depth;
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+		@JsonIgnore
+		@ManyToOne(cascade = { CascadeType.ALL })
+		@JoinColumn(name = "equipment_form_id")
+		EquipmentForm equipmentForm;
 
-	public int getLength() {
-		return length;
-	}
+		public SizeOfEquipment() {
 
-	public void setLength(int length) {
-		this.length = length;
+		}
+
+		public SizeOfEquipment(boolean sizeOfEquipment, int height , int width, int depth ) {
+			this.sizeOfEquipment = sizeOfEquipment;
+			this.height = height;
+			this.width = width;
+			this.depth = depth; 	
+		}
+		public Long getId() {
+			return Id;
+		}
+
+		public void setId(Long id) {
+			Id = id;
+		}
+		public boolean isSizeOfEquipment() {
+			return sizeOfEquipment;
+		}
+
+		public void setSizeOfEquipment(boolean sizeOfEquipment) {
+			this.sizeOfEquipment = sizeOfEquipment;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+
+		public void setHeight(int height) {
+			this.height = height;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public void setWidth(int width) {
+			this.width = width;
+		}
+
+		public int getDepth() {
+			return depth;
+		}
+
+		public void setDepth(int depth) {
+			this.depth = depth;
+		}
+		public EquipmentForm getEquipmentForm() {
+			return equipmentForm;
+		}
+
+		public void setEquipmentForm(EquipmentForm EquipmentForm) {
+			this.equipmentForm = equipmentForm;
+		}
 	}
 
 	public Signature getDirectorOfResearchDevelopmentSignature() {
@@ -679,7 +810,15 @@ public class EquipmentForm extends Form implements Serializable{
 
 	public void setChemicals(Map<Integer, String> chemicals) {
 		this.chemicals = chemicals;
+	}	
+	public Map<String, String> getRadiation() {
+		return radiation;
 	}
+
+	public void setRadiation(Map<String, String> radiation) {
+		this.radiation = radiation;
+	}
+
 
 	public List<String> getListOfRequirements() {
 		return listOfRequirements;
@@ -687,15 +826,5 @@ public class EquipmentForm extends Form implements Serializable{
 
 	public void setListOfRequirements(List<String> listOfRequirements) {
 		this.listOfRequirements = listOfRequirements;
-	}
-
-	public List<String> getTypeOfEquipment() {
-		return typeOfEquipment;
-	}
-
-	public void setTypeOfEquipment(List<String> typeOfEquipment) {
-		this.typeOfEquipment = typeOfEquipment;
-	}
-
-	
+	}	
 }

@@ -32,10 +32,10 @@ public class Form implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="form_id")
-	Long Id;
+	private Long Id;
 	
 	@Column(name = "is_complete")
-	boolean isComplete;
+	private boolean isComplete;
 	
 	@JsonIgnore
 	@ManyToOne(cascade = { CascadeType.ALL })

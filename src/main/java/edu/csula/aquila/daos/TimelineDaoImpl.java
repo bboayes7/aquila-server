@@ -15,13 +15,13 @@ public class TimelineDaoImpl implements TimelineDao{
 	private EntityManager entityManager;
 	
 	@Override
-	public Timeline getTimelineForm(Long id) {
+	public Timeline getTimeline(Long id) {
 		return entityManager.find(Timeline.class, id);
 	}
 
 	@Override
 	@Transactional
-	public Timeline saveTimelineForm(Timeline timeline) {
+	public Timeline saveTimeline(Timeline timeline) {
 		return entityManager.merge(timeline);
 	}
 

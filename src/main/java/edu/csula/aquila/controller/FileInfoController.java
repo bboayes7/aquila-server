@@ -51,7 +51,7 @@ public class FileInfoController {
 		FileInfo fileInfo =	fileInfoDao.addFileToDB(propId,filename);
 		Stage stage = stageDao.getStage(stageId);
 		stage.getRequiredFiles().put(fileName, fileInfo);
-		stageDao.updateStage(stage);
+		stageDao.saveStage(stage);
 		
 		
 		uploadStatus = "success! - " + filename + " has been uploaded";
