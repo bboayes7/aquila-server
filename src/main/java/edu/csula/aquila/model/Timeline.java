@@ -47,8 +47,8 @@ public class Timeline implements Serializable {
 	@Column(name = "co_pis")
 	List<String> coPI;
 
-	@Column(name = "proposal")
-	String proposal;// unclear if proposal name or code
+	@Column(name = "proposal_name")
+	String proposalName;// unclear if proposal name or code
 
 	@Column(name = "funding_agency")
 	String fundingAgency;
@@ -62,16 +62,15 @@ public class Timeline implements Serializable {
 	@Column(name = "final_sign_date")
 	Date finalSign;
 
-	@OneToMany(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "timeline_id", nullable = true)
+	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
 	List<Stage> stages;
 	
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne(cascade = {CascadeType.ALL}, mappedBy="timeline")
+	@OneToOne(mappedBy="timeline")
 	@JoinColumn(name="proposal_id", nullable = false)
-	Proposal proposalForm;
+	Proposal proposal;
 	
 
 	public Timeline()
@@ -106,11 +105,12 @@ public class Timeline implements Serializable {
 		deadline.setTime(dueDate);
 		deadline.add(Calendar.DATE, -7);
 		Date deadline3 = deadline.getTime();
-		/*
+		
+		//2 days before shipping date
 		deadline.setTime(dueDate);
 		deadline.add(Calendar.DATE, -2);
 		Date deadline4 = deadline.getTime();
-		*/
+		
 		
 		//file lists and form lists for each stage
 		Map<String,FileInfo> files1 = new HashMap<>();
@@ -159,11 +159,11 @@ public class Timeline implements Serializable {
 	}
 	
 
-	public Timeline(String principalInvestigator, List<String> coPI, String proposal, String fundingAgency,
+	public Timeline(String principalInvestigator, List<String> coPI, String proposalName, String fundingAgency,
 			Date uasDueDate, Date sponsorDueDate, Date finalSign, List<Stage> stages) {
 		this.principalInvestigator = principalInvestigator;
 		this.coPI = coPI;
-		this.proposal = proposal;
+		this.proposalName = proposalName;
 		this.fundingAgency = fundingAgency;
 		this.uasDueDate = uasDueDate;
 		this.sponsorDueDate = sponsorDueDate;
@@ -195,12 +195,12 @@ public class Timeline implements Serializable {
 		this.coPI = coPI;
 	}
 
-	public String getProposal() {
-		return proposal;
+	public String getProposalName() {
+		return proposalName;
 	}
 
-	public void setProposal(String proposal) {
-		this.proposal = proposal;
+	public void setProposalName(String proposalName) {
+		this.proposalName = proposalName;
 	}
 
 	public String getFundingAgency() {
@@ -243,12 +243,12 @@ public class Timeline implements Serializable {
 		this.stages = stages;
 	}
 
-	public Proposal getProposalForm() {
-		return proposalForm;
+	public Proposal getProposal() {
+		return proposal;
 	}
 
-	public void setProposalForm(Proposal proposalForm) {
-		this.proposalForm = proposalForm;
+	public void setProposal(Proposal proposal) {
+		this.proposal = proposal;
 	}
 
 	// Timeline contains a list of stages
