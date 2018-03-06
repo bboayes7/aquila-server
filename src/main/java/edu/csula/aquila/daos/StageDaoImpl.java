@@ -14,26 +14,22 @@ public class StageDaoImpl implements StageDao{
 	
 	@PersistenceContext
 	private EntityManager entityManager;
-
+	
 	@Override
-	public Stage getStage(Long id) 
-	{
-		return entityManager.find(Timeline.Stage.class, id);
+	public Stage getStage(Long id) {
+		return entityManager.find(Stage.class, id);
 	}
 
 	@Override
 	@Transactional
-	public Stage saveStage(Stage stage) 
-	{
-		return entityManager.merge( stage );
+	public Stage saveStage(Stage stage) {
+		return entityManager.merge(stage);
 	}
 
 	@Override
 	@Transactional
-	public void removeStage( Long id ) 
-	{
+	public void deleteStage(Long id) {
 		Stage stage = entityManager.find(Timeline.Stage.class, id);
 		entityManager.remove(stage);
 	}
-
 }

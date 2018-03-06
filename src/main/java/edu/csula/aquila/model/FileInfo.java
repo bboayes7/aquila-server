@@ -19,25 +19,25 @@ public class FileInfo implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column( name = "file_info_id")
-	Long Id;
+	private Long Id;
 	
 	@Column(name = "uploader")
-	String nameOfUploader;
+	private String nameOfUploader;
 	
 	@Column(name ="file_name")
-	String fileName;
+	private String fileName;
 	
 	@Column(name = "file_type")
-	String fileType;
+	private String fileType;
 	
 	@Column(name = "file_path")
-	String filePath;
+	private String filePath;
 	
 	@Column(name ="upload_date")
-	Date uploadDate;
+	private Date uploadDate;
 	
 	@Column(name = "is_uploaded")
-	boolean isUploaded;
+	private boolean isUploaded;
 	
 	public FileInfo() {}
 
@@ -101,6 +101,14 @@ public class FileInfo implements Serializable{
 
 	public void setUploadDate(Date uploadDate) {
 		this.uploadDate = uploadDate;
+	}
+
+	public boolean isUploaded() {
+		return isUploaded;
+	}
+
+	public void setUploaded(boolean isUploaded) {
+		this.isUploaded = isUploaded;
 	}
 	
 	
