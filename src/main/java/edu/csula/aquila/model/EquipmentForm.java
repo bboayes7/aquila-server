@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name = "equipment_form")
+@DiscriminatorValue(value = "equipment")
 public class EquipmentForm extends Form implements Serializable{
 
 	private static final long serialVersionUID = -639475707169544047L;
@@ -31,8 +32,29 @@ public class EquipmentForm extends Form implements Serializable{
 	private int progress;
 
 	@Column(name = "faculty_name")
-	String facultyName;
+	private String facultyName;
 
+	@Column
+	private String department;
+
+	@Column(name = "proposal_title")
+	private String proposalTitle;
+
+	@Column
+	private boolean extension;
+
+	@Column(name = "extension_value")
+	private String extensionValue;
+
+	@Column(name = "cost_share")
+	private boolean costShare;
+
+	@Column
+	private boolean donation;
+
+	@Column(name = "new_equipment")
+	private boolean newEquipment;
+  
 	@Column
 	String department;
 
@@ -59,131 +81,128 @@ public class EquipmentForm extends Form implements Serializable{
 	//this needs string url
 	
 	@OneToMany(cascade = { CascadeType.ALL },mappedBy= "equipmentForm")
-	List<TypeOfEquipment> typeOfEquipment; 
+	private List<TypeOfEquipment> typeOfEquipment; 
 
 	// location
 	@Column(name = "building_location")
-	String buildingLocation;
+	private String buildingLocation;
 	@Column(name = "room_location")
-	String roomLocation;
+	private String roomLocation;
 	// donation
 	@Column(name = "is_donation")
-	boolean isDonation;
+	private boolean isDonation;
 	@Column(name = "company_donating")
-	String companyDonating;
+	private String companyDonating;
 	@Column(name = "previous_use")
-	String previousUse;
+	private String previousUse;
 	// please check all that apply
 	@Column(name = "space_modification_requirement")
-	boolean spaceModificationRequirement;
+	private boolean spaceModificationRequirement;
 	// electrical modification
 	@Column(name = "electrical_modification")
-	boolean electricalModification;
+	private boolean electricalModification;
 	@Column
-	boolean volts;
+	private boolean volts;
 	@Column
-	boolean amps;
+	private boolean amps;
 	@Column
-	boolean phase;
+	private boolean phase;
 
 	@Column(name = "dedicated_power")
-	boolean dedicatedPower;
+	private boolean dedicatedPower;
 	@Column(name = "circuit_breaker_specification")
-	boolean circuitBreakerSpecification;
+	private boolean circuitBreakerSpecification;
 	@Column(name = "motor_compressor_specification")
-	boolean motorCompressorSpecification;
+	private boolean motorCompressorSpecification;
 	@Column(name = "special_needs")
-	boolean specialNeeds;
+	private boolean specialNeeds;
 	@Column
-	boolean fwr;
-
-
+	private boolean fwr;
 
 	@Column(name = "special_needs_string")
-	String specialNeedsString;
+	private String specialNeedsString;
 	@Column(name = "fwr_paid_by")
-	String fwrPaidBy;
+	private String fwrPaidBy;
 	// hvac
 	@Column
-	boolean hvac;
+	private boolean hvac;
 	@Column(name = "air_chilled_water_flow")
-	boolean airChilledWaterFlow;
+	private boolean airChilledWaterFlow;
 	@Column
-	boolean temperature;
+	private boolean temperature;
 	@Column(name = "humidity_control")
-	boolean humidityControl;
+	private boolean humidityControl;
 	@Column(name = "supply_pressure")
-	boolean supplyPressure;
+	private boolean supplyPressure;
 	@Column(name = "central_package_unit")
-	boolean centralPackageUnit;
+	private boolean centralPackageUnit;
 	@Column(name = "special_work")
-	boolean specialWork;
+	private boolean specialWork;
 	@Column(name = "noise_requirement")
-	boolean noiseRequirement;
+	private boolean noiseRequirement;
 
 	// plumbing
 	@Column
-	boolean plumbing;
+	private boolean plumbing;
 	@Column
-	boolean fluid;
+	private boolean fluid;
 	@Column(name = "flow_rate")
-	boolean flowRate;
+	private boolean flowRate;
 	@Column
-	boolean pressure;
+	private boolean pressure;
 	@Column(name = "fluid_temperature")
-	boolean fluidTemperature;
+	private boolean fluidTemperature;
 	@Column(name = "pump_compressor_motor")
-	boolean pumpCompressorMotor;
+	private boolean pumpCompressorMotor;
 	// NetworkRequirements
 	@Column
-	boolean maintenance;
+	private boolean maintenance;
 	@Column(name = "license_requirements")
-	boolean licenseRequirements;
+	private boolean licenseRequirements;
 	@Column
-	boolean hardware;
+	private boolean hardware;
 
 	// hazardous material
 	@Column(name = "hazardous_material")
-	boolean hazardousMaterial;
+	private boolean hazardousMaterial;
 
 	@ElementCollection
 	@MapKeyColumn(name="chemical_name")
 	@Column(name = "amount")
 	@CollectionTable(name="chemicals", joinColumns=@JoinColumn(name="chemicals_id"))
-	Map<Integer, String> chemicals; // chem/quantity
+	private Map<Integer, String> chemicals; // chem/quantity
 
 	@ElementCollection
 	@MapKeyColumn(name="radiation_name")
 	@Column(name = "source")
 	@CollectionTable(name="radiation", joinColumns=@JoinColumn(name="radiation_id"))
-	Map<String, String> radiation; // radiation/source
+	private Map<String, String> radiation; // radiation/source
 
 
 	@Column(name = "maintenance_requirement")
-	boolean maintenanceRequirement;
+	private boolean maintenanceRequirement;
 
 	@ElementCollection
 	@CollectionTable(name = "list_of_requirements", joinColumns = @JoinColumn(name = "equipment_form_id"))
 	@Column(name = "requirement")
-	List<String> listOfRequirements;
+	private List<String> listOfRequirements;
 
 	//List of size of Equipment
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "equipmentForm")
-	List<SizeOfEquipment> sizeOfEquipment;
-
-
+	private List<SizeOfEquipment> sizeOfEquipment;
 
 	@Column(name = "director_of_research_development_signature")
-	Signature directorOfResearchDevelopmentSignature;
+	private Signature directorOfResearchDevelopmentSignature;
 
 	@Column(name = "director_of_research_development_signature_date")
-	Date directorOfResearchDevelopmentSignatureDate;
+	private Date directorOfResearchDevelopmentSignatureDate;
 
 	@Column(name = "director_of_facilities_services_signature")
-	Signature directorOfFacilitiesServicesSignature;
+	private Signature directorOfFacilitiesServicesSignature;
 
 	@Column(name = "director_of_facilities_services_signature_date")
-	Date directorOfFacilitiesServicesSignatureDate;
+	private Date directorOfFacilitiesServicesSignatureDate;
+
 
 	public EquipmentForm() {
 
@@ -270,10 +289,10 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setSizeOfEquipment(List<SizeOfEquipment> sizeOfEquipment) {
 		this.sizeOfEquipment = sizeOfEquipment;
 	}
+
 	//proposal relationship
 	@OneToOne(mappedBy="equipmentForm")
 	Proposal proposalForm;
-
 
 
 	public int getProgress() {
@@ -342,14 +361,16 @@ public class EquipmentForm extends Form implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "type_of_equipment_id")
-		Long Id;
+
+		private Long Id;
 
 		@Column
-		String name;
+		private String name;
 		@Column(name = "specification")
-		String specification;
+		private String specification;
 		@Column
-		String url;
+		private String url;
+
 
 		// relation
 		@JsonIgnore
@@ -704,17 +725,18 @@ public class EquipmentForm extends Form implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "size_of_equipment_id")
-		Long Id;
+		private Long Id;
 
 		@Column(name = "size_of_equipment")
-		boolean sizeOfEquipment;
+		private boolean sizeOfEquipment;
 
 		@Column
-		int height;
+		private int height;
 		@Column
-		int width; 
+		private int width; 
 		@Column
-		int depth;
+		private int depth;
+
 
 		@JsonIgnore
 		@ManyToOne(cascade = { CascadeType.ALL })
@@ -734,6 +756,7 @@ public class EquipmentForm extends Form implements Serializable{
 		public Long getId() {
 			return Id;
 		}
+
 
 		public void setId(Long id) {
 			Id = id;
@@ -819,11 +842,13 @@ public class EquipmentForm extends Form implements Serializable{
 	}	
 	public Map<String, String> getRadiation() {
 		return radiation;
+
 	}
 
 	public void setRadiation(Map<String, String> radiation) {
 		this.radiation = radiation;
 	}
+
 
 
 	public List<String> getListOfRequirements() {
@@ -833,5 +858,5 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setListOfRequirements(List<String> listOfRequirements) {
 		this.listOfRequirements = listOfRequirements;
 	}	
-}
 
+}

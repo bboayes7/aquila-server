@@ -12,30 +12,32 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.daos.FileInfoDao;
+import edu.csula.aquila.daos.StageDao;
+import edu.csula.aquila.model.FileInfo;
+import edu.csula.aquila.model.Timeline.Stage;
 
 @RestController
 public class FileInfoController {
-	
-	@Autowired 
+
+	@Autowired
 	private FileInfoDao fileInfoDao;
 	
+	@Autowired
+	private StageDao stageDao;
+
 	
 	//save file to disk , then add filename and date under proposal
-	@RequestMapping(value= "/proposal/{id}/fileupload" , method = RequestMethod.PUT)
-	public String saveFile(@RequestParam("file") MultipartFile file, @PathVariable Long id)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileName}/{stageId}" , method = RequestMethod.PUT)
+	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
 		String filename = null ;
 		
-		if(file.isEmpty())
-		{
-			return "Please Choose A Valid File";
-		}
 		
 		try
 		{
 			//saveFile saves file to disk and returns new fileName 
-			filename = fileInfoDao.saveFileToDisk( Arrays.asList(file), id );		
+			filename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
 
         } 
 		catch (IOException e) 
@@ -46,20 +48,21 @@ public class FileInfoController {
 		System.out.println(filename);
 		
 		//save file info to db
-		fileInfoDao.addFileToDB(id,filename);
+		FileInfo fileInfo =	fileInfoDao.addFileToDB(propId,filename);
+		Stage stage = stageDao.getStage(stageId);
+		stage.getRequiredFiles().put(fileName, fileInfo);
+		stageDao.saveStage(stage);
 		
 		
 		uploadStatus = "success! - " + filename + " has been uploaded";
 		
 		return uploadStatus;
 	}
-	
-	//return file
+
+	// return file
 	@RequestMapping(value = "/proposal/fileview", method = RequestMethod.GET)
-	public void returnFile(@RequestParam String fileName)
-	{
+	public void returnFile(@RequestParam String fileName) {
 		fileInfoDao.returnFile(fileName);
 	}
 
-	
 }

@@ -40,9 +40,10 @@ public class UserController {
     }
     
     //update a user
-    @RequestMapping(value = "/edituser", method = RequestMethod.PUT)
-    public User editUser(@RequestBody User user)
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
+    public User editUser(@RequestBody User user, @PathVariable Long id)
     {
+    	user.setId(id);
     	return userDao.editUser(user);
     			
     }

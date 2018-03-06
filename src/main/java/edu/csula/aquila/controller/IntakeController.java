@@ -18,6 +18,8 @@ public class IntakeController {
 	@Autowired
 	private IntakeDao intakeDao;
 	
+	TimelineController timelineController;
+	
 	//create a new form
 	@RequestMapping(value = "intake/", method = RequestMethod.POST)
 	public IntakeForm newIntakeForm(@RequestBody IntakeForm intakeForm) {
@@ -28,7 +30,8 @@ public class IntakeController {
 	//update a form
 	@RequestMapping(value = "intake/{id}", method = RequestMethod.PUT)
 	public IntakeForm updateIntakeForm(@RequestBody IntakeForm intakeForm, @PathVariable Long id) {
-
+		intakeForm.setId(id);
+		
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
 	

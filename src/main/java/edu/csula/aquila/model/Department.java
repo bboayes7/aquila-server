@@ -1,10 +1,16 @@
 package edu.csula.aquila.model;
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,16 +22,30 @@ public class Department implements Serializable{
 	@Id
 	@GeneratedValue
 	@Column(name="department_id")
-	Long id;
+	private Long id;
 	
 	@Column(nullable = false, unique = true, name = "department_name")
-	String name;
+	private String name;
 	
-	@Column(name = "department_chair")
-	User depChair;
+	@OneToMany(mappedBy ="department", cascade = CascadeType.ALL)
+	private List<User> faculty;
 	
-	@Column(name = "college")
-	College college;
+	@OneToOne
+	@JoinColumn(name ="dept_chair_id")
+	private User depChair;
+	
+	@ManyToOne
+	@JoinColumn(name ="college_id")
+	private College college;
+
+	public Department() {}
+
+	public Department(String name, List<User> faculty, User depChair, College college) {
+		this.name = name;
+		this.faculty = faculty;
+		this.depChair = depChair;
+		this.college = college;
+	}
 
 	public Long getId() {
 		return id;
@@ -43,6 +63,14 @@ public class Department implements Serializable{
 		this.name = name;
 	}
 
+	public List<User> getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(List<User> faculty) {
+		this.faculty = faculty;
+	}
+
 	public User getDepChair() {
 		return depChair;
 	}
@@ -58,6 +86,6 @@ public class Department implements Serializable{
 	public void setCollege(College college) {
 		this.college = college;
 	}
-
+	
 	
 }
