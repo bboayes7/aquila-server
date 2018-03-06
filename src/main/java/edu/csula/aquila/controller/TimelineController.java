@@ -25,13 +25,6 @@ public class TimelineController {
 	ProposalDao proposalDao;
 	
 
-	@RequestMapping(value="/proposal/{proposalId}/timelinedefault/{uasDueDate}", method = RequestMethod.POST)
-	public Timeline defaultTimeline(@PathVariable Long proposalId, @PathVariable @DateTimeFormat(pattern = "ddMMyyyy") Date uasDueDate)
-	{
-		Timeline defaultTimeline = new Timeline(proposalId, uasDueDate);
-		return timelineDao.saveTimeline(defaultTimeline);
-	}
-
 
 	// create a new timeline
 	@RequestMapping(value = "timeline", method = RequestMethod.POST)
@@ -45,7 +38,14 @@ public class TimelineController {
 	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id,
 			@PathVariable Long proposalId) 
 	{
-
+		
+		if(timeline.getUasDueDate() != null)
+		{
+			Date dueDate = timeline.getUasDueDate();
+			timeline = new Timeline(dueDate);
+			timeline.setId(id);
+		}
+		
 
 		
 		return timelineDao.saveTimeline(timeline);
