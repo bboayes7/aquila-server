@@ -6,31 +6,20 @@ import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 
 @Entity
-@Table(name = "economic_interest_pi")
-public class EconomicInterestPI implements Serializable {
+@DiscriminatorValue("economic_interest_pi")
+public class EconomicInterestPI extends Form implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "economic_interest_pi_id")
-	private Long id;
-	
 	private int progress;
 	
 	@Column(name = "last_name")
@@ -159,21 +148,60 @@ public class EconomicInterestPI implements Serializable {
 	
 	private String signature;
 	
-	//proposal relationship
-	@JsonIgnore
-	@OneToOne(mappedBy="economicInterest")
-	Proposal proposal;
-	
-	
 	public EconomicInterestPI() {}
 
-	public Long getId() {
-		return id;
+	public EconomicInterestPI(int progress, String lastName, String firstName, String middleInitial, String phoneNumber,
+			Department department, String mailCode, String email, String projectTitle, String entityName,
+			String entityAddress, String principalBusiness, Integer fundingAmount, Boolean actualAmount,
+			String statementType, Date fundDate, Boolean positionHeld, String positionTitle,
+			Boolean investmentGreaterThan, Integer investAmount, Boolean receivedIncome, Integer receivedAmount,
+			Boolean receivedThroughSpouse, Boolean receivedThroughEntity, Integer loanAmount, String loanType,
+			Double loanInterest, Boolean loanPaidOff, Boolean giftsReceived, String giftsDescription,
+			Integer giftsValue, Date giftsReceivedDate, Boolean travelThroughEntity, String travelPaymentType,
+			Integer atravelPaymentAmount, List<Date> travelPaymentDates, String travelDescription, Date dateSigned,
+			String signature) {
+		super();
+		this.progress = progress;
+		this.lastName = lastName;
+		this.firstName = firstName;
+		this.middleInitial = middleInitial;
+		this.phoneNumber = phoneNumber;
+		this.department = department;
+		this.mailCode = mailCode;
+		this.email = email;
+		this.projectTitle = projectTitle;
+		this.entityName = entityName;
+		this.entityAddress = entityAddress;
+		this.principalBusiness = principalBusiness;
+		this.fundingAmount = fundingAmount;
+		this.actualAmount = actualAmount;
+		this.statementType = statementType;
+		this.fundDate = fundDate;
+		this.positionHeld = positionHeld;
+		this.positionTitle = positionTitle;
+		this.investmentGreaterThan = investmentGreaterThan;
+		this.investAmount = investAmount;
+		this.receivedIncome = receivedIncome;
+		this.receivedAmount = receivedAmount;
+		this.receivedThroughSpouse = receivedThroughSpouse;
+		this.receivedThroughEntity = receivedThroughEntity;
+		this.loanAmount = loanAmount;
+		this.loanType = loanType;
+		this.loanInterest = loanInterest;
+		this.loanPaidOff = loanPaidOff;
+		this.giftsReceived = giftsReceived;
+		this.giftsDescription = giftsDescription;
+		this.giftsValue = giftsValue;
+		this.giftsReceivedDate = giftsReceivedDate;
+		this.travelThroughEntity = travelThroughEntity;
+		this.travelPaymentType = travelPaymentType;
+		this.atravelPaymentAmount = atravelPaymentAmount;
+		this.travelPaymentDates = travelPaymentDates;
+		this.travelDescription = travelDescription;
+		this.dateSigned = dateSigned;
+		this.signature = signature;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public int getProgress() {
 		return progress;

@@ -6,27 +6,16 @@ import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "conflict_of_interest_pi_non_phs")
-public class ConflictOfInterestPINonPHS implements Serializable{
+@DiscriminatorValue("conflict_of_interest_pi_non_phs")
+public class ConflictOfInterestPINonPHS extends Form implements Serializable{
 
 	private static final long serialVersionUID = 326016992276354262L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="conflict_of_interest_pi_non_phs_id")
-	Long Id;
 	
 	private int progress;
 	
@@ -100,18 +89,39 @@ public class ConflictOfInterestPINonPHS implements Serializable{
 	@Column(name = "ari_date")
 	private Date ariDate;
 	
-	//proposal relationship
-	@JsonIgnore
-	@OneToOne(mappedBy="coiPiNonPhs")
-	Proposal proposal;
+	public ConflictOfInterestPINonPHS() {}
 	
-	public Long getId() {
-		return Id;
+	public ConflictOfInterestPINonPHS(int progress, String subawardWithFederalAgencyPassThrough,
+			String disclosureReason, String proposalTitle, Date budgetPeriodStart, Date budgetPeriodEnd,
+			Date projectPeriodStart, Date projectPeriodEnd, Integer amountRequested, long irbACUibcNos,
+			boolean significantFinancialInterest, List<Boolean> sigFinInterstReason,
+			List<Boolean> sigFinInterstDoesntInclude, boolean otherPersonnelContribution,
+			List<String> namesOfOtherInvestigators, Signature piSignature, Date signatureDate, User piName,
+			boolean ariOfficialApproved, String ariOfficial, Date ariDate) {
+		super();
+		this.progress = progress;
+		this.subawardWithFederalAgencyPassThrough = subawardWithFederalAgencyPassThrough;
+		this.disclosureReason = disclosureReason;
+		this.proposalTitle = proposalTitle;
+		this.budgetPeriodStart = budgetPeriodStart;
+		this.budgetPeriodEnd = budgetPeriodEnd;
+		this.projectPeriodStart = projectPeriodStart;
+		this.projectPeriodEnd = projectPeriodEnd;
+		this.amountRequested = amountRequested;
+		this.irbACUibcNos = irbACUibcNos;
+		this.significantFinancialInterest = significantFinancialInterest;
+		this.sigFinInterstReason = sigFinInterstReason;
+		this.sigFinInterstDoesntInclude = sigFinInterstDoesntInclude;
+		this.otherPersonnelContribution = otherPersonnelContribution;
+		this.namesOfOtherInvestigators = namesOfOtherInvestigators;
+		this.piSignature = piSignature;
+		this.signatureDate = signatureDate;
+		this.piName = piName;
+		this.ariOfficialApproved = ariOfficialApproved;
+		this.ariOfficial = ariOfficial;
+		this.ariDate = ariDate;
 	}
-	public void setId(Long id) {
-		Id = id;
-	}
-	
+
 	public int getProgress() {
 		return progress;
 	}
@@ -205,12 +215,7 @@ public class ConflictOfInterestPINonPHS implements Serializable{
 	public void setNamesOfOtherInvestigators(List<String> namesOfOtherInvestigators) {
 		this.namesOfOtherInvestigators = namesOfOtherInvestigators;
 	}
-//	public Proposal getProposalForm() {
-//		return proposalForm;
-//	}
-//	public void setProposalForm(Proposal proposalForm) {
-//		this.proposalForm = proposalForm;
-//	}
+
 	public Signature getPiSignature() {
 		return piSignature;
 	}

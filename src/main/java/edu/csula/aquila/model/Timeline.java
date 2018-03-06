@@ -2,7 +2,6 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -26,7 +26,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.csula.aquila.daos.FileInfoDao;
+
 
 
 @Entity
@@ -41,29 +41,29 @@ public class Timeline implements Serializable {
 	private Long Id;
 
 	@Column(name = "principal_investigator")
-	String principalInvestigator;
+	private String principalInvestigator;
 
 	@ElementCollection
-	@Column(name = "co_pis")
-	List<String> coPI;
+	@CollectionTable(name = "timeline_co_pis", joinColumns=@JoinColumn(name = "timeline_id"))
+	private List<String> coPI;
 
 	@Column(name = "proposal_name")
-	String proposalName;// unclear if proposal name or code
+	private String proposalName;
 
 	@Column(name = "funding_agency")
-	String fundingAgency;
+	private String fundingAgency;
 
 	@Column(name = "uas_date")
-	Date uasDueDate;
+	private Date uasDueDate;
 
 	@Column(name = "sponsor_date")
-	Date sponsorDueDate;
+	private Date sponsorDueDate;
 
 	@Column(name = "final_sign_date")
-	Date finalSign;
+	private Date finalSign;
 
 	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
-	List<Stage> stages;
+	private List<Stage> stages;
 	
 
 	// proposal relationship
@@ -71,7 +71,7 @@ public class Timeline implements Serializable {
 	@OneToOne(mappedBy="timeline")
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposal;
-	
+
 
 	public Timeline()
 	{
@@ -146,14 +146,14 @@ public class Timeline implements Serializable {
 		
 		//create default stages
 		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
-		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
-		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
+//		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
+//		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
 		
 		
 		//add default stages
 		preFill.add(stage1);
-		preFill.add(stage2);
-		preFill.add(stage3);
+//		preFill.add(stage2);
+//		preFill.add(stage3);
 		this.setStages(preFill);
 		
 	}
@@ -203,6 +203,7 @@ public class Timeline implements Serializable {
 		this.proposalName = proposalName;
 	}
 
+
 	public String getFundingAgency() {
 		return fundingAgency;
 	}
@@ -251,6 +252,8 @@ public class Timeline implements Serializable {
 		this.proposal = proposal;
 	}
 
+
+
 	// Timeline contains a list of stages
 	// This is the innerclass of stage to help a uas member
 	// manage the timeline
@@ -293,11 +296,8 @@ public class Timeline implements Serializable {
 		@ElementCollection
 		@MapKeyColumn(name = "form_name")
 		@Column(name = "form_id")
-	    @JoinTable(
-	            name = "required_forms",
-	            joinColumns = @JoinColumn(name = "form_id"),
-	            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
-		Map<String, Form> requiredForms;
+		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_form_id"))
+		Map<String, Long> requiredForms;
 
 		//Files as a map 
 		@ElementCollection
@@ -306,7 +306,7 @@ public class Timeline implements Serializable {
 		@JoinTable(
 		            name = "required_files",
 		            joinColumns = @JoinColumn(name = "file_info_id"),
-		            inverseJoinColumns = @JoinColumn(name = "timeline_id"))
+		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
 		Map<String, FileInfo> requiredFiles;
 
 		// allows uas member to add comments to a stage if needed
@@ -314,14 +314,16 @@ public class Timeline implements Serializable {
 		String addComments;
 		
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
+		@ManyToOne
 		@JoinColumn(name = "timeline_id")
 		Timeline timeline;
+		
+		
 
 		public Stage() {
 		}
 		
-		public Stage(String name, Date expectedDate, String deadlineType, Map<String,Form> requiredForms, Map<String,FileInfo> requiredFiles) 
+		public Stage(String name, Date expectedDate, String deadlineType, Map<String,Long> requiredForms, Map<String,FileInfo> requiredFiles) 
 		{
 			this.name = name;
 			this.expectedDate = expectedDate;
@@ -332,8 +334,9 @@ public class Timeline implements Serializable {
 
 
 		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
-				String deadlineType, Map<String, Form> requiredForms, Map<String, FileInfo> requiredFiles,
+				String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles,
 				String addComments) {
+
 			this.name = name;
 			this.expectedDate = expectedDate;
 			this.completedDate = completedDate;
@@ -377,15 +380,6 @@ public class Timeline implements Serializable {
 			this.completedDate = completedDate;
 		}
 
-
-		public String getAddComments() {
-			return addComments;
-		}
-
-		public void setAddComments(String addComments) {
-			this.addComments = addComments;
-		}
-
 		public boolean isUasReviewRequired() {
 			return uasReviewRequired;
 		}
@@ -410,19 +404,11 @@ public class Timeline implements Serializable {
 			this.deadlineType = deadlineType;
 		}
 
-		public Timeline getTimeline() {
-			return timeline;
-		}
-
-		public void setTimeline(Timeline timeline) {
-			this.timeline = timeline;
-		}
-
-		public Map<String, Form> getRequiredForms() {
+		public Map<String, Long> getRequiredForms() {
 			return requiredForms;
 		}
 
-		public void setRequiredForms(Map<String, Form> requiredForms) {
+		public void setRequiredForms(Map<String, Long> requiredForms) {
 			this.requiredForms = requiredForms;
 		}
 
@@ -433,6 +419,71 @@ public class Timeline implements Serializable {
 		public void setRequiredFiles(Map<String, FileInfo> requiredFiles) {
 			this.requiredFiles = requiredFiles;
 		}
+
+		public String getAddComments() {
+			return addComments;
+		}
+
+		public void setAddComments(String addComments) {
+			this.addComments = addComments;
+		}
+
+		public Timeline getTimeline() {
+			return timeline;
+		}
+
+		public void setTimeline(Timeline timeline) {
+			this.timeline = timeline;
+		}
+
+	
+
+//		public void stageCheck() {
+//			// check if all forms are completed through the isComplete boolean
+//			boolean formsComplete = false;
+//			boolean filesUploaded = false; // consider if stages dont have required files or required forms
+//			
+//			System.out.println("HEYYYY ");
+//
+//			List<Long> forms = (List<Long>) getRequiredForms().keySet();
+//			List<FileInfo> files = (List<FileInfo>) getRequiredFiles().values(); // get a list of budgets too
+//
+//			// check if all forms are complete (maybe add a condition if form list is 0 then
+//			// dont call this?)
+//			if (forms.size() != 0) {
+//				for (Form form : forms) {
+//					if (!form.isComplete()) {
+//						break;
+//					} else {
+//						formsComplete = true; // if all forms are complete, have a boolean called formsCompleted and set it to true
+//
+//					}
+//				}
+//			}
+//
+//			// check if all files are uploaded
+//			if (files.size() != 0) {
+//				for (FileInfo file : files) {
+//					if (!file.isUploaded()) {
+//						break;
+//					} else {
+//						filesUploaded = true; // if all files are uploaded, have a boolean called filesUploaded and set it to true
+//
+//					}
+//				}
+//			}
+//
+//			// find out how to implement budget checking
+//
+//			// when formsCompleted && filesUploaded is true
+//			if (formsComplete && filesUploaded) {
+//				// set uasReviewRequired to true
+//				setUasReviewRequired(true);
+//				// send an email to UAS
+//				// for now just print email sent
+//				System.out.println("Email 'sent'");
+//			}
+//		}
 
 	}
 
