@@ -23,6 +23,10 @@ public class Signature implements Serializable{
 	String name;
 	//for testing purposes
 	
+	public Signature(){
+		
+	}
+	
 	Signature(String name){
 		this.name = name;
 	}
