@@ -1,6 +1,7 @@
 target/
 
 src/main/resources/application.properties
+src/main/scripts/aquila-tables.ddl
 
 ### Eclipse ###
 .project
