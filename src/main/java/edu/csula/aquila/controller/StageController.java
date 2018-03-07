@@ -46,7 +46,7 @@ public class StageController {
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id) {
+	public DeleteResponse deleteStage(@PathVariable Long id) {
 		
 		stageDao.deleteStage(id);
 		return new DeleteResponse("Stage Deleted!");
