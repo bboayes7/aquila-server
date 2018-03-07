@@ -8,6 +8,8 @@ public interface StageDao {
 	
 	public Stage saveStage( Stage stage );
 	
+	public Stage updateStage( Stage stage );
+	
 	public void deleteStage( Long id );
 
 	

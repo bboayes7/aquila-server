@@ -143,12 +143,20 @@ public class Timeline implements Serializable {
 		Stage stage3 = new Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
 		Stage stage4 = new Stage("Final Proposal", deadline4, "Principal Investigator", forms4, files4);
 		
+		
+		//set timeline to stage
 		//add default stages
+		stage1.setTimeline(this);
 		defaultStages.add(stage1);
+		stage2.setTimeline(this);
 		defaultStages.add(stage2);
+		stage3.setTimeline(this);
 		defaultStages.add(stage3);
+		stage4.setTimeline(this);
 		defaultStages.add(stage4);
-		this.setStages(defaultStages);
+		this.stages = defaultStages;
+		
+		
 		
 	}
 	

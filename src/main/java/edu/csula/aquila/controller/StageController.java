@@ -37,8 +37,8 @@ public class StageController {
 	}
 
 	// update a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
-	public Stage updateStage(Timeline.Stage stage, @PathVariable Long id) {
+	@RequestMapping(value = "timeline/stage/update/{id}", method = RequestMethod.PUT)
+	public Stage updateStage(Stage stage, @PathVariable Long id) {
 		stage.setId(id);
 		return stageDao.saveStage(stage);
 	}
