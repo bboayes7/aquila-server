@@ -48,7 +48,7 @@ public class Timeline implements Serializable {
 	private List<String> coPI;
 
 	@Column(name = "proposal_name")
-	private String proposalName;// unclear if proposal name or code
+	private String proposalName;
 
 	@Column(name = "funding_agency")
 	private String fundingAgency;
@@ -72,18 +72,19 @@ public class Timeline implements Serializable {
 	@JoinColumn(name="proposal_id", nullable = false)
 	Proposal proposal;
 
+
 	public Timeline()
 	{
 	 
 	}
 	
 	//default timeline , still in progress
-	public Timeline(Long id, Date uasDueDate) 
-	{
-		String directory = "C:\\Proposals_UAS\\";
+	public Timeline(Date uasDueDate) 
+	{		
+		this.uasDueDate = uasDueDate;
 		
-		//list of default stages
-		List<Timeline.Stage> preFill = new ArrayList<Timeline.Stage>();
+		//instantiate list of default stages
+		List<Stage> defaultStages = new ArrayList<Stage>();
 		
 		//create instance of date
 		Calendar deadline = Calendar.getInstance();
@@ -91,7 +92,6 @@ public class Timeline implements Serializable {
 		
 		//15 days before shipping date
 		deadline.setTime(dueDate);
-		int year = deadline.get(Calendar.YEAR);
 		deadline.add(Calendar.DATE, -15);
 		Date deadline1 = deadline.getTime();
 		
@@ -105,23 +105,23 @@ public class Timeline implements Serializable {
 		deadline.add(Calendar.DATE, -7);
 		Date deadline3 = deadline.getTime();
 		
+		//2 days before shipping date
+		deadline.setTime(dueDate);
+		deadline.add(Calendar.DATE, -2);
+		Date deadline4 = deadline.getTime();
+		
+		
 		//file lists and form lists for each stage
 		Map<String,FileInfo> files1 = new HashMap<>();
 		Map<String,FileInfo> files2 = new HashMap<>();
 		Map<String,FileInfo> files3 = new HashMap<>();
-		Map<String,Form> forms2 = new HashMap<>();
-		Map<String,Form> forms3 = new HashMap<>();
+		Map<String,FileInfo> files4 = new HashMap<>();
+		Map<String,Long> forms2 = new HashMap<>();
+		Map<String,Long> forms3 = new HashMap<>();
+		Map<String,Long> forms4 = new HashMap<>();
 		
-		//empty files
-		/*FileInfo firstBudget = new FileInfo(directory + year + "ProposalID_" + id + "FirstBudget");
-		FileInfo subContractDocs = new FileInfo(directory + year + "ProposalID_" + id + "SubContractDoc");
-		FileInfo finalBudget = new FileInfo(directory + year + "ProposalID_" + id + "FinalBudget");
-		FileInfo equipmentQuotesSpecs = new FileInfo(directory + year + "ProposalID_" + id + "EquipmentQuotesSpecs");
-		FileInfo supportingLetter = new FileInfo(directory + year + "ProposalID_" + id + "SupportingLetter");
-		FileInfo signatures = new FileInfo(directory + year + "ProposalID_" + id + "Signatures");
-		*/
 		
-		//put filename with empty file into map
+		//put filename as key in maps
 		files1.put("First Budget", null);
 		files2.put("Sub Contract Documents", null);
 		files2.put("Final Budget", null);
@@ -129,7 +129,7 @@ public class Timeline implements Serializable {
 		files3.put("Supporting Letters", null);
 		files3.put("Signatures PDF", null);
 		
-		//put forms into map
+		//put forms into map, still implementing
 		/*forms2.put("Budget");
 		forms2.put("Equipment");
 		forms3.put("Intake Form");
@@ -138,16 +138,17 @@ public class Timeline implements Serializable {
 		*/
 		
 		//create default stages
-		Timeline.Stage stage1 = new Timeline.Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
-//		Timeline.Stage stage2 = new Timeline.Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
-//		Timeline.Stage stage3 = new Timeline.Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
-		
+		Stage stage1 = new Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
+		Stage stage2 = new Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
+		Stage stage3 = new Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
+		Stage stage4 = new Stage("Final Proposal", deadline4, "Principal Investigator", forms4, files4);
 		
 		//add default stages
-		preFill.add(stage1);
-//		preFill.add(stage2);
-//		preFill.add(stage3);
-		this.setStages(preFill);
+		defaultStages.add(stage1);
+		defaultStages.add(stage2);
+		defaultStages.add(stage3);
+		defaultStages.add(stage4);
+		this.setStages(defaultStages);
 		
 	}
 	
@@ -236,7 +237,7 @@ public class Timeline implements Serializable {
 	public void setStages(List<Stage> stages) {
 		this.stages = stages;
 	}
-	
+
 	public Proposal getProposal() {
 		return proposal;
 	}

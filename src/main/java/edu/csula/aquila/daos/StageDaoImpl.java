@@ -28,7 +28,8 @@ public class StageDaoImpl implements StageDao{
 
 	@Override
 	@Transactional
-	public void deleteStage(Long id) {
+	public void deleteStage( Long id ) 
+	{
 		Stage stage = entityManager.find(Timeline.Stage.class, id);
 		entityManager.remove(stage);
 	}

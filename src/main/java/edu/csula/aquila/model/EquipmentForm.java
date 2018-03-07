@@ -18,8 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -54,6 +54,27 @@ public class EquipmentForm extends Form implements Serializable{
 
 	@Column(name = "new_equipment")
 	private boolean newEquipment;
+  
+	@Column
+	String department;
+
+	@Column(name = "proposal_title")
+	String proposalTitle;
+
+	@Column
+	boolean extension;
+
+	@Column(name = "extension_value")
+	String extensionValue;
+
+	@Column(name = "cost_share")
+	boolean costShare;
+
+	@Column
+	boolean donation;
+
+	@Column(name = "new_equipment")
+	boolean newEquipment;
 
 	// type of equipment First
 	//this name, spec/quote
@@ -97,8 +118,6 @@ public class EquipmentForm extends Form implements Serializable{
 	private boolean specialNeeds;
 	@Column
 	private boolean fwr;
-
-
 
 	@Column(name = "special_needs_string")
 	private String specialNeedsString;
@@ -183,6 +202,7 @@ public class EquipmentForm extends Form implements Serializable{
 
 	@Column(name = "director_of_facilities_services_signature_date")
 	private Date directorOfFacilitiesServicesSignatureDate;
+
 
 	public EquipmentForm() {
 
@@ -270,6 +290,11 @@ public class EquipmentForm extends Form implements Serializable{
 		this.sizeOfEquipment = sizeOfEquipment;
 	}
 
+	//proposal relationship
+	@OneToOne(mappedBy="equipmentForm")
+	Proposal proposalForm;
+
+
 	public int getProgress() {
 		return progress;
 	}
@@ -336,6 +361,7 @@ public class EquipmentForm extends Form implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "type_of_equipment_id")
+
 		private Long Id;
 
 		@Column
@@ -344,6 +370,7 @@ public class EquipmentForm extends Form implements Serializable{
 		private String specification;
 		@Column
 		private String url;
+
 
 		// relation
 		@JsonIgnore
@@ -710,6 +737,7 @@ public class EquipmentForm extends Form implements Serializable{
 		@Column
 		private int depth;
 
+
 		@JsonIgnore
 		@ManyToOne(cascade = { CascadeType.ALL })
 		@JoinColumn(name = "equipment_form_id")
@@ -728,6 +756,7 @@ public class EquipmentForm extends Form implements Serializable{
 		public Long getId() {
 			return Id;
 		}
+
 
 		public void setId(Long id) {
 			Id = id;
@@ -813,11 +842,13 @@ public class EquipmentForm extends Form implements Serializable{
 	}	
 	public Map<String, String> getRadiation() {
 		return radiation;
+
 	}
 
 	public void setRadiation(Map<String, String> radiation) {
 		this.radiation = radiation;
 	}
+
 
 
 	public List<String> getListOfRequirements() {
@@ -827,4 +858,5 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setListOfRequirements(List<String> listOfRequirements) {
 		this.listOfRequirements = listOfRequirements;
 	}	
+
 }
