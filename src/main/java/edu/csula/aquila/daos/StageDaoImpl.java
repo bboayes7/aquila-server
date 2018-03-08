@@ -29,7 +29,7 @@ public class StageDaoImpl implements StageDao{
 	@Override
 	@Transactional
 	public Stage updateStage(Stage stage) {
-		return entityManager.merge(stage)
+		return entityManager.merge(stage);
 	}
 
 	@Override

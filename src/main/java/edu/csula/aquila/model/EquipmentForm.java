@@ -55,27 +55,8 @@ public class EquipmentForm extends Form implements Serializable{
 	@Column(name = "new_equipment")
 	private boolean newEquipment;
   
-	@Column
-	String department;
-
-	@Column(name = "proposal_title")
-	String proposalTitle;
-
-	@Column
-	boolean extension;
-
-	@Column(name = "extension_value")
-	String extensionValue;
-
-	@Column(name = "cost_share")
-	boolean costShare;
-
-	@Column
-	boolean donation;
-
-	@Column(name = "new_equipment")
-	boolean newEquipment;
-
+	
+	
 	// type of equipment First
 	//this name, spec/quote
 	//this needs string url
