@@ -2,6 +2,7 @@ package edu.csula.aquila.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,8 @@ public class StageController {
 
 	// create a stage
 	@RequestMapping(value = "proposal/timeline/{timelineId}/stage/", method = RequestMethod.POST)
-	public Stage createStage(Stage stage, @PathVariable Long timelineId) {
+	public Stage createStage( @RequestBody Stage stage, @PathVariable Long timelineId ) 
+	{
 		Timeline timeline = timelineDao.getTimeline(timelineId);
 		stage.setTimeline(timeline);
 		
@@ -38,7 +40,8 @@ public class StageController {
 
 	// update a stage
 	@RequestMapping(value = "timeline/stage/update/{id}", method = RequestMethod.PUT)
-	public Stage updateStage(Stage stage, @PathVariable Long id) {
+	public Stage updateStage( @RequestBody Stage stage, @PathVariable Long id ) 
+	{
 		stage.setId(id);
 		return stageDao.saveStage(stage);
 	}
