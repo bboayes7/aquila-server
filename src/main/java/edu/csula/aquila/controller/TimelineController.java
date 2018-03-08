@@ -39,15 +39,16 @@ public class TimelineController {
 			@PathVariable Long proposalId) 
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
-		String proposalName = proposal.getProposalName();
-		String piName = proposal.getUser().getFirstName() +" "+ proposal.getUser().getLastName();
-		
+				
 		if(timeline.getUasDueDate() != null)
 		{
 			Date dueDate = timeline.getUasDueDate();
 			timeline = new Timeline(dueDate);
-			timeline.setProposalName(proposalName);
-			timeline.setPrincipalInvestigator(piName);
+			timeline.setProposalName(proposal.getProposalName());
+			timeline.setPrincipalInvestigator(proposal.getUser().getFirstName() +" "+ 
+													proposal.getUser().getLastName());
+			timeline.setProposal(proposal);
+			proposal.setTimeline(timeline);
 		}
 		
 

@@ -378,7 +378,7 @@
         economic_interest_pi_id bigint,
         equipment_id bigint,
         intake_form_id bigint,
-        timeline_timeline_id bigint,
+        timeline_id bigint,
         user_id bigint,
         primary key (proposal_id)
     ) engine=MyISAM;
@@ -667,8 +667,8 @@
        references form (form_id);
 
     alter table proposal 
-       add constraint FKph4mow8ls5c0yqx0fhvqan8tb 
-       foreign key (timeline_timeline_id) 
+       add constraint FK1uiqx36h5gwmixwcdm62k6nqk 
+       foreign key (timeline_id) 
        references timeline (timeline_id);
 
     alter table proposal 

@@ -11,6 +11,9 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @DiscriminatorValue("conflict_of_interest_pi_phs")
@@ -69,6 +72,10 @@ public class ConflictOfInterestPHS extends Form implements Serializable{
 	
 	@Column(name = "ari_date")
 	private Date aRIDate;
+	
+	@JsonIgnore
+	@OneToOne(mappedBy = "coiPhs")
+	private Proposal proposal;
 	
 	public ConflictOfInterestPHS() {}
 	
@@ -214,6 +221,14 @@ public class ConflictOfInterestPHS extends Form implements Serializable{
 	public void setaRIDate(Date aRIDate) {
 		this.aRIDate = aRIDate;
 	}
+
+	public Proposal getProposal() {
+		return proposal;
+	}
+
+	public void setProposal(Proposal proposal) {
+		this.proposal = proposal;
+	}
 	
-	
+		
 }

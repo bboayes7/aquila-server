@@ -12,6 +12,9 @@ import javax.persistence.Entity;
 
 
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @DiscriminatorValue("economic_interest_pi")
@@ -147,6 +150,10 @@ public class EconomicInterestPI extends Form implements Serializable {
 	private Date dateSigned;
 	
 	private String signature;
+	
+	@JsonIgnore
+	@OneToOne(mappedBy = "economicInterestPi")
+	private Proposal proposal;
 	
 	public EconomicInterestPI() {}
 
@@ -513,6 +520,14 @@ public class EconomicInterestPI extends Form implements Serializable {
 
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+
+	public Proposal getProposal() {
+		return proposal;
+	}
+
+	public void setProposal(Proposal proposal) {
+		this.proposal = proposal;
 	}
 	
 	
