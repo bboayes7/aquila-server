@@ -41,13 +41,14 @@ public class FileInfo implements Serializable{
 	
 	public FileInfo() {}
 
-	public FileInfo(String nameOfUploader, String fileName, String fileType, String filePath, Date uploadDate) {
+	public FileInfo(String nameOfUploader, String fileName, String fileType, String filePath, Date uploadDate, boolean isUploaded) {
 		super();
 		this.nameOfUploader = nameOfUploader;
 		this.fileName = fileName;
 		this.fileType = fileType;
 		this.filePath = filePath;
 		this.uploadDate = uploadDate;
+		this.isUploaded = isUploaded;
 	}
 	
 	public FileInfo(String filePath)

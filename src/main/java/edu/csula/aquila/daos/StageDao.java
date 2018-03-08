@@ -3,10 +3,14 @@ package edu.csula.aquila.daos;
 import edu.csula.aquila.model.Timeline.Stage;
 
 public interface StageDao {
-	Stage getStage(Long id);
+	
+	public Stage getStage( Long id );
+	
+	public Stage saveStage( Stage stage );
+	
+	public Stage updateStage( Stage stage );
+	
+	public void deleteStage( Long id );
 
-	Stage saveStage(Stage stage);
-
-	void deleteStage(Long id );
 	
 }

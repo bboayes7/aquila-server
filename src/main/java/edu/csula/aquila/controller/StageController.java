@@ -37,8 +37,8 @@ public class StageController {
 	}
 
 	// update a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
-	public Stage updateStage(Timeline.Stage stage, @PathVariable Long id) {
+	@RequestMapping(value = "timeline/stage/update/{id}", method = RequestMethod.PUT)
+	public Stage updateStage(Stage stage, @PathVariable Long id) {
 		stage.setId(id);
 		return stageDao.saveStage(stage);
 	}
@@ -46,7 +46,7 @@ public class StageController {
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public DeleteResponse deleteStage(Timeline.Stage stage, @PathVariable Long id) {
+	public DeleteResponse deleteStage(@PathVariable Long id) {
 		
 		stageDao.deleteStage(id);
 		return new DeleteResponse("Stage Deleted!");

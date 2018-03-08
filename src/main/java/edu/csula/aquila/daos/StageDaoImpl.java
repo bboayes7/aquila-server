@@ -25,10 +25,17 @@ public class StageDaoImpl implements StageDao{
 	public Stage saveStage(Stage stage) {
 		return entityManager.merge(stage);
 	}
+	
+	@Override
+	@Transactional
+	public Stage updateStage(Stage stage) {
+		return entityManager.merge(stage);
+	}
 
 	@Override
 	@Transactional
-	public void deleteStage(Long id) {
+	public void deleteStage( Long id ) 
+	{
 		Stage stage = entityManager.find(Timeline.Stage.class, id);
 		entityManager.remove(stage);
 	}
