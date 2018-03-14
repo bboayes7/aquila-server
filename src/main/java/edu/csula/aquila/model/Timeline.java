@@ -13,6 +13,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,6 +26,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 
 
@@ -62,14 +65,15 @@ public class Timeline implements Serializable {
 	@Column(name = "final_sign_date")
 	private Date finalSign;
 
+	@JsonIgnore
+	@JsonProperty(access=Access.READ_ONLY)	
 	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
 	private List<Stage> stages;
 	
 
 	// proposal relationship
 	@JsonIgnore
-	@OneToOne(mappedBy="timeline")
-	@JoinColumn(name="proposal_id", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "timeline")
 	Proposal proposal;
 
 
@@ -308,7 +312,7 @@ public class Timeline implements Serializable {
 		String addComments;
 		
 		@JsonIgnore
-		@ManyToOne
+		@ManyToOne(cascade = CascadeType.ALL)
 		@JoinColumn(name = "timeline_id")
 		Timeline timeline;
 		
@@ -327,10 +331,11 @@ public class Timeline implements Serializable {
 		}
 
 
+
+
 		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
 				String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles,
 				String addComments) {
-
 			this.name = name;
 			this.expectedDate = expectedDate;
 			this.completedDate = completedDate;
@@ -432,52 +437,6 @@ public class Timeline implements Serializable {
 
 	
 
-//		public void stageCheck() {
-//			// check if all forms are completed through the isComplete boolean
-//			boolean formsComplete = false;
-//			boolean filesUploaded = false; // consider if stages dont have required files or required forms
-//			
-//			System.out.println("HEYYYY ");
-//
-//			List<Long> forms = (List<Long>) getRequiredForms().keySet();
-//			List<FileInfo> files = (List<FileInfo>) getRequiredFiles().values(); // get a list of budgets too
-//
-//			// check if all forms are complete (maybe add a condition if form list is 0 then
-//			// dont call this?)
-//			if (forms.size() != 0) {
-//				for (Form form : forms) {
-//					if (!form.isComplete()) {
-//						break;
-//					} else {
-//						formsComplete = true; // if all forms are complete, have a boolean called formsCompleted and set it to true
-//
-//					}
-//				}
-//			}
-//
-//			// check if all files are uploaded
-//			if (files.size() != 0) {
-//				for (FileInfo file : files) {
-//					if (!file.isUploaded()) {
-//						break;
-//					} else {
-//						filesUploaded = true; // if all files are uploaded, have a boolean called filesUploaded and set it to true
-//
-//					}
-//				}
-//			}
-//
-//			// find out how to implement budget checking
-//
-//			// when formsCompleted && filesUploaded is true
-//			if (formsComplete && filesUploaded) {
-//				// set uasReviewRequired to true
-//				setUasReviewRequired(true);
-//				// send an email to UAS
-//				// for now just print email sent
-//				System.out.println("Email 'sent'");
-//			}
-//		}
 
 	}
 

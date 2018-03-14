@@ -50,7 +50,8 @@ public class Proposal implements Serializable{
 	IntakeForm intakeForm;
 	
 	@JsonIgnore
-	@OneToOne( cascade = {CascadeType.MERGE})
+	@OneToOne(cascade = {CascadeType.MERGE})
+	@JoinColumn(name = "timeline_id")
 	Timeline timeline;
 
 	@OneToOne(cascade = {CascadeType.MERGE})
