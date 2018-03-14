@@ -272,6 +272,9 @@ public class Timeline implements Serializable {
 
 		@Column
 		String name;
+		
+		@Column
+		int order;
 
 		@Column(name = "expected_date")
 		Date expectedDate;
