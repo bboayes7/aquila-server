@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.Proposal;

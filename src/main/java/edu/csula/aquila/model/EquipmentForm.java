@@ -55,8 +55,6 @@ public class EquipmentForm extends Form implements Serializable{
 	@Column(name = "new_equipment")
 	private boolean newEquipment;
   
-	
-	
 	// type of equipment First
 	//this name, spec/quote
 	//this needs string url
@@ -829,8 +827,6 @@ public class EquipmentForm extends Form implements Serializable{
 	public void setRadiation(Map<String, String> radiation) {
 		this.radiation = radiation;
 	}
-
-
 
 	public List<String> getListOfRequirements() {
 		return listOfRequirements;
