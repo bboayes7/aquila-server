@@ -32,6 +32,7 @@ public class StageController {
 	public Stage createStage( @RequestBody Stage stage, @PathVariable Long timelineId ) 
 	{
 		Timeline timeline = timelineDao.getTimeline(timelineId);
+		stage.setName("New Stage");
 		stage.setTimeline(timeline);
 		
 		

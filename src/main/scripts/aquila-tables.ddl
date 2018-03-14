@@ -453,6 +453,7 @@
         deadline_type varchar(255),
         expected_date datetime,
         name varchar(255),
+        stage_order integer,
         uas_review_required bit,
         uas_reviewed bit,
         timeline_id bigint,
