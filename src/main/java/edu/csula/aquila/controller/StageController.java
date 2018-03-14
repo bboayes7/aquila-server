@@ -51,19 +51,24 @@ public class StageController {
 	// create a stage
 	@RequestMapping(value = "proposal/timeline/{timelineId}/stage/", method = RequestMethod.POST)
 	public Stage createStage(@RequestBody Stage stage, @PathVariable Long timelineId) {
-
 		Timeline timeline = timelineDao.getTimeline(timelineId);
+		stage.setName("New Stage");
 		stage.setTimeline(timeline);
 	
 		return stageDao.saveStage(stage);
 	}
 
 	// update a stage
-	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.PUT)
-	public Stage updateStage(@RequestBody Stage stage, @PathVariable Long id) {
+
+	@RequestMapping(value = "timeline/{timelineId}/stage/update/{id}", method = RequestMethod.PUT)
+	public Stage updateStage( @RequestBody Stage stage, @PathVariable Long timelineId, @PathVariable Long id ) 
+	{
+		Timeline timeline = timelineDao.getTimeline(timelineId);
+		stage.setTimeline(timeline);
+
 		stage.setId(id);
 		
-		Proposal proposal = proposalDao.getProposal(1L);
+		Proposal proposal = timeline.getProposal();
 		
 		//update forms
 		formUpdate(stage, proposal);

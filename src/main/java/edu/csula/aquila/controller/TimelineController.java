@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
+import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
 
 @RestController
@@ -36,16 +37,21 @@ public class TimelineController {
 	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id,
 			@PathVariable Long proposalId) 
 	{
-		
-		if(timeline.getUasDueDate() != null)
+		Proposal proposal = proposalDao.getProposal(proposalId);
+				
+		if(timeline.getUasDueDate() != null && timeline.getStages().size() == 1)
 		{
 			Date dueDate = timeline.getUasDueDate();
 			timeline = new Timeline(dueDate);
-			timeline.setId(id);
+			timeline.setProposalName(proposal.getProposalName());
+			timeline.setPrincipalInvestigator(proposal.getUser().getFirstName() +" "+ 
+													proposal.getUser().getLastName());
+			timeline.setProposal(proposal);
+			proposal.setTimeline(timeline);
 		}
 		
 
-		
+		timeline.setId(id);
 		return timelineDao.saveTimeline(timeline);
 	}
 	

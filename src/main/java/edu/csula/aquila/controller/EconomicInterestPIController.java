@@ -5,20 +5,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.EconomicInterestPIDao;
+import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.model.EconomicInterestPI;
+import edu.csula.aquila.model.Proposal;
 
 @RestController
 public class EconomicInterestPIController {
 	@Autowired
 	private EconomicInterestPIDao economicInterestPIDao;
 	
-	@RequestMapping(value = "/proposal/saveeconomicinterest", method = RequestMethod.POST)
-	public EconomicInterestPI saveEconomicInterestPI(@RequestBody EconomicInterestPI economicInterestPI)
+	@Autowired
+	private ProposalDao proposalDao;
+	
+	@RequestMapping(value = "/proposal/{proposalId}/saveeconomicinterest", method = RequestMethod.POST)
+	public EconomicInterestPI saveEconomicInterestPI(@PathVariable Long proposalId, @RequestBody EconomicInterestPI economicInterestPI)
 	{
+		Proposal proposal = proposalDao.getProposal(proposalId);
+		proposal.setEconomicInterestPi(economicInterestPI);
+		economicInterestPI.setProposal(proposal);
 		return economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
 	}
 	
