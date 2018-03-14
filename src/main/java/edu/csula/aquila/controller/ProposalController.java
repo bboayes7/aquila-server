@@ -1,7 +1,10 @@
 package edu.csula.aquila.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,9 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.UserDao;
+import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
+import edu.csula.aquila.model.Timeline.Stage;
 import edu.csula.aquila.model.User;
 
 @RestController
@@ -59,10 +64,20 @@ public class ProposalController {
 		intakeForm.setPrincipleInvestigator(user.getFirstName() + " " + user.getLastName());
 		proposal.setIntakeForm(intakeForm);
 		
-		//create a null timeline
+		//instantiate timeline with pre meeting stage
+		Map<String,Long> forms = new HashMap<>();
+		forms.put("Intake Form", intakeForm.getId());
+		Map<String,FileInfo> files = new HashMap<>();
+		files.put("Pre-Meeting Budget", null);
+		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
+		List<Stage> preMeeting = new ArrayList<>();
+		preMeeting.add(preMeetingStage);
+		
 		Timeline timeline = new Timeline();
 		timeline.setProposalName(proposal.getProposalName());
 		timeline.setPrincipalInvestigator(user.getFirstName() + " " + user.getLastName());
+		timeline.setStages(preMeeting);
+		preMeetingStage.setTimeline(timeline);
 		timeline.setProposal(proposal);
 		proposal.setTimeline(timeline);
 		

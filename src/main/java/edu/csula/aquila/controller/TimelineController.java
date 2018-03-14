@@ -40,7 +40,7 @@ public class TimelineController {
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
 				
-		if(timeline.getUasDueDate() != null)
+		if(timeline.getUasDueDate() != null && timeline.getStages().size() == 1)
 		{
 			Date dueDate = timeline.getUasDueDate();
 			timeline = new Timeline(dueDate);
