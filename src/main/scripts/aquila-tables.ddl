@@ -271,7 +271,6 @@
         students_involved bit,
         technical_assistance bit,
         vertebrate_animals bit,
-        stage_id bigint,
         primary key (form_id)
     ) engine=MyISAM;
 
@@ -566,11 +565,6 @@
        add constraint FKiy7pha5u3qk8pu2qvxyen3lr3 
        foreign key (dept_chair_id) 
        references users (user_id);
-
-    alter table form 
-       add constraint FKjr3t0ti0w8f8ch6brn9pgpokc 
-       foreign key (stage_id) 
-       references stage (stage_id);
 
     alter table hazardous_substances 
        add constraint FK4igsnfxmjw3wuw8thvwbxgkir 
