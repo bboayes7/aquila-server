@@ -51,6 +51,14 @@ public class FileInfo implements Serializable{
 		this.isUploaded = isUploaded;
 	}
 	
+	
+	//I'm creating this constructor to avoid the map saving an entry with a null value
+	public FileInfo(String fileName, boolean isUploaded)
+	{
+		this.fileName = fileName;
+		this.isUploaded = isUploaded;
+	}
+	
 	public FileInfo(String filePath)
 	{
 		this.filePath = filePath;

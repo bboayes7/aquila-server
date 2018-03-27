@@ -67,7 +67,7 @@ public class Timeline implements Serializable {
 
 	@JsonIgnore
 	@JsonProperty(access=Access.READ_ONLY)	
-	@OneToMany(cascade = { CascadeType.MERGE }, mappedBy = "timeline")
+	@OneToMany(cascade = { CascadeType.REMOVE, CascadeType.MERGE }, mappedBy = "timeline")
 	private List<Stage> stages;
 	
 
@@ -323,7 +323,7 @@ public class Timeline implements Serializable {
 		String addComments;
 		
 		@JsonIgnore
-		@ManyToOne(cascade = CascadeType.ALL)
+		@ManyToOne(cascade = CascadeType.MERGE)
 		@JoinColumn(name = "timeline_id")
 		Timeline timeline;
 		

@@ -33,7 +33,7 @@ public class TimelineController {
 	}
 
 	// update a timeline
-	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PATCH)
 	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id,
 			@PathVariable Long proposalId) 
 	{
