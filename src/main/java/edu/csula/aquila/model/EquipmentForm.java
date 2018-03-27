@@ -257,10 +257,7 @@ public class EquipmentForm extends Form implements Serializable{
 		this.directorOfFacilitiesServicesSignature = directorOfFacilitiesServicesSignature;
 		this.directorOfFacilitiesServicesSignatureDate = directorOfFacilitiesServicesSignatureDate;
 	}
-
-
-
-
+	
 	public List<SizeOfEquipment> getSizeOfEquipment() {
 		return sizeOfEquipment;
 	}

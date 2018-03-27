@@ -3,9 +3,6 @@ package edu.csula.aquila.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.EconomicInterestPIDao;
 import edu.csula.aquila.daos.EquipmentDao;
+import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.StageDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.EconomicInterestPI;
 import edu.csula.aquila.model.EquipmentForm;
+import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
@@ -41,6 +40,9 @@ public class StageController {
 	
 	@Autowired
 	private EconomicInterestPIDao economicDao;
+	
+	@Autowired
+	private FileInfoDao fileInfoDao;
 	
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
@@ -72,6 +74,9 @@ public class StageController {
 		
 		//update forms
 		formUpdate(stage, proposal);
+		
+		//update files
+		fileUpdate(stage, proposal);
 		
 		proposalDao.saveProposal(proposal);
 		
@@ -109,6 +114,18 @@ public class StageController {
 
 	}
 	
+	//This method updates the required file's map value from null to a fileInfo object
+	public void fileUpdate(Stage stage, Proposal proposal) {
+		Map<String, edu.csula.aquila.model.FileInfo> files = stage.getRequiredFiles();
+		
+		for(Map.Entry<String, FileInfo> file : files.entrySet()) {
+			String key = file.getKey();
+			FileInfo fileValue = new FileInfo(key, false);
+			
+			file.setValue(fileInfoDao.saveFile(fileValue));
+		}
+	}
+	
 	//This method updates the required form's map value from null to a form in the proposal
 	public void formUpdate(Stage stage, Proposal proposal) {
 		
@@ -120,7 +137,7 @@ public class StageController {
 			
 			switch(key) {
 			//this case is easy since there's already an intake form set
-			case "Intake Form":
+			case "Intake":
 				IntakeForm intakeForm = proposal.getIntakeForm();
 				form.setValue(intakeForm.getId());
 				
@@ -128,7 +145,7 @@ public class StageController {
 			//this case is tricky since there isn't an equipment form created yet and there's no id
 			//we also have to consider if a stage is getting updated again and there's already a form linked
 			//if that's the case then we would have to check if a value is null to create a new form for the link
-			case "Equipment Form":
+			case "Equipment":
 				if(form.getValue() == null) {
 					EquipmentForm equipmentForm = new EquipmentForm();
 					equipmentForm = equipmentDao.saveEquipmentForm(equipmentForm);
@@ -138,7 +155,7 @@ public class StageController {
 					break;
 				}
 				break;
-			case "Economic Interest":
+			case "Statement Of Economic Interest":
 				if(form.getValue() == null) {
 					EconomicInterestPI economicInt = new EconomicInterestPI();
 					economicInt = economicDao.saveEconomicInterestPI(economicInt);
@@ -148,7 +165,7 @@ public class StageController {
 					break;
 				}
 				break;
-			
+			//make cases for keys {"Approval", "COI Other Investigator/Key Personnel PHS", "COI Other Investigator/Key Personnel PHS", "COI Principal Investigator PHS", COI Principal Investigator NONPHS  
 			}
 			
 		}
