@@ -77,7 +77,7 @@ public class ProposalController {
 		forms.put("Intake Form", intakeForm.getId());
 		System.out.println("PROPOSAL CONTROLLER INTAKE FORM ID : " + intakeForm.getId());
 		Map<String,FileInfo> files = new HashMap<>();
-		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", user.getFirstName() + " " + user.getLastName());
+		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", false);
 		files.put("Pre-Meeting Budget", fileInfoDao.saveFile(preMeetingBudget));
 		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
 		List<Stage> preMeeting = new ArrayList<>();
