@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.csula.aquila.daos.FileInfoDao;
+import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.UserDao;
 import edu.csula.aquila.model.FileInfo;
@@ -31,6 +33,11 @@ public class ProposalController {
 	@Autowired
 	private UserDao userDao;
 	
+	@Autowired
+	private IntakeDao intakeDao;
+	
+	@Autowired
+	private FileInfoDao fileInfoDao;
 	
 	//Get a proposal
 	@RequestMapping(value = "proposal/{id}", method = RequestMethod.GET)
@@ -62,14 +69,18 @@ public class ProposalController {
 		IntakeForm intakeForm = new IntakeForm();
 		intakeForm.setProjectTitle(proposalInstantiate.getProposalName());
 		intakeForm.setPrincipleInvestigator(user.getFirstName() + " " + user.getLastName());
+		intakeForm = intakeDao.saveIntakeForm(intakeForm);
 		proposal.setIntakeForm(intakeForm);
 		
 		//instantiate timeline with pre meeting stage
 		Map<String,Long> forms = new HashMap<>();
 		forms.put("Intake Form", intakeForm.getId());
+		System.out.println("PROPOSAL CONTROLLER INTAKE FORM ID : " + intakeForm.getId());
 		Map<String,FileInfo> files = new HashMap<>();
-		files.put("Pre-Meeting Budget", null);
+		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", false);
+		files.put("Pre-Meeting Budget", fileInfoDao.saveFile(preMeetingBudget));
 		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
+		preMeetingStage.setStageOrder(0);
 		List<Stage> preMeeting = new ArrayList<>();
 		preMeeting.add(preMeetingStage);
 		

@@ -3,12 +3,12 @@ package edu.csula.aquila.controller;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
@@ -33,9 +33,9 @@ public class TimelineController {
 		return timelineDao.saveTimeline(timeline);
 	}
 
-	// update a timeline
+	// update a timeline when UAS and PI make a timeline together
 	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
-	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id,
+	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id,
 			@PathVariable Long proposalId) 
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
@@ -52,6 +52,14 @@ public class TimelineController {
 		}
 		
 
+		timeline.setId(id);
+		return timelineDao.saveTimeline(timeline);
+	}
+	
+	//update timeline simple types when there are changes happening along the meeting
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PATCH)
+	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) {
+		
 		timeline.setId(id);
 		return timelineDao.saveTimeline(timeline);
 	}

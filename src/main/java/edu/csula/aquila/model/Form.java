@@ -37,16 +37,15 @@ public class Form implements Serializable{
 	@Column(name = "is_complete")
 	private boolean isComplete;
 	
-	@JsonIgnore
-	@ManyToOne(cascade = { CascadeType.ALL })
-	@JoinColumn(name = "stage_id")
-	Timeline.Stage stage;
+//	@JsonIgnore
+//	@ManyToOne(cascade = { CascadeType.ALL })
+//	@JoinColumn(name = "stage_id")
+//	Timeline.Stage stage;
 	
 	public Form() {}
 	
-	public Form(boolean isComplete, Stage stage) {
+	public Form(boolean isComplete) {
 		this.isComplete = isComplete;
-		this.stage = stage;
 	}
 
 	public Long getId() {
@@ -65,14 +64,6 @@ public class Form implements Serializable{
 		this.isComplete = isComplete;
 	}
 
-	public Timeline.Stage getStage() {
-		return stage;
-	}
-
-	public void setStage(Timeline.Stage stage) {
-		this.stage = stage;
-	}
-	
 	
 	
 }
