@@ -32,9 +32,9 @@ public class TimelineController {
 		return timelineDao.saveTimeline(timeline);
 	}
 
-	// update a timeline
-	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PATCH)
-	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id,
+	// update a timeline when UAS and PI make a timeline together
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
+	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id,
 			@PathVariable Long proposalId) 
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
@@ -51,6 +51,14 @@ public class TimelineController {
 		}
 		
 
+		timeline.setId(id);
+		return timelineDao.saveTimeline(timeline);
+	}
+	
+	//update timeline simple types when there are changes happening along the meeting
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PATCH)
+	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) {
+		
 		timeline.setId(id);
 		return timelineDao.saveTimeline(timeline);
 	}
