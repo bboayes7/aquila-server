@@ -11,12 +11,18 @@ public interface FileInfoDao {
 	
 	public FileInfo getFile(Long id);
 	
+	public FileInfo getFile( String fileName );
+	
 	public FileInfo saveFile(FileInfo fileInfo);
 	
-	public FileInfo addFileToDB(Long id, String filename);
+	public FileInfo addFileToDB(Long id, String diskFilename, String fileName);
+	
+	public FileInfo updateFile( String fileName, Long id, String diskFilename );
 	
 	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException;
 	
-	public void returnFile(String filename);
+	public void returnFile(String diskFilename);
+	
+	public void deleteFile( Long id );
 
 }
