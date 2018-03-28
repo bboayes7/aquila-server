@@ -80,6 +80,7 @@ public class ProposalController {
 		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", false);
 		files.put("Pre-Meeting Budget", fileInfoDao.saveFile(preMeetingBudget));
 		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
+		preMeetingStage.setStageOrder(0);
 		List<Stage> preMeeting = new ArrayList<>();
 		preMeeting.add(preMeetingStage);
 		

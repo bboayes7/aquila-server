@@ -446,6 +446,14 @@ public class Timeline implements Serializable {
 			this.timeline = timeline;
 		}
 
+		public int getStageOrder() {
+			return stageOrder;
+		}
+
+		public void setStageOrder(int stageOrder) {
+			this.stageOrder = stageOrder;
+		}
+
 	
 
 
