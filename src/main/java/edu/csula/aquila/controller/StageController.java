@@ -111,29 +111,41 @@ public class StageController {
 
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public DeleteResponse deleteStage(@PathVariable Long id) {
+	public ResponseEntity<Object> deleteStage(@PathVariable Long id) {
 
+		Stage stage = stageDao.getStage(id);
+		int order = stage.getStageOrder();
+		Timeline timeline = stage.getTimeline();
+		List<Stage> stages = timeline.getStages();
+		
+		System.out.println("---------------------------------------------------- \n BEFORE");
+		for(int i = 0; i < stages.size(); i++) {
+			System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
+		}
+		
+		if(order == stages.size()) {
+			stageDao.deleteStage(id);
+			return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
+		} else {
+			stages.remove(order);
+			for(int i = order; i < stages.size(); i++) {
+				stages.get(i).setStageOrder(stages.get(i).getStageOrder() - 1);
+			}
+			
+			System.out.println("AFTER");
+			for(int i = 0; i < stages.size(); i++) {
+				System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
+			}
+//			timeline.setStages(stages);
+//			timelineDao.saveTimeline(timeline);
+			
+		}
+		
+		
+		
+		
 		stageDao.deleteStage(id);
-		return new DeleteResponse("Stage Deleted!");
-	}
-
-	// message to send when a stage is deleted
-	public class DeleteResponse {
-		private String message;
-
-		public DeleteResponse(String message) {
-			this.message = message;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
+		return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.POST)
@@ -157,13 +169,6 @@ public class StageController {
 
 		// log what we're testing
 		System.out.println("switching stage #" + currentStageIndex +" with stage #" + indexToPush + "..");
-
-		// try it out
-
-
-
-
-		// 3 cases
 
 		// deleting stage
 		// delete the stage>grab order values after that stage and decrement by 1
@@ -192,7 +197,6 @@ public class StageController {
 			
 		}
 		
-//		timeline.setStages(stageDao.getStages(timeline.getId()));
 		List<Stage> reorderedStages = stageDao.getStages(timeline.getId());
 		System.out.println("new stages");
 		for(int i = 0; i < reorderedStages.size(); i++) {
