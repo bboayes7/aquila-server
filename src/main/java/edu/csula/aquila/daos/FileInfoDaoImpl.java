@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.Proposal;
-import edu.csula.aquila.model.User;
 
 
 @Repository
@@ -36,19 +35,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	{
 		return entityManager.find(FileInfo.class, id);
 	}
-	
-	
-	@Override
-	public FileInfo getFile( String fileName)
-	{
-		String query = "from file_info where lower(fileName) = :fileName";
-
-		List<FileInfo> fileInfos = entityManager.createQuery( query, FileInfo.class )
-	            .setParameter( "fileName", fileName.toLowerCase() )
-	            .getResultList();
-	        return fileInfos.size() == 0 ? null : fileInfos.get( 0 );
-	}
-	
+		
 	
 	@Override
 	@Transactional
@@ -86,12 +73,13 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	@Transactional
 	public FileInfo updateFile( String fileName, Long id, String diskFilename )
 	{
-		String query = "from file_info where lower(fileName) = :fileName";
+		String query = "from FileInfo where lower(fileName) = :fileName";
 
 		List<FileInfo> fileInfos = entityManager.createQuery( query, FileInfo.class )
 	            .setParameter( "fileName", fileName.toLowerCase() )
 	            .getResultList();
 	        FileInfo fileInfo = fileInfos.get( 0 );
+	        
 	        
 	    //find proposal by id
 		Proposal proposal = entityManager.find(Proposal.class, id);

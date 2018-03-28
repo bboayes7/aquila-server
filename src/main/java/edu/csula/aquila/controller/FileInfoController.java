@@ -58,7 +58,7 @@ public class FileInfoController {
 			fileInfo = fileInfoDao.updateFile(fileName, propId, diskFilename);
 		}
 		else {
-			fileInfo =	fileInfoDao.addFileToDB(propId,diskFilename, fileName);
+			fileInfo =	fileInfoDao.addFileToDB(propId, diskFilename, fileName);
 		}
 		
 		stage.getRequiredFiles().put(fileName, fileInfo);

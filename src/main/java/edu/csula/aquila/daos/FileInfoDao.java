@@ -10,9 +10,7 @@ import edu.csula.aquila.model.FileInfo;
 public interface FileInfoDao {
 	
 	public FileInfo getFile(Long id);
-	
-	public FileInfo getFile( String fileName );
-	
+		
 	public FileInfo saveFile(FileInfo fileInfo);
 	
 	public FileInfo addFileToDB(Long id, String diskFilename, String fileName);
