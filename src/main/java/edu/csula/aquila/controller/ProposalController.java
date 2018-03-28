@@ -20,8 +20,8 @@ import edu.csula.aquila.daos.UserDao;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
+import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
-import edu.csula.aquila.model.Timeline.Stage;
 import edu.csula.aquila.model.User;
 
 @RestController

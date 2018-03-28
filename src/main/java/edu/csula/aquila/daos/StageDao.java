@@ -2,7 +2,8 @@ package edu.csula.aquila.daos;
 
 import java.util.List;
 
-import edu.csula.aquila.model.Timeline.Stage;
+import edu.csula.aquila.model.Stage;
+
 
 public interface StageDao {
 	

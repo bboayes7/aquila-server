@@ -1,6 +1,5 @@
 package edu.csula.aquila.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +32,8 @@ import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
+import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
-import edu.csula.aquila.model.Timeline.Stage;
 
 @RestController
 public class StageController {
@@ -91,6 +90,8 @@ public class StageController {
 		Timeline timeline = timelineDao.getTimeline(timelineId);
 		stage.setTimeline(timeline);
 		stage.setId(id);
+		
+		int currentOrder = stage.getStageOrder();
 
 		Proposal proposal = timeline.getProposal();
 
@@ -140,8 +141,13 @@ public class StageController {
 		// get the timeline to get all stages
 		Stage stage = stageDao.getStage(stageId);
 		int currentStageIndex = stage.getStageOrder();
+		System.out.println(currentStageIndex);
 		Timeline timeline = stage.getTimeline();
 		List<Stage> stages = timeline.getStages();
+		
+		if(indexToPush > stages.size()) {
+			return new ResponseEntity("Out Of Bounds", HttpStatus.BAD_REQUEST);
+		}
 
 		System.out.println("------------------------------------------------------------");
 		// test out stageOrders
@@ -150,7 +156,7 @@ public class StageController {
 		}
 
 		// log what we're testing
-		System.out.println("switching stage #6 with stage #1..");
+		System.out.println("switching stage #" + currentStageIndex +" with stage #" + indexToPush + "..");
 
 		// try it out
 
@@ -192,6 +198,9 @@ public class StageController {
 		for(int i = 0; i < reorderedStages.size(); i++) {
 			System.out.println(reorderedStages.get(i).getName() + " ORDER : #" + reorderedStages.get(i).getStageOrder());
 		}
+		
+		timeline.setStages(reorderedStages);
+		timelineDao.saveTimeline(timeline);
 
 		return new ResponseEntity<Object>("Stages Reordered", HttpStatus.ACCEPTED);
 	}
