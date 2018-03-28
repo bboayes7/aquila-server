@@ -2,6 +2,7 @@ package edu.csula.aquila.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,18 +27,19 @@ public class FileInfoController {
 	private StageDao stageDao;
 
 	
-	//save file to disk , then add filename and date under proposal
+	//save file to disk , database, then add to Stage
 	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileName}/{stageId}" , method = RequestMethod.PUT)
 	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
-		String filename = null ;
+		String diskFilename = null ;
+		FileInfo fileInfo ;
 		
 		
 		try
 		{
 			//saveFile saves file to disk and returns new fileName 
-			filename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
+			diskFilename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
 
         } 
 		catch (IOException e) 
@@ -45,20 +47,30 @@ public class FileInfoController {
             uploadStatus = "Bad Request";
         }
 		
-		System.out.println(filename);
+		System.out.println(diskFilename);
 		
-		//save file info to db
-		FileInfo fileInfo =	fileInfoDao.addFileToDB(propId,filename);
+		//check if fileIfo exist in database, if yes then update, if no then add
 		Stage stage = stageDao.getStage(stageId);
+		Map<String,FileInfo> requiredFiles = stage.getRequiredFiles();
+		
+		if(requiredFiles.containsKey(fileName)) 
+		{
+			fileInfo = fileInfoDao.updateFile(fileName, propId, diskFilename);
+		}
+		else {
+			fileInfo =	fileInfoDao.addFileToDB(propId, diskFilename, fileName);
+		}
+		
 		stage.getRequiredFiles().put(fileName, fileInfo);
 		stageDao.saveStage(stage);
 		
 		
-		uploadStatus = "success! - " + filename + " has been uploaded";
+		uploadStatus = "success! - " + diskFilename + " has been uploaded";
 		
 		return uploadStatus;
 	}
 
+	
 	// return file
 	@RequestMapping(value = "/proposal/fileview", method = RequestMethod.GET)
 	public void returnFile(@RequestParam String fileName) {
