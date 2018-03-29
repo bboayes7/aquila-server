@@ -5,11 +5,15 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.ConflictOfInterestKPNonPHSDao;
@@ -66,6 +70,9 @@ public class StageController {
 	@Autowired
 	private ConflictOfInterestPINonPHSDao coiPiNonPhsDao;
 
+	@Autowired
+	MailSender mailSender;
+	
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
 	public Stage getStage(@PathVariable Long id) {
@@ -145,8 +152,9 @@ public class StageController {
 		return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
 	}
 
-	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.POST)
-	public ResponseEntity<Object> reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
+	
+	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.GET)
+	public @ResponseBody ReorderMessage reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
 		// get the timeline to get all stages
 		Stage stage = stageDao.getStage(stageId);
 		int currentStageIndex = stage.getStageOrder();
@@ -155,7 +163,7 @@ public class StageController {
 		List<Stage> stages = timeline.getStages();
 		
 		if(indexToPush > stages.size()) {
-			return new ResponseEntity("Out Of Bounds", HttpStatus.BAD_REQUEST);
+			return new ReorderMessage("Out of Bounds");
 		}
 
 		System.out.println("------------------------------------------------------------");
@@ -203,7 +211,23 @@ public class StageController {
 		timeline.setStages(reorderedStages);
 		timelineDao.saveTimeline(timeline);
 
-		return new ResponseEntity<Object>("Stages Reordered", HttpStatus.ACCEPTED);
+		return new ReorderMessage("Stages Reordered");
+	}
+	
+	public class ReorderMessage{
+		String message;
+		
+		public ReorderMessage(String message) {
+			this.message = message;
+		}
+		
+		public void setMessage(String message) {
+			this.message = message;
+		}
+		
+		public String getMessage() {
+			return message;
+		}
 	}
 
 	// This method updates the required file's map value from null to a fileInfo
@@ -315,8 +339,8 @@ public class StageController {
 		boolean formsComplete = false;
 		boolean filesUploaded = true; // consider if stages dont have required files or required forms
 
+		//HANDLE FORMS
 		Map<String, Long> forms = stage.getRequiredForms();
-		// List<FileInfo> files = (List<FileInfo>) stage.getRequiredFiles().values();
 
 		// check if all forms are complete (maybe add a condition if form list is 0 then
 		// dont call this?)
@@ -367,21 +391,23 @@ public class StageController {
 		if (complete) {
 			formsComplete = true;
 		}
-
-		// check if all files are uploaded
-		// if (files.size() != 0) {
-		// for (FileInfo file : files) {
-		// if (!file.isUploaded()) {
-		// break;
-		// } else {
-		// filesUploaded = true; // if all files are uploaded, have a boolean called
-		// filesUploaded and set it to true
-		//
-		// }
-		// }
-		// } else {
-		// filesUploaded = true;
-		// }
+		
+		//HANDLE FILES
+		Map<String, FileInfo> files = stage.getRequiredFiles();
+		if(files.size() != 0){
+			for (Map.Entry<String, FileInfo> file : files.entrySet()) {
+				if(file.getValue().isUploaded() == true) {
+					complete = true;
+				} else {
+					complete = false;
+					break;
+				}
+			}
+		}
+		
+		if(complete) {
+			filesUploaded = true;
+		}
 
 		// when formsCompleted && filesUploaded is true
 		if (formsComplete && filesUploaded) {
@@ -389,6 +415,12 @@ public class StageController {
 			stage.setUasReviewRequired(true);
 			// send an email to UAS
 			// for now just print email sent
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setFrom( "aquila@csula.com" );
+			msg.setTo( "barryboayes17@gmail.com" );
+			msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
+			msg.setText("A user has completed a stage, please go to our website and review this stage");
+			mailSender.send(msg);
 			System.out.println("Email 'sent'");
 		}
 	}
