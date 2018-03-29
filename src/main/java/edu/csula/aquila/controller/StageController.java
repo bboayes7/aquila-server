@@ -136,7 +136,7 @@ public class StageController {
 
 	}
 
-	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.POST)
+	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.GET)
 	public ResponseEntity<Object> reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
 		// get the timeline to get all stages
 		Stage stage = stageDao.getStage(stageId);

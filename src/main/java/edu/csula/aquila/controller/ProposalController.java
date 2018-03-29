@@ -79,7 +79,7 @@ public class ProposalController {
 		Map<String,FileInfo> files = new HashMap<>();
 		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", false);
 		files.put("Pre-Meeting Budget", fileInfoDao.saveFile(preMeetingBudget));
-		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
+		Stage preMeetingStage = new Stage(0, "Pre-Meeting", null,"Principal Investigator", forms, files);
 		preMeetingStage.setStageOrder(0);
 		List<Stage> preMeeting = new ArrayList<>();
 		preMeeting.add(preMeetingStage);
