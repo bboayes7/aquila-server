@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +29,8 @@ public class FileInfoController {
 
 	
 	//save file to disk , database, then add to Stage
-	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileName}/{stageId}" , method = RequestMethod.PUT)
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/{stageId}/fileupload" , method = RequestMethod.PUT)
+	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @RequestBody String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
 		String diskFilename = null ;
@@ -71,7 +72,7 @@ public class FileInfoController {
 	}
 
 	
-	// return file
+	// view file
 	@RequestMapping(value = "/proposal/fileview", method = RequestMethod.GET)
 	public void returnFile(@RequestParam String fileName) {
 		fileInfoDao.returnFile(fileName);
