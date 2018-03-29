@@ -772,7 +772,7 @@ public class EquipmentForm extends Form implements Serializable{
 			return equipmentForm;
 		}
 
-		public void setEquipmentForm(EquipmentForm EquipmentForm) {
+		public void setEquipmentForm(EquipmentForm equipmentForm) {
 			this.equipmentForm = equipmentForm;
 		}
 	}
