@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -120,7 +119,7 @@ public class StageController {
 		Stage stage = stageDao.getStage(id);
 		int order = stage.getStageOrder();
 		Timeline timeline = stage.getTimeline();
-		List<Stage> stages = timeline.getStages();
+		List<Stage> stages = stageDao.getStages(timeline.getId());
 		
 		System.out.println("---------------------------------------------------- \n BEFORE");
 		for(int i = 0; i < stages.size(); i++) {
@@ -132,23 +131,33 @@ public class StageController {
 			return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
 		} else {
 			stages.remove(order);
+			order--;
 			for(int i = order; i < stages.size(); i++) {
-				stages.get(i).setStageOrder(stages.get(i).getStageOrder() - 1);
+				stages.get(i).setStageOrder(order);
+				order++;
+				stageDao.saveStage(stages.get(i));
+				
 			}
+
+			
+			stageDao.deleteStage(id);
 			
 			System.out.println("AFTER");
-			for(int i = 0; i < stages.size(); i++) {
-				System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
+			List<Stage> reorderedStages = stageDao.getStages(timeline.getId());
+			System.out.println("new stages");
+			for(int i = 0; i < reorderedStages.size(); i++) {
+				System.out.println(reorderedStages.get(i).getName() + " ORDER : #" + reorderedStages.get(i).getStageOrder());
 			}
-//			timeline.setStages(stages);
-//			timelineDao.saveTimeline(timeline);
+			
+			timeline.setStages(reorderedStages);
+			timelineDao.saveTimeline(timeline);
 			
 		}
 		
 		
 		
 		
-		stageDao.deleteStage(id);
+
 		return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
 	}
 
