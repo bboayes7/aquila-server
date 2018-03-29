@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.StageDao;
-import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.Timeline.Stage;
 
@@ -81,23 +79,26 @@ public class FileInfoController {
 	
 	
 	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
-	public void deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId)
+	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId)
 	{
 		FileInfo fileInfo = fileInfoDao.getFile(fileId);
 		Stage stage = stageDao.getStage(stageId);
+		String deleteStatus;
 		
 		Map<String, FileInfo> requiredFiles = stage.getRequiredFiles();
 		
 		if(requiredFiles.containsKey(fileInfo.getFileName())) 
 		{
 			requiredFiles.remove(fileInfo.getFileName());
-			System.out.println("Deleted Successfully");
+			deleteStatus = "Deleted Successfully";
 		}
 		else
 		{
-			System.out.println("File Does not Exist");
+			deleteStatus = "File Does not Exist";
 		}
+		
 		fileInfoDao.deleteFile(fileId);
+		return deleteStatus;
 	}
 
 }
