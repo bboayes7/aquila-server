@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.StageDao;
+import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.Timeline.Stage;
 
@@ -29,8 +30,8 @@ public class FileInfoController {
 
 	
 	//save file to disk , database, then add to Stage
-	@RequestMapping(value= "/proposal/{propId}/{stageId}/fileupload" , method = RequestMethod.PUT)
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @RequestBody String fileName, @PathVariable Long stageId)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/stage/{stageId}/fileupload/{fileName}" , method = RequestMethod.PUT)
+	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
 		String diskFilename = null ;
@@ -73,9 +74,30 @@ public class FileInfoController {
 
 	
 	// view file
-	@RequestMapping(value = "/proposal/fileview", method = RequestMethod.GET)
+	@RequestMapping(value = "/proposal/{propId}/fileview", method = RequestMethod.GET)
 	public void returnFile(@RequestParam String fileName) {
 		fileInfoDao.returnFile(fileName);
+	}
+	
+	
+	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
+	public void deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId)
+	{
+		FileInfo fileInfo = fileInfoDao.getFile(fileId);
+		Stage stage = stageDao.getStage(stageId);
+		
+		Map<String, FileInfo> requiredFiles = stage.getRequiredFiles();
+		
+		if(requiredFiles.containsKey(fileInfo.getFileName())) 
+		{
+			requiredFiles.remove(fileInfo.getFileName());
+			System.out.println("Deleted Successfully");
+		}
+		else
+		{
+			System.out.println("File Does not Exist");
+		}
+		fileInfoDao.deleteFile(fileId);
 	}
 
 }
