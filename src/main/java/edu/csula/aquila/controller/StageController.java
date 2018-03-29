@@ -5,7 +5,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.mail.MailSender;
+//import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,6 +70,9 @@ public class StageController {
 	@Autowired
 	private ConflictOfInterestPINonPHSDao coiPiNonPhsDao;
 
+//	@Autowired
+//	MailSender mailSender;
+	
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
 	public Stage getStage(@PathVariable Long id) {
@@ -91,8 +97,6 @@ public class StageController {
 		stage.setTimeline(timeline);
 		stage.setId(id);
 		
-		int currentOrder = stage.getStageOrder();
-
 		Proposal proposal = timeline.getProposal();
 
 		// update forms
@@ -111,33 +115,47 @@ public class StageController {
 
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public DeleteResponse deleteStage(@PathVariable Long id) {
+	public ResponseEntity<Object> deleteStage(@PathVariable Long id) {
 
+		Stage stage = stageDao.getStage(id);
+		int order = stage.getStageOrder();
+		Timeline timeline = stage.getTimeline();
+		List<Stage> stages = timeline.getStages();
+		
+		System.out.println("---------------------------------------------------- \n BEFORE");
+		for(int i = 0; i < stages.size(); i++) {
+			System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
+		}
+		
+		if(order == stages.size()) {
+			stageDao.deleteStage(id);
+			return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
+		} else {
+			stages.remove(order);
+			for(int i = order; i < stages.size(); i++) {
+				stages.get(i).setStageOrder(stages.get(i).getStageOrder() - 1);
+			}
+			
+			System.out.println("AFTER");
+			for(int i = 0; i < stages.size(); i++) {
+				System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
+			}
+//			timeline.setStages(stages);
+//			timelineDao.saveTimeline(timeline);
+			
+		}
+		
+		
+		
+		
 		stageDao.deleteStage(id);
-		return new DeleteResponse("Stage Deleted!");
+		return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
 	}
 
-	// message to send when a stage is deleted
-	public class DeleteResponse {
-		private String message;
 
-		public DeleteResponse(String message) {
-			this.message = message;
-		}
-
-		public String getMessage() {
-			return message;
-		}
-
-		public void setMessage(String message) {
-			this.message = message;
-		}
-
-	}
-
+	
 	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.GET)
-	public ResponseEntity<Object> reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
+	public @ResponseBody ReorderMessage reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
 		// get the timeline to get all stages
 		Stage stage = stageDao.getStage(stageId);
 		int currentStageIndex = stage.getStageOrder();
@@ -146,7 +164,7 @@ public class StageController {
 		List<Stage> stages = timeline.getStages();
 		
 		if(indexToPush > stages.size()) {
-			return new ResponseEntity("Out Of Bounds", HttpStatus.BAD_REQUEST);
+			return new ReorderMessage("Out of Bounds");
 		}
 
 		System.out.println("------------------------------------------------------------");
@@ -157,13 +175,6 @@ public class StageController {
 
 		// log what we're testing
 		System.out.println("switching stage #" + currentStageIndex +" with stage #" + indexToPush + "..");
-
-		// try it out
-
-
-
-
-		// 3 cases
 
 		// deleting stage
 		// delete the stage>grab order values after that stage and decrement by 1
@@ -192,7 +203,6 @@ public class StageController {
 			
 		}
 		
-//		timeline.setStages(stageDao.getStages(timeline.getId()));
 		List<Stage> reorderedStages = stageDao.getStages(timeline.getId());
 		System.out.println("new stages");
 		for(int i = 0; i < reorderedStages.size(); i++) {
@@ -202,7 +212,23 @@ public class StageController {
 		timeline.setStages(reorderedStages);
 		timelineDao.saveTimeline(timeline);
 
-		return new ResponseEntity<Object>("Stages Reordered", HttpStatus.ACCEPTED);
+		return new ReorderMessage("Stages Reordered");
+	}
+	
+	public class ReorderMessage{
+		String message;
+		
+		public ReorderMessage(String message) {
+			this.message = message;
+		}
+		
+		public void setMessage(String message) {
+			this.message = message;
+		}
+		
+		public String getMessage() {
+			return message;
+		}
 	}
 
 	// This method updates the required file's map value from null to a fileInfo
@@ -314,8 +340,8 @@ public class StageController {
 		boolean formsComplete = false;
 		boolean filesUploaded = true; // consider if stages dont have required files or required forms
 
+		//HANDLE FORMS
 		Map<String, Long> forms = stage.getRequiredForms();
-		// List<FileInfo> files = (List<FileInfo>) stage.getRequiredFiles().values();
 
 		// check if all forms are complete (maybe add a condition if form list is 0 then
 		// dont call this?)
@@ -366,21 +392,23 @@ public class StageController {
 		if (complete) {
 			formsComplete = true;
 		}
-
-		// check if all files are uploaded
-		// if (files.size() != 0) {
-		// for (FileInfo file : files) {
-		// if (!file.isUploaded()) {
-		// break;
-		// } else {
-		// filesUploaded = true; // if all files are uploaded, have a boolean called
-		// filesUploaded and set it to true
-		//
-		// }
-		// }
-		// } else {
-		// filesUploaded = true;
-		// }
+		
+		//HANDLE FILES
+		Map<String, FileInfo> files = stage.getRequiredFiles();
+		if(files.size() != 0){
+			for (Map.Entry<String, FileInfo> file : files.entrySet()) {
+				if(file.getValue().isUploaded() == true) {
+					complete = true;
+				} else {
+					complete = false;
+					break;
+				}
+			}
+		}
+		
+		if(complete) {
+			filesUploaded = true;
+		}
 
 		// when formsCompleted && filesUploaded is true
 		if (formsComplete && filesUploaded) {
@@ -388,6 +416,12 @@ public class StageController {
 			stage.setUasReviewRequired(true);
 			// send an email to UAS
 			// for now just print email sent
+//			SimpleMailMessage msg = new SimpleMailMessage();
+//			msg.setFrom( "aquila@csula.com" );
+//			msg.setTo( "barryboayes17@gmail.com" );
+//			msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
+//			msg.setText("A user has completed a stage, please go to our website and review this stage");
+//			mailSender.send(msg);
 			System.out.println("Email 'sent'");
 		}
 	}

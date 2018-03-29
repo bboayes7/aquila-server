@@ -48,8 +48,7 @@ public class TimelineController {
 
 	// update a timeline when UAS and PI make a timeline together
 	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
-	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id,
-			@PathVariable Long proposalId) 
+	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) 
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
 				
@@ -120,6 +119,7 @@ public class TimelineController {
 			timeline.setPrincipalInvestigator(proposal.getUser().getFirstName() +" "+ 
 													proposal.getUser().getLastName());
 			timeline.setProposal(proposal);
+			System.out.println("timeline stage size: " + timeline.getStages().size());
 			proposal.setTimeline(timeline);
 		}
 		
