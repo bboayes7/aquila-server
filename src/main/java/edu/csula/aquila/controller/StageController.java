@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.csula.aquila.daos.ConflictOfInterestKPNonPHSDao;
@@ -91,8 +90,6 @@ public class StageController {
 		stage.setTimeline(timeline);
 		stage.setId(id);
 		
-		int currentOrder = stage.getStageOrder();
-
 		Proposal proposal = timeline.getProposal();
 
 		// update forms
