@@ -106,7 +106,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		return entityManager.merge(fileInfo);
 	}
 	
-	
+	//TODO check back on this method when vm is set up
 	@Override
 	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException 
 	{
@@ -143,7 +143,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 			
 			//save bytes to the created path(with new filename)
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(directory + newFileName );
+            Path path = Paths.get(directory + newFileName + "." + extension);
             Files.write(path, bytes); 
             
 		}
@@ -173,10 +173,13 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
 		File fileToDelete = new File(fileInfo.getFilePath());
 		
-		if( !fileToDelete.delete() )
+		
+		boolean deleteSuccessful = fileToDelete.delete();
+		
+		if(!deleteSuccessful)
 			System.out.println("File was not Deleted Succesfully" );
 		
-		entityManager.remove(fileToDelete);
+		entityManager.remove(fileInfo);
 		
 	}
 

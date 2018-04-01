@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,8 +28,8 @@ public class FileInfoController {
 
 	
 	//save file to disk , database, then add to Stage
-	@RequestMapping(value= "/proposal/{propId}/{stageId}/fileupload" , method = RequestMethod.PUT)
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @RequestBody String fileName, @PathVariable Long stageId)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/stage/{stageId}/fileupload/{fileName}" , method = RequestMethod.PUT)
+	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
 		String uploadStatus;
 		String diskFilename = null ;
@@ -73,9 +72,33 @@ public class FileInfoController {
 
 	
 	// view file
-	@RequestMapping(value = "/proposal/fileview", method = RequestMethod.GET)
+	@RequestMapping(value = "/proposal/{propId}/fileview", method = RequestMethod.GET)
 	public void returnFile(@RequestParam String fileName) {
 		fileInfoDao.returnFile(fileName);
+	}
+	
+	
+	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
+	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId)
+	{
+		FileInfo fileInfo = fileInfoDao.getFile(fileId);
+		Stage stage = stageDao.getStage(stageId);
+		String deleteStatus;
+		
+		Map<String, FileInfo> requiredFiles = stage.getRequiredFiles();
+		
+		if(requiredFiles.containsKey(fileInfo.getFileName())) 
+		{
+			requiredFiles.remove(fileInfo.getFileName());
+			deleteStatus = "Deleted Successfully";
+		}
+		else
+		{
+			deleteStatus = "File Does not Exist";
+		}
+		
+		fileInfoDao.deleteFile(fileId);
+		return deleteStatus;
 	}
 
 }
