@@ -1,5 +1,6 @@
 package edu.csula.aquila.daos;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,6 +22,6 @@ public interface FileInfoDao {
 	
 	public void returnFile(String diskFilename);
 	
-	public void deleteFile( Long id );
+	public void deleteFile( Long id ) throws FileNotFoundException;
 
 }

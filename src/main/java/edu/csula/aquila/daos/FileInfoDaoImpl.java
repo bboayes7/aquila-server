@@ -1,6 +1,7 @@
 package edu.csula.aquila.daos;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -106,6 +107,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		return entityManager.merge(fileInfo);
 	}
 	
+	
 	//TODO check back on this method when vm is set up
 	@Override
 	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException 
@@ -166,15 +168,24 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		}
 	}
 	
+	
 	@Override
 	@Transactional
-	public void deleteFile( Long id )
+	public void deleteFile( Long id ) throws FileNotFoundException
 	{
+		boolean deleteSuccessful = false;
+		
 		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
 		File fileToDelete = new File(fileInfo.getFilePath());
 		
-		
-		boolean deleteSuccessful = fileToDelete.delete();
+		if(!fileToDelete.exists()) 
+		{
+			 throw new FileNotFoundException("File does not currently Exist");
+		}
+		else
+		{
+			deleteSuccessful = fileToDelete.delete();
+		}
 		
 		if(!deleteSuccessful)
 			System.out.println("File was not Deleted Succesfully" );

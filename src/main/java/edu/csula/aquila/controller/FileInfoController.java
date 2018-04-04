@@ -1,5 +1,6 @@
 package edu.csula.aquila.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class FileInfoController {
 	
 	
 	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
-	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId)
+	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId) throws FileNotFoundException
 	{
 		FileInfo fileInfo = fileInfoDao.getFile(fileId);
 		Stage stage = stageDao.getStage(stageId);
@@ -87,6 +88,7 @@ public class FileInfoController {
 		
 		Map<String, FileInfo> requiredFiles = stage.getRequiredFiles();
 		
+		//if file name is in map, remove file from map by key(file name)
 		if(requiredFiles.containsKey(fileInfo.getFileName())) 
 		{
 			requiredFiles.remove(fileInfo.getFileName());
