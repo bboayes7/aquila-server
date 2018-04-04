@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 
 
 @Entity
@@ -30,9 +37,15 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String username;
     
-    @Column(name="password")
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @Transient
     private String password;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
+    @Column(nullable = false)
+    private String hash;
+    
+    
     @Column(name = "last_name")
     private String lastName;
 
@@ -44,6 +57,14 @@ public class User implements Serializable {
 
     @Column(nullable = false, unique = true)
     private String email;
+    
+    public enum Type {
+        INVESTIGATOR, UAS_ANALYST, SYSADMIN
+    }
+    
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
     
 
     //Relationships
@@ -63,19 +84,26 @@ public class User implements Serializable {
     
 	public User(){}
    
-    
-	public User(String username, String password, String lastName, String firstName, String phoneNumber, String email,
-			List<Proposal> proposals, Department department, College college) {
+
+
+	public User(String username, String password, String hash, String lastName, String firstName,
+			String phoneNumber, String email, Type type, List<Proposal> proposals, Department department,
+			College college) {
+		super();
 		this.username = username;
 		this.password = password;
+		this.hash = hash;
 		this.lastName = lastName;
 		this.firstName = firstName;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
+		this.type = type;  
 		this.proposals = proposals;
 		this.department = department;
 		this.college = college;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -162,5 +190,27 @@ public class User implements Serializable {
 		proposals.add(proposal);
 		setProposals(proposals);
 	}
+
+
+	public String getHash() {
+		return hash;
+	}
+
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
+
+	public Type getType() {
+		return type;
+	}
+
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+	
+	
 
 }
