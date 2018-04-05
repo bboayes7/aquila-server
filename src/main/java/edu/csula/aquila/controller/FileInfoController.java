@@ -110,7 +110,7 @@ public class FileInfoController {
 	}
 
 	
-	@RequestMapping( value = "/dowloadfile/{fileId}", method = RequestMethod.GET )
+	@RequestMapping( value = "/downloadfile/{fileId}", method = RequestMethod.GET )
 	public void dowloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
 	{
 		FileInfo fileInfo = fileInfoDao.getFile(fileId);
