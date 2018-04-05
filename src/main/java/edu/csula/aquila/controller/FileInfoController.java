@@ -1,9 +1,15 @@
 package edu.csula.aquila.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Map;
+
+import javax.activation.MimetypesFileTypeMap;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -103,4 +109,33 @@ public class FileInfoController {
 		return deleteStatus;
 	}
 
+	
+	@RequestMapping( value = "/dowloadfile/{fileId}", method = RequestMethod.GET )
+	public void dowloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
+	{
+		FileInfo fileInfo = fileInfoDao.getFile(fileId);
+		File fileToDownload = new File(fileInfo.getFilePath());
+		
+	      
+	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
+	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
+	        // Set the response headers. File.length() returns the size of the file
+	        // as a long, which we need to convert to a String.
+	        
+	        response.setContentLength((int) fileToDownload.length());
+	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
+
+	        // Binary files need to read/written in bytes.
+	        FileInputStream in = new FileInputStream( fileToDownload );
+	        OutputStream out = response.getOutputStream();
+	        byte buffer[] = new byte[2048];
+	        int bytesRead = -1;
+	        while( (bytesRead = in.read( buffer )) != -1 ) 
+	        {
+	            out.write( buffer, 0, bytesRead );
+	        }
+	        in.close();
+	        out.close();
+	  }
+	
 }

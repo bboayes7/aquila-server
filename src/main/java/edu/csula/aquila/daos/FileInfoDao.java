@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.csula.aquila.model.FileInfo;
@@ -23,5 +25,7 @@ public interface FileInfoDao {
 	public void returnFile(String diskFilename);
 	
 	public void deleteFile( Long id ) throws FileNotFoundException;
+	
+	//public void downloadFile( HttpServletResponse response, Long id ) throws IOException;
 
 }
