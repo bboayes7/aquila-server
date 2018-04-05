@@ -1,7 +1,10 @@
 package edu.csula.aquila.daos;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,8 +12,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,6 +111,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		return entityManager.merge(fileInfo);
 	}
 	
+	
 	//TODO check back on this method when vm is set up
 	@Override
 	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException 
@@ -166,15 +172,24 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		}
 	}
 	
+	
 	@Override
 	@Transactional
-	public void deleteFile( Long id )
+	public void deleteFile( Long id ) throws FileNotFoundException
 	{
+		boolean deleteSuccessful = false;
+		
 		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
 		File fileToDelete = new File(fileInfo.getFilePath());
 		
-		
-		boolean deleteSuccessful = fileToDelete.delete();
+		if(!fileToDelete.exists()) 
+		{
+			 throw new FileNotFoundException("File does not currently Exist");
+		}
+		else
+		{
+			deleteSuccessful = fileToDelete.delete();
+		}
 		
 		if(!deleteSuccessful)
 			System.out.println("File was not Deleted Succesfully" );
@@ -182,5 +197,30 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		entityManager.remove(fileInfo);
 		
 	}
+	
+	/*@Override
+	public void downloadFile( HttpServletResponse response, Long id ) throws IOException
+	{
+		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
+		File fileToDownload = new File(fileInfo.getFilePath());
+	      
+	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
+	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
+	        // Set the response headers. File.length() returns the size of the file
+	        // as a long, which we need to convert to a String.
+	        //response.setContentType( "image/jpg" );
+	        response.setHeader( "Content-Length", "" + fileToDownload.length() );
+	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
+
+	        // Binary files need to read/written in bytes.
+	        FileInputStream in = new FileInputStream( fileToDownload );
+	        OutputStream out = response.getOutputStream();
+	        byte buffer[] = new byte[2048];
+	        int bytesRead;
+	        while( (bytesRead = in.read( buffer )) > 0 )
+	            out.write( buffer, 0, bytesRead );
+	        in.close();
+	   }*/
+	
 
 }
