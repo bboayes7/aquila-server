@@ -36,9 +36,9 @@ public class FileInfoController {
 	
 	//save file to disk , database, then add to Stage
 	@RequestMapping(value= "/proposal/{propId}/stage/{stageId}/fileupload/{fileName}" , method = RequestMethod.PUT)
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
+	public FileInfo uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
 	{
-		String uploadStatus;
+
 		String diskFilename = null ;
 		FileInfo fileInfo ;
 		
@@ -51,7 +51,7 @@ public class FileInfoController {
         } 
 		catch (IOException e) 
 		{
-            uploadStatus = "Bad Request";
+            System.out.println("Bad Request");
         }
 		
 		System.out.println(diskFilename);
@@ -72,9 +72,8 @@ public class FileInfoController {
 		stageDao.saveStage(stage);
 		
 		
-		uploadStatus = "success! - " + diskFilename + " has been uploaded";
 		
-		return uploadStatus;
+		return fileInfo;
 	}
 
 	
