@@ -83,7 +83,7 @@ public class FileInfoController {
 		fileInfoDao.returnFile(fileName);
 	}
 	
-	
+	// delete file
 	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
 	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId) throws FileNotFoundException
 	{
@@ -108,7 +108,7 @@ public class FileInfoController {
 		return deleteStatus;
 	}
 
-	
+	// download file
 	@RequestMapping( value = "/downloadfile/{fileId}", method = RequestMethod.GET )
 	public void dowloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
 	{
