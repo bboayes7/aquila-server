@@ -54,14 +54,13 @@ public class EquipmentForm extends Form implements Serializable{
 
 	@Column(name = "new_equipment")
 	private boolean newEquipment;
-  
+
 	// type of equipment First
 	//this name, spec/quote
 	//this needs string url
 	
 	@OneToMany(cascade = { CascadeType.ALL }, mappedBy= "equipmentForm")
 	private List<TypeOfEquipment> typeOfEquipment; 
-
 	// location
 	@Column(name = "building_location")
 	private String buildingLocation;
@@ -149,7 +148,7 @@ public class EquipmentForm extends Form implements Serializable{
 	@MapKeyColumn(name="chemical_name")
 	@Column(name = "amount")
 	@CollectionTable(name="chemicals", joinColumns=@JoinColumn(name="chemicals_id"))
-	private Map<Integer, String> chemicals; // chem/quantity
+	private Map<String, String> chemicals; // chem/quantity
 
 	@ElementCollection
 	@MapKeyColumn(name="radiation_name")
@@ -161,14 +160,12 @@ public class EquipmentForm extends Form implements Serializable{
 	@Column(name = "maintenance_requirement")
 	private boolean maintenanceRequirement;
 
-	@ElementCollection
-	@CollectionTable(name = "list_of_requirements", joinColumns = @JoinColumn(name = "equipment_form_id"))
-	@Column(name = "requirement")
-	private List<String> listOfRequirements;
+	@Column(name = "maintenance_requirements")
+	private String maintenanceRequirements;
 
 	//List of size of Equipment
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "equipmentForm")
-	private List<SizeOfEquipment> sizeOfEquipment;
+	@Column(name="size_of_equipment")
+	private boolean sizeOfEquipment;
 
 	@Column(name = "director_of_research_development_signature")
 	private Signature directorOfResearchDevelopmentSignature;
@@ -197,9 +194,9 @@ public class EquipmentForm extends Form implements Serializable{
 			boolean temperature, boolean humidityControl, boolean supplyPressure, boolean centralPackageUnit,
 			boolean specialWork, boolean noiseRequirement, boolean plumbing, boolean fluid, boolean flowRate,
 			boolean pressure, boolean fluidTemperature, boolean pumpCompressorMotor, boolean maintenance,
-			boolean licenseRequirements, boolean hardware, boolean hazardousMaterial, Map<Integer, String> chemicals,
+			boolean licenseRequirements, boolean hardware, boolean hazardousMaterial, Map<String, String> chemicals,
 			Map<String, String> radiation, boolean maintenanceRequirement,
-			List<String> listOfRequirements, List<SizeOfEquipment> sizeOfEquipment,
+			String maintenanceRequirements, boolean sizeOfEquipment,
 			Signature directorOfResearchDevelopmentSignature, Date directorOfResearchDevelopmentSignatureDate,
 			Signature directorOfFacilitiesServicesSignature, Date directorOfFacilitiesServicesSignatureDate) {
 		this.progress = progress;
@@ -250,7 +247,7 @@ public class EquipmentForm extends Form implements Serializable{
 		this.chemicals = chemicals;
 		this.radiation = radiation;
 		this.maintenanceRequirement = maintenanceRequirement;
-		this.listOfRequirements = listOfRequirements;
+		this.maintenanceRequirements = maintenanceRequirements;
 		this.sizeOfEquipment = sizeOfEquipment;
 		this.directorOfResearchDevelopmentSignature = directorOfResearchDevelopmentSignature;
 		this.directorOfResearchDevelopmentSignatureDate = directorOfResearchDevelopmentSignatureDate;
@@ -258,11 +255,11 @@ public class EquipmentForm extends Form implements Serializable{
 		this.directorOfFacilitiesServicesSignatureDate = directorOfFacilitiesServicesSignatureDate;
 	}
 	
-	public List<SizeOfEquipment> getSizeOfEquipment() {
+	public boolean getSizeOfEquipment() {
 		return sizeOfEquipment;
 	}
 
-	public void setSizeOfEquipment(List<SizeOfEquipment> sizeOfEquipment) {
+	public void setSizeOfEquipment(boolean sizeOfEquipment) {
 		this.sizeOfEquipment = sizeOfEquipment;
 	}
 
@@ -337,7 +334,6 @@ public class EquipmentForm extends Form implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "type_of_equipment_id")
-
 		private Long Id;
 
 		@Column
@@ -691,92 +687,6 @@ public class EquipmentForm extends Form implements Serializable{
 		this.maintenanceRequirement = maintenanceRequirement;
 	}
 
-	//SIZE OF EQUIPMENT LIST
-	@Entity
-	@Table(name = "size_of_equipment")
-	public static class SizeOfEquipment  implements Serializable {
-
-		private static final long serialVersionUID = 6L;
-
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		@Column(name = "size_of_equipment_id")
-		private Long Id;
-
-		@Column(name = "size_of_equipment")
-		private boolean sizeOfEquipment;
-
-		@Column
-		private int height;
-		@Column
-		private int width; 
-		@Column
-		private int depth;
-
-
-		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "equipment_form_id")
-		EquipmentForm equipmentForm;
-
-		public SizeOfEquipment() {
-
-		}
-
-		public SizeOfEquipment(boolean sizeOfEquipment, int height , int width, int depth ) {
-			this.sizeOfEquipment = sizeOfEquipment;
-			this.height = height;
-			this.width = width;
-			this.depth = depth; 	
-		}
-		public Long getId() {
-			return Id;
-		}
-
-
-		public void setId(Long id) {
-			Id = id;
-		}
-		public boolean isSizeOfEquipment() {
-			return sizeOfEquipment;
-		}
-
-		public void setSizeOfEquipment(boolean sizeOfEquipment) {
-			this.sizeOfEquipment = sizeOfEquipment;
-		}
-
-		public int getHeight() {
-			return height;
-		}
-
-		public void setHeight(int height) {
-			this.height = height;
-		}
-
-		public int getWidth() {
-			return width;
-		}
-
-		public void setWidth(int width) {
-			this.width = width;
-		}
-
-		public int getDepth() {
-			return depth;
-		}
-
-		public void setDepth(int depth) {
-			this.depth = depth;
-		}
-		public EquipmentForm getEquipmentForm() {
-			return equipmentForm;
-		}
-
-		public void setEquipmentForm(EquipmentForm equipmentForm) {
-			this.equipmentForm = equipmentForm;
-		}
-	}
-
 	public Signature getDirectorOfResearchDevelopmentSignature() {
 		return directorOfResearchDevelopmentSignature;
 	}
@@ -809,11 +719,11 @@ public class EquipmentForm extends Form implements Serializable{
 		this.directorOfFacilitiesServicesSignatureDate = directorOfFacilitiesServicesSignatureDate;
 	}
 
-	public Map<Integer, String> getChemicals() {
+	public Map<String, String> getChemicals() {
 		return chemicals;
 	}
 
-	public void setChemicals(Map<Integer, String> chemicals) {
+	public void setChemicals(Map<String, String> chemicals) {
 		this.chemicals = chemicals;
 	}	
 	public Map<String, String> getRadiation() {
@@ -825,12 +735,12 @@ public class EquipmentForm extends Form implements Serializable{
 		this.radiation = radiation;
 	}
 
-	public List<String> getListOfRequirements() {
-		return listOfRequirements;
+	public String getMaintenanceRequirements() {
+		return maintenanceRequirements;
 	}
 
-	public void setListOfRequirements(List<String> listOfRequirements) {
-		this.listOfRequirements = listOfRequirements;
+	public void setMaintenanceRequirements(String maintenanceRequirements) {
+		this.maintenanceRequirements = maintenanceRequirements;
 	}	
 
 }

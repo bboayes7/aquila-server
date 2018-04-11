@@ -89,13 +89,15 @@ public class Stage implements Serializable {
 	public Stage() {
 	}
 	
-	public Stage(String name, Date expectedDate, String deadlineType, Map<String,Long> requiredForms, Map<String,FileInfo> requiredFiles) 
+	public Stage( int stageOrder, String name, Date expectedDate, String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles ) 
 	{
+		this.stageOrder = stageOrder;
 		this.name = name;
 		this.expectedDate = expectedDate;
 		this.deadlineType = deadlineType;
-		this.requiredForms = requiredForms;
 		this.requiredFiles = requiredFiles;
+		this.requiredForms = requiredForms;
+		
 	}
 
 
@@ -114,6 +116,7 @@ public class Stage implements Serializable {
 		this.requiredFiles = requiredFiles;
 		this.addComments = addComments;
 	}
+
 
 	public Long getId() {
 		return Id;

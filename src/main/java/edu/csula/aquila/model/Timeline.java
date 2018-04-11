@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +24,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
-
 
 
 @Entity
@@ -76,16 +73,13 @@ public class Timeline implements Serializable {
 
 	public Timeline()
 	{
-	 
+			
 	}
 	
 	//default timeline , still in progress
 	public Timeline(Date uasDueDate) 
 	{		
 		this.uasDueDate = uasDueDate;
-		
-		//instantiate list of default stages
-		List<Stage> defaultStages = new ArrayList<Stage>();
 		
 		//create instance of date
 		Calendar deadline = Calendar.getInstance();
@@ -111,42 +105,16 @@ public class Timeline implements Serializable {
 		deadline.add(Calendar.DATE, -2);
 		Date deadline4 = deadline.getTime();
 		
-		
-		//file lists and form lists for each stage
-		Map<String,FileInfo> files1 = new HashMap<>();
-		Map<String,FileInfo> files2 = new HashMap<>();
-		Map<String,FileInfo> files3 = new HashMap<>();
-		Map<String,FileInfo> files4 = new HashMap<>();
-		Map<String,Long> forms2 = new HashMap<>();
-		Map<String,Long> forms3 = new HashMap<>();
-		Map<String,Long> forms4 = new HashMap<>();
-		
-		
-		//put filename as key in maps
-		files1.put("First Budget", null);
-		files2.put("Sub Contract Documents", null);
-		files2.put("Final Budget", null);
-		files2.put("Equipment Quotes & Specs", null);
-		files3.put("Supporting Letters", null);
-		files3.put("Signatures PDF", null);
-		
-		//put forms into map, still implementing
-		/*forms2.put("Budget");
-		forms2.put("Equipment");
-		forms3.put("Intake Form");
-		forms3.put("Conflict of Interest");
-		forms3.put("Approval");
-		*/
+		//instantiate list of default stages
+		List<Stage> defaultStages = new ArrayList<Stage>();
 		
 		//create default stages
-		Stage stage1 = new Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
-		Stage stage2 = new Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
-		Stage stage3 = new Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
-		Stage stage4 = new Stage("Final Proposal", deadline4, "Principal Investigator", forms4, files4);
+		Stage stage1 = new Stage(1, "First Budget Due", deadline1, "Principal Investigator", null, null);
+		Stage stage2 = new Stage(2, "Final Budget Due", deadline2, "Principal Investigator", null, null);
+		Stage stage3 = new Stage(3, "Print Forms/ Project Summary", deadline3, "Principal Investigator", null, null);
+		Stage stage4 = new Stage(4, "Final Proposal", deadline4, "Principal Investigator", null, null);
 		
-		
-		//set timeline to stage
-		//add default stages
+		//set timeline to stage and add default stages
 		stage1.setTimeline(this);
 		defaultStages.add(stage1);
 		stage2.setTimeline(this);
@@ -156,9 +124,8 @@ public class Timeline implements Serializable {
 		stage4.setTimeline(this);
 		defaultStages.add(stage4);
 		this.stages = defaultStages;
-		
-		
-		
+
+				
 	}
 	
 
@@ -254,12 +221,5 @@ public class Timeline implements Serializable {
 	public void setProposal(Proposal proposal) {
 		this.proposal = proposal;
 	}
-
-
-
-	// Timeline contains a list of stages
-	// This is the innerclass of stage to help a uas member
-	// manage the timeline
-
 
 }
