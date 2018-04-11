@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
+//import org.springframework.mail.MailSender;
+//import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,9 +69,9 @@ public class StageController {
 	@Autowired
 	private ConflictOfInterestPINonPHSDao coiPiNonPhsDao;
 
-	@Autowired
-	MailSender mailSender;
-	
+	// @Autowired
+	// MailSender mailSender;
+
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
 	public Stage getStage(@PathVariable Long id) {
@@ -95,7 +95,7 @@ public class StageController {
 		Timeline timeline = timelineDao.getTimeline(timelineId);
 		stage.setTimeline(timeline);
 		stage.setId(id);
-		
+
 		Proposal proposal = timeline.getProposal();
 
 		// update forms
@@ -114,92 +114,60 @@ public class StageController {
 
 	// delete a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Object> deleteStage(@PathVariable Long id) {
+	public @ResponseBody Message deleteStage(@PathVariable Long id) {
 
 		Stage stage = stageDao.getStage(id);
 		int order = stage.getStageOrder();
 		Timeline timeline = stage.getTimeline();
 		List<Stage> stages = stageDao.getStages(timeline.getId());
-		
-		System.out.println("---------------------------------------------------- \n BEFORE");
-		for(int i = 0; i < stages.size(); i++) {
-			System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
-		}
-		
-		if(order == stages.size()) {
+
+		if (order == stages.size()) {
 			stageDao.deleteStage(id);
-			return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
+			return new Message("Stage Deleted!");
 		} else {
 			stages.remove(order);
 			order--;
-			for(int i = order; i < stages.size(); i++) {
+			for (int i = order; i < stages.size(); i++) {
 				stages.get(i).setStageOrder(order);
 				order++;
 				stageDao.saveStage(stages.get(i));
-				
+
 			}
 
-			
 			stageDao.deleteStage(id);
-			
-			System.out.println("AFTER");
 			List<Stage> reorderedStages = stageDao.getStages(timeline.getId());
-			System.out.println("new stages");
-			for(int i = 0; i < reorderedStages.size(); i++) {
-				System.out.println(reorderedStages.get(i).getName() + " ORDER : #" + reorderedStages.get(i).getStageOrder());
-			}
-			
 			timeline.setStages(reorderedStages);
 			timelineDao.saveTimeline(timeline);
-			
-		}
-		
-		
-		
-		
 
-		return new ResponseEntity<Object>("Stage Deleted!", HttpStatus.ACCEPTED);
+		}
+
+		return new Message("Stage Deleted!");
 	}
 
-	
 	@RequestMapping(value = "timeline/stage/{stageId}/order/{indexToPush}", method = RequestMethod.GET)
-	public @ResponseBody ReorderMessage reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
-		// get the timeline to get all stages
+	public @ResponseBody Message reorderStages(@PathVariable Long stageId, @PathVariable int indexToPush) {
+
 		Stage stage = stageDao.getStage(stageId);
 		int currentStageIndex = stage.getStageOrder();
-		System.out.println(currentStageIndex);
 		Timeline timeline = stage.getTimeline();
-		List<Stage> stages = timeline.getStages();
-		
-		if(indexToPush > stages.size()) {
-			return new ReorderMessage("Out of Bounds");
+		List<Stage> stages = stageDao.getStages(timeline.getId());
+
+		if (indexToPush > stages.size()) {
+			return new Message("Out of Bounds");
 		}
 
-		System.out.println("------------------------------------------------------------");
-		// test out stageOrders
-		for (int i = 0; i < stages.size(); i++) {
-			System.out.println(stages.get(i).getName() + " ORDER : #" + stages.get(i).getStageOrder());
-		}
-
-		// log what we're testing
-		System.out.println("switching stage #" + currentStageIndex +" with stage #" + indexToPush + "..");
-
-		// deleting stage
-		// delete the stage>grab order values after that stage and decrement by 1
-
-		// stage moved up the list
-		if(currentStageIndex > indexToPush) {
+		// stage moved down the list
+		if (currentStageIndex > indexToPush) {
 			for (int i = indexToPush; i <= currentStageIndex; i++) {
 				stages.get(i).setStageOrder(stages.get(i).getStageOrder() + 1);
 				stageDao.saveStage(stages.get(i));
 			}
 			stage.setStageOrder(indexToPush);
 			stageDao.saveStage(stage);
-			
+
 		}
 
-
-		// stage moved down the list
+		// stage moved up the list
 		if (currentStageIndex < indexToPush) {
 			// reorder stages in between
 			for (int i = currentStageIndex; i <= indexToPush; i++) {
@@ -208,32 +176,27 @@ public class StageController {
 			}
 			stage.setStageOrder(indexToPush);
 			stageDao.saveStage(stage);
-			
+
 		}
 		
 		List<Stage> reorderedStages = stageDao.getStages(timeline.getId());
-		System.out.println("new stages");
-		for(int i = 0; i < reorderedStages.size(); i++) {
-			System.out.println(reorderedStages.get(i).getName() + " ORDER : #" + reorderedStages.get(i).getStageOrder());
-		}
-		
 		timeline.setStages(reorderedStages);
 		timelineDao.saveTimeline(timeline);
 
-		return new ReorderMessage("Stages Reordered");
+		return new Message("Stages Reordered");
 	}
-	
-	public class ReorderMessage{
+
+	public class Message {
 		String message;
-		
-		public ReorderMessage(String message) {
+
+		public Message(String message) {
 			this.message = message;
 		}
-		
+
 		public void setMessage(String message) {
 			this.message = message;
 		}
-		
+
 		public String getMessage() {
 			return message;
 		}
@@ -252,7 +215,8 @@ public class StageController {
 		}
 	}
 
-	// This method updates the required form's map value from null to a form in the
+	// This method updates the required form's map value from null to a form in
+	// the
 	// proposal
 	public void formUpdate(Stage stage, Proposal proposal) {
 
@@ -268,11 +232,14 @@ public class StageController {
 				form.setValue(intakeForm.getId());
 
 				break;
-			// this case is tricky since there isn't an equipment form created yet and
+			// this case is tricky since there isn't an equipment form created
+			// yet and
 			// there's no id
-			// we also have to consider if a stage is getting updated again and there's
+			// we also have to consider if a stage is getting updated again and
+			// there's
 			// already a form linked
-			// if that's the case then we would have to check if a value is null to create a
+			// if that's the case then we would have to check if a value is null
+			// to create a
 			// new form for the link
 			case "Equipment":
 				if (form.getValue() == null) {
@@ -346,12 +313,14 @@ public class StageController {
 	public void stageCheck(Stage stage, Proposal proposal) {
 		// check if all forms are completed through the isComplete boolean
 		boolean formsComplete = false;
-		boolean filesUploaded = true; // consider if stages dont have required files or required forms
+		boolean filesUploaded = true; // consider if stages dont have required
+										// files or required forms
 
-		//HANDLE FORMS
+		// HANDLE FORMS
 		Map<String, Long> forms = stage.getRequiredForms();
 
-		// check if all forms are complete (maybe add a condition if form list is 0 then
+		// check if all forms are complete (maybe add a condition if form list
+		// is 0 then
 		// dont call this?)
 		boolean complete = true;
 		if (forms.size() != 0) {
@@ -400,12 +369,12 @@ public class StageController {
 		if (complete) {
 			formsComplete = true;
 		}
-		
-		//HANDLE FILES
+
+		// HANDLE FILES
 		Map<String, FileInfo> files = stage.getRequiredFiles();
-		if(files.size() != 0){
+		if (files.size() != 0) {
 			for (Map.Entry<String, FileInfo> file : files.entrySet()) {
-				if(file.getValue().isUploaded() == true) {
+				if (file.getValue().isUploaded() == true) {
 					complete = true;
 				} else {
 					complete = false;
@@ -413,8 +382,8 @@ public class StageController {
 				}
 			}
 		}
-		
-		if(complete) {
+
+		if (complete) {
 			filesUploaded = true;
 		}
 
@@ -424,12 +393,13 @@ public class StageController {
 			stage.setUasReviewRequired(true);
 			// send an email to UAS
 			// for now just print email sent
-			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setFrom( "aquila@csula.com" );
-			msg.setTo( "barryboayes17@gmail.com" );
-			msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
-			msg.setText("A user has completed a stage, please go to our website and review this stage");
-			mailSender.send(msg);
+			// SimpleMailMessage msg = new SimpleMailMessage();
+			// msg.setFrom( "aquila@csula.com" );
+			// msg.setTo( "barryboayes17@gmail.com" );
+			// msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
+			// msg.setText("A user has completed a stage, please go to our
+			// website and review this stage");
+			// mailSender.send(msg);
 			System.out.println("Email 'sent'");
 		}
 	}
