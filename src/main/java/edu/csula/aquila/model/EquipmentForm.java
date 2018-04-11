@@ -54,14 +54,9 @@ public class EquipmentForm extends Form implements Serializable{
 
 	@Column(name = "new_equipment")
 	private boolean newEquipment;
-  
-	// type of equipment First
-	//this name, spec/quote
-	//this needs string url
-	
+
 	@OneToMany(cascade = { CascadeType.ALL },mappedBy= "equipmentForm")
 	private List<TypeOfEquipment> typeOfEquipment; 
-
 	// location
 	@Column(name = "building_location")
 	private String buildingLocation;
@@ -335,7 +330,6 @@ public class EquipmentForm extends Form implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "type_of_equipment_id")
-
 		private Long Id;
 
 		@Column

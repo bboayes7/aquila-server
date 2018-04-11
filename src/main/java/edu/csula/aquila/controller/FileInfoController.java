@@ -70,9 +70,6 @@ public class FileInfoController {
 		
 		stage.getRequiredFiles().put(fileName, fileInfo);
 		stageDao.saveStage(stage);
-		
-		
-		
 		return fileInfo;
 	}
 
