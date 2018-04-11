@@ -39,7 +39,7 @@ public class Proposal implements Serializable{
 	private Date dateCreated;
 	
     public enum Status {
-    	PREMEETING, MEETING, POSTMEETING, FINAL
+    	DRAFT, CANCELLED, MEETING, POSTMEETING, FINAL
     }
 
     @Enumerated(EnumType.STRING)

@@ -60,7 +60,7 @@ public class ProposalController {
 		proposal.setUser(user);
 		
 		//set the status
-		proposal.setStatus(Status.PREMEETING);
+		proposal.setStatus(Status.DRAFT);
 
 		//set the date
 		proposal.setDateCreated(new java.sql.Date(Calendar.getInstance().getTime().getTime()));

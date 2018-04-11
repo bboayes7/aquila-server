@@ -59,7 +59,7 @@ public class EquipmentForm extends Form implements Serializable{
 	//this name, spec/quote
 	//this needs string url
 	
-	@OneToMany(cascade = { CascadeType.ALL },mappedBy= "equipmentForm")
+	@OneToMany(cascade = { CascadeType.ALL }, mappedBy= "equipmentForm")
 	private List<TypeOfEquipment> typeOfEquipment; 
 
 	// location

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.csula.aquila.daos.LoginDao;
 import edu.csula.aquila.daos.UserDao;
 import edu.csula.aquila.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -34,6 +35,8 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Object> login(@RequestBody User user){
+		
+		System.out.println("hello");
 		//check if user sent any fields
 //		if(user.getUsername() == null && user.getPassword() == null) {
 //			 throw new RestException( 400, "Missing username and/or password." );
@@ -45,7 +48,14 @@ public class LoginController {
 		//check if passwords are the same from the database
 		if(bcrypt.matches(user.getPassword(), userDB.getHash())){
 			//create jwt with username as the subject
-			String compactJws = Jwts.builder().setSubject(userDB.getUsername()).signWith(SignatureAlgorithm.HS512, secret).compact();
+			String compactJws = Jwts.builder()
+					.setSubject(userDB.getUsername())
+					.claim("id", userDB.getId())
+					.claim("first", userDB.getFirstName())
+					.claim("last", userDB.getLastName())
+					.claim("type", userDB.getType().toString())
+					.signWith(SignatureAlgorithm.HS512, secret)
+					.compact();
 		    HttpHeaders responseHeaders = new HttpHeaders();
 		    responseHeaders.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(new Jwt(compactJws, userDB), responseHeaders, HttpStatus.ACCEPTED);

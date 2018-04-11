@@ -28,26 +28,35 @@ public class UserController {
 
     //Get a list of all users
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getUsers()
+    public List<User> getUsers(@RequestHeader("Authorization") String token, @ModelAttribute("currentUser") User currentUser)
     {
-        return userDao.getUsers();
+    	
+		System.out.println("username : " + currentUser.getUsername());
+		System.out.println("name : " + currentUser.getFirstName() + " " + currentUser.getLastName());
+		System.out.println("Type : " + currentUser.getType());
+    	
+    	if(currentUser.getType() == Type.SYSADMIN) {
+            return userDao.getUsers();    		
+    	}
+
+    	return null;
     }
     
     //get a user
     @RequestMapping(value ="/user/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Long id)
     {
+    	
+    	
     	return userDao.getUser(id); 
     }
     
     //create a user
     //implementing hashing for passwords now
     @RequestMapping(value = "/user/", method = RequestMethod.POST)
-    public User saveUser(@RequestBody User user, @ModelAttribute("currentUser") User currentUser, @RequestHeader("Authorization") String token) 
+    public User saveUser(@RequestBody User user) 
     {
-    	user.setType(Type.INVESTIGATOR);
-
-    	System.out.println(currentUser);
+    	
     	//hash the password
     	user.setHash(bcrypt.encode(user.getPassword()));
     	
