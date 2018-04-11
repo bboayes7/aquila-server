@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,9 +38,12 @@ public class Proposal implements Serializable{
 	@Column(name="date_created")
 	private Date dateCreated;
 	
-	
-	@Column(name="status")
-	private String status;
+    public enum Status {
+    	PREMEETING, MEETING, POSTMEETING, FINAL
+    }
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 	
 	@JsonIgnore
 	@ManyToOne
@@ -86,9 +91,8 @@ public class Proposal implements Serializable{
 
 	public Proposal(){}
 	
-	public Proposal(String proposalName, User user, String status, Date dateCreated) {
+	public Proposal(String proposalName, User user, Date dateCreated) {
 		this.proposalName = proposalName;
-		this.status = status;
 		this.user = user;
 		this.dateCreated = dateCreated;
 	}
@@ -100,7 +104,6 @@ public class Proposal implements Serializable{
 		super();
 		this.proposalName = proposalName;
 		this.dateCreated = dateCreated;
-		this.status = status;
 		this.user = user;
 		this.intakeForm = intakeForm;
 		this.timeline = timeline;
@@ -137,11 +140,11 @@ public class Proposal implements Serializable{
 		this.dateCreated = dateCreated;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
