@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +19,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -59,8 +59,10 @@ public class EquipmentForm extends Form implements Serializable{
 	//this name, spec/quote
 	//this needs string url
 	
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy= "equipmentForm")
+	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+	@JoinColumn(name = "form_id")
 	private List<TypeOfEquipment> typeOfEquipment; 
+	
 	// location
 	@Column(name = "building_location")
 	private String buildingLocation;
@@ -263,10 +265,6 @@ public class EquipmentForm extends Form implements Serializable{
 		this.sizeOfEquipment = sizeOfEquipment;
 	}
 
-	//proposal relationship
-	@OneToOne(mappedBy="equipmentForm")
-	Proposal proposalForm;
-
 
 	public int getProgress() {
 		return progress;
@@ -346,8 +344,8 @@ public class EquipmentForm extends Form implements Serializable{
 
 		// relation
 		@JsonIgnore
-		@ManyToOne(cascade = { CascadeType.ALL })
-		@JoinColumn(name = "equipment_form_id")
+		@ManyToOne
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		EquipmentForm equipmentForm;
 
 		public TypeOfEquipment() {
@@ -380,6 +378,24 @@ public class EquipmentForm extends Form implements Serializable{
 		public void setUrl(String url) {
 			this.url = url;
 		}
+
+		public Long getId() {
+			return Id;
+		}
+
+		public void setId(Long id) {
+			Id = id;
+		}
+
+		public EquipmentForm getEquipmentForm() {
+			return equipmentForm;
+		}
+
+		public void setEquipmentForm(EquipmentForm equipmentForm) {
+			this.equipmentForm = equipmentForm;
+		}
+		
+		
 	}
 
 	public boolean isCostShare() {

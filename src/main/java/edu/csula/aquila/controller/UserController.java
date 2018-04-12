@@ -28,18 +28,18 @@ public class UserController {
 
     //Get a list of all users
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getUsers(@RequestHeader("Authorization") String token, @ModelAttribute("currentUser") User currentUser)
+    public List<User> getUsers()
     {
-    	
-		System.out.println("username : " + currentUser.getUsername());
-		System.out.println("name : " + currentUser.getFirstName() + " " + currentUser.getLastName());
-		System.out.println("Type : " + currentUser.getType());
-    	
-    	if(currentUser.getType() == Type.SYSADMIN) {
+//    	
+//		System.out.println("username : " + currentUser.getUsername());
+//		System.out.println("name : " + currentUser.getFirstName() + " " + currentUser.getLastName());
+//		System.out.println("Type : " + currentUser.getType());
+//    	
+//    	if(currentUser.getType() == Type.SYSADMIN) {
             return userDao.getUsers();    		
-    	}
-
-    	return null;
+//    	}
+//
+//    	return null;
     }
     
     //get a user

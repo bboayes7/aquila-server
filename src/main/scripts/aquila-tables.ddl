@@ -4,7 +4,7 @@
         explanation_of_involvement varchar(255),
         party_name varchar(255),
         supervisor varchar(255),
-        intake_form_id bigint,
+        form_id bigint,
         primary key (additional_parties_involved_id)
     ) engine=MyISAM;
 
@@ -31,7 +31,7 @@
     create table chemicals (
        chemicals_id bigint not null,
         amount varchar(255),
-        chemical_name integer not null,
+        chemical_name varchar(255) not null,
         primary key (chemicals_id, chemical_name)
     ) engine=MyISAM;
 
@@ -65,6 +65,37 @@
        form_type varchar(31) not null,
         form_id bigint not null auto_increment,
         is_complete bit,
+        amount_requested integer,
+        ari_date datetime,
+        ari_official varchar(255),
+        ari_official_approved bit,
+        budget_period_end datetime,
+        budget_period_start datetime,
+        disclosure_reason varchar(255),
+        irb_iacuc_ibc_no bigint,
+        other_personnel_contribution bit,
+        pi_name tinyblob,
+        pi_signature tinyblob,
+        progress integer,
+        project_period_end datetime,
+        project_period_start datetime,
+        proposal_title varchar(255),
+        signature_date datetime,
+        significant_financial_interest bit,
+        subaward_with_federal_agency_pass_through varchar(255),
+        pi_date datetime,
+        pi_sign tinyblob,
+        siginificant_financial_interest bit,
+        iRBACUCIBCNo bigint,
+        key_personnel_date datetime,
+        key_personnel_sign tinyblob,
+        pi varchar(255),
+        proposal_number bigint,
+        significat_fin_interest bit,
+        sponsor varchar(255),
+        sub_award bit,
+        subaward_agency varchar(255),
+        subaward_sponsor varchar(255),
         air_chilled_water_flow bit,
         amps bit,
         building_location varchar(255),
@@ -96,6 +127,7 @@
         license_requirements bit,
         maintenance bit,
         maintenance_requirement bit,
+        maintenance_requirements varchar(255),
         motor_compressor_specification bit,
         new_equipment bit,
         noise_requirement bit,
@@ -103,10 +135,9 @@
         plumbing bit,
         pressure bit,
         previous_use varchar(255),
-        progress integer,
-        proposal_title varchar(255),
         pump_compressor_motor bit,
         room_location varchar(255),
+        size_of_equipment bit,
         space_modification_requirement bit,
         special_needs bit,
         special_needs_string varchar(255),
@@ -114,6 +145,7 @@
         supply_pressure bit,
         temperature bit,
         volts bit,
+        significant_fin_interest bit,
         actual_amount bit,
         travel_payment_amount integer,
         date_signed datetime,
@@ -183,8 +215,6 @@
         director_signature_date datetime,
         human_subjects bit,
         human_subjects_approved varchar(255),
-        pi_name tinyblob,
-        pi_signature tinyblob,
         pi_signature_date datetime,
         prepared_by varchar(255),
         prepared_date datetime,
@@ -209,34 +239,6 @@
         university_cost_sharing bit,
         vertebrate_animal bit,
         vertebrate_animal_approved varchar(255),
-        amount_requested integer,
-        ari_date datetime,
-        ari_official varchar(255),
-        ari_official_approved bit,
-        budget_period_end datetime,
-        budget_period_start datetime,
-        disclosure_reason varchar(255),
-        irb_iacuc_ibc_no bigint,
-        other_personnel_contribution bit,
-        project_period_end datetime,
-        project_period_start datetime,
-        signature_date datetime,
-        significant_financial_interest bit,
-        subaward_with_federal_agency_pass_through varchar(255),
-        pi_date datetime,
-        pi_sign tinyblob,
-        siginificant_financial_interest bit,
-        iRBACUCIBCNo bigint,
-        key_personnel_date datetime,
-        key_personnel_sign tinyblob,
-        pi varchar(255),
-        proposal_number bigint,
-        significat_fin_interest bit,
-        sponsor varchar(255),
-        sub_award bit,
-        subaward_agency varchar(255),
-        subaward_sponsor varchar(255),
-        significant_fin_interest bit,
         agency_cost_rate_percentage integer,
         agency_cost_sharing bit,
         anticipate_stipend bit,
@@ -319,11 +321,6 @@
         primary key (kp_sponsor_id, sponsor_type)
     ) engine=MyISAM;
 
-    create table list_of_requirements (
-       equipment_form_id bigint not null,
-        requirement varchar(255)
-    ) engine=MyISAM;
-
     create table other_activities (
        intake_form_id bigint not null,
         other_activity varchar(255)
@@ -336,7 +333,7 @@
         percent_of_time_proposed integer,
         position_title_on_grant varchar(255),
         units integer,
-        intake_form_id bigint,
+        form_id bigint,
         primary key (personnel_id)
     ) engine=MyISAM;
 
@@ -360,7 +357,7 @@
         time_on_site integer,
         site_address varchar(255),
         site_name varchar(255),
-        intake_form_id bigint,
+        form_id bigint,
         primary key (project_locations_id)
     ) engine=MyISAM;
 
@@ -426,22 +423,12 @@
         significant_financial_interest_reason bit
     ) engine=MyISAM;
 
-    create table size_of_equipment (
-       size_of_equipment_id bigint not null auto_increment,
-        depth integer,
-        height integer,
-        size_of_equipment bit,
-        width integer,
-        equipment_form_id bigint,
-        primary key (size_of_equipment_id)
-    ) engine=MyISAM;
-
     create table space (
        space_id bigint not null auto_increment,
         item varchar(255),
         source_of_funds varchar(255),
         type_of_use varchar(255),
-        intake_form_id bigint,
+        form_id bigint,
         primary key (space_id)
     ) engine=MyISAM;
 
@@ -467,7 +454,7 @@
         contact_person_phone bigint,
         institution varchar(255),
         proposed_funding_amount integer,
-        intake_form_id bigint,
+        form_id bigint,
         primary key (subgrant_or_subcontract_id)
     ) engine=MyISAM;
 
@@ -497,7 +484,7 @@
         name varchar(255),
         specification varchar(255),
         url varchar(255),
-        equipment_form_id bigint,
+        form_id bigint,
         primary key (type_of_equipment_id)
     ) engine=MyISAM;
 
@@ -528,8 +515,8 @@
        add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username);
 
     alter table additional_parties_involved 
-       add constraint FKrtaab9m7i4m49rphge66b1xs8 
-       foreign key (intake_form_id) 
+       add constraint FKt3xxg4tj7t2voh0hsrtq39p9b 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table approval_colleges 
@@ -592,19 +579,14 @@
        foreign key (kp_sponsor_id) 
        references form (form_id);
 
-    alter table list_of_requirements 
-       add constraint FK7pl9fsvb440uqu0torn3me8rt 
-       foreign key (equipment_form_id) 
-       references form (form_id);
-
     alter table other_activities 
        add constraint FK6jy4q546it2biinxtce13cxt7 
        foreign key (intake_form_id) 
        references form (form_id);
 
     alter table personnel 
-       add constraint FKtkdyls5wk8hygf5ke1drcm5d 
-       foreign key (intake_form_id) 
+       add constraint FK2qv9018ub0sa63pr71mdcbery 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table phs_sponsor 
@@ -618,8 +600,8 @@
        references form (form_id);
 
     alter table project_locations 
-       add constraint FK7ldg8ugry3in3gt9e4quby1y4 
-       foreign key (intake_form_id) 
+       add constraint FK41wvv0ksgi0ra3ei5m3m4ro64 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table proposal 
@@ -707,14 +689,9 @@
        foreign key (significant_fin_interest_id) 
        references form (form_id);
 
-    alter table size_of_equipment 
-       add constraint FKefg2wlvnpduc7i2r1vhacrrl5 
-       foreign key (equipment_form_id) 
-       references form (form_id);
-
     alter table space 
-       add constraint FKmphxnucd6y15dab1kkud99kca 
-       foreign key (intake_form_id) 
+       add constraint FKbi81059vrle7yecuxsw1n4syf 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table stage 
@@ -723,8 +700,8 @@
        references timeline (timeline_id);
 
     alter table subgrants_or_subcontracts 
-       add constraint FKqjtd9l0ey95ytghk4twncx2ek 
-       foreign key (intake_form_id) 
+       add constraint FKpkk1kdp9upknomclyp80bt9qx 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table timeline_co_pis 
@@ -738,8 +715,8 @@
        references form (form_id);
 
     alter table type_of_equipment 
-       add constraint FK44vwdqdsos00kcokj16prm8qj 
-       foreign key (equipment_form_id) 
+       add constraint FKlwdavxxnimb9hgx27vj4remjj 
+       foreign key (form_id) 
        references form (form_id);
 
     alter table users 

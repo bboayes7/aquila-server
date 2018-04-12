@@ -36,7 +36,6 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<Object> login(@RequestBody User user){
 		
-		System.out.println("hello");
 		//check if user sent any fields
 //		if(user.getUsername() == null && user.getPassword() == null) {
 //			 throw new RestException( 400, "Missing username and/or password." );

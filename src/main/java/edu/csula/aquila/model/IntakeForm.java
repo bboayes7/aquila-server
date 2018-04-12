@@ -55,7 +55,8 @@ public class IntakeForm extends Form implements Serializable {
 	private Date endDate;
 
 	// B
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<Personnel> personnel;
 
 	// C
@@ -127,15 +128,18 @@ public class IntakeForm extends Form implements Serializable {
 	private List<String> otherActivitiesList;
 
 	// D
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<SubgrantsOrSubcontracts> subgrantsOrSubcontracts;
 
 	// E
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")	
 	private List<ProjectLocations> projectLocations;
 
 	// F
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<AdditionalPartiesInvolved> additionalPartiesInvolved;
 
 	// G
@@ -170,7 +174,8 @@ public class IntakeForm extends Form implements Serializable {
 	private Map<String, Integer> requestedEquipment;
 
 	// H
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy ="intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<Space> space;
 
 	// I
@@ -712,7 +717,7 @@ public class IntakeForm extends Form implements Serializable {
 		// relation
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public Personnel() {
@@ -820,7 +825,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id")
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public SubgrantsOrSubcontracts() {
@@ -934,7 +939,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public ProjectLocations() {
@@ -1023,7 +1028,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public AdditionalPartiesInvolved() {
@@ -1103,7 +1108,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public Space() {
