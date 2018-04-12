@@ -119,7 +119,7 @@ public class FileInfoController {
 	        // as a long, which we need to convert to a String.
 	        
 	        response.setContentLength((int) fileToDownload.length());
-	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
+	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName());
 
 	        // Binary files need to read/written in bytes.
 	        FileInputStream in = new FileInputStream( fileToDownload );

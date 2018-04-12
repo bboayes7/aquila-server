@@ -817,11 +817,9 @@ public class IntakeForm extends Form implements Serializable {
 		@Column(name = "contact_person_name")
 		String contactPersonName;
 
-		@Column(name = "contact_person_email")
-		String contactPersonEmail;
+		@Column(name = "contact_info")
+		String contactInfo;
 
-		@Column(name = "contact_person_phone")
-		long contactPersonPhone;
 
 		@JsonIgnore
 		@ManyToOne
@@ -832,13 +830,12 @@ public class IntakeForm extends Form implements Serializable {
 		}
 
 		public SubgrantsOrSubcontracts(String institution, String address, int proposedFundingAmount,
-				String contactPersonName, String contactPersonEmail, long contactPersonPhone) {
+				String contactPersonName, String contactInfo) {
 			this.institution = institution;
 			this.address = address;
 			this.proposedFundingAmount = proposedFundingAmount;
 			this.contactPersonName = contactPersonName;
-			this.contactPersonEmail = contactPersonEmail;
-			this.contactPersonPhone = contactPersonPhone;
+			this.contactInfo = contactInfo;
 		}
 
 		public Long getId() {
@@ -881,20 +878,12 @@ public class IntakeForm extends Form implements Serializable {
 			this.contactPersonName = contactPersonName;
 		}
 
-		public String getContactPersonEmail() {
-			return contactPersonEmail;
+		public String getContactInfo() {
+			return contactInfo;
 		}
 
-		public void setContactPersonEmail(String contactPersonEmail) {
-			this.contactPersonEmail = contactPersonEmail;
-		}
-
-		public long getContactPersonPhone() {
-			return contactPersonPhone;
-		}
-
-		public void setContactPersonPhone(long contactPersonPhone) {
-			this.contactPersonPhone = contactPersonPhone;
+		public void setContactInfo(String contactInfo) {
+			this.contactInfo = contactInfo;
 		}
 
 		public IntakeForm getIntakeForm() {
