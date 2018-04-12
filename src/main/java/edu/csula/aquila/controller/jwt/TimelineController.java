@@ -1,4 +1,4 @@
-package edu.csula.aquila.controller;
+package edu.csula.aquila.controller.jwt;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package edu.csula.aquila.controller;
+package edu.csula.aquila.controller.jwt;
 
 import java.util.List;
 
@@ -28,18 +28,20 @@ public class UserController {
 
     //Get a list of all users
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getUsers()
+    public List<User> getUsers(@ModelAttribute("currentUser") User currentUser)
     {
-//    	
-//		System.out.println("username : " + currentUser.getUsername());
-//		System.out.println("name : " + currentUser.getFirstName() + " " + currentUser.getLastName());
-//		System.out.println("Type : " + currentUser.getType());
-//    	
-//    	if(currentUser.getType() == Type.SYSADMIN) {
+    	
+//		System.out.println("username : " + currentUser.getUsername() +
+//				"\nfirstName : " + currentUser.getFirstName() +
+//				"\nlastName : " + currentUser.getLastName() + 
+//				"\ntype : " + currentUser.getType() +
+//				"\nid : " + currentUser.getId());
+    	
+    	if(currentUser.getType() == Type.SYSADMIN) {
             return userDao.getUsers();    		
-//    	}
-//
-//    	return null;
+    	}
+
+    	return null;
     }
     
     //get a user
