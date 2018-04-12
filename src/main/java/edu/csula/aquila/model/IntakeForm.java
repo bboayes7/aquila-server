@@ -919,7 +919,7 @@ public class IntakeForm extends Form implements Serializable {
 		String siteAddress;
 
 		@Column(name = "time_on_site")
-		int projectedPercentOfTimeAtSite;
+		String projectedPercentOfTimeAtSite;
 
 		// Will on-campus space or off-campus rental
 		// agreement need to be arranged?
@@ -934,7 +934,7 @@ public class IntakeForm extends Form implements Serializable {
 		public ProjectLocations() {
 		}
 
-		public ProjectLocations(String siteName, String siteAddress, int projectedPercentOfTimeAtSite,
+		public ProjectLocations(String siteName, String siteAddress, String projectedPercentOfTimeAtSite,
 				boolean agreementArranged) {
 			this.siteName = siteName;
 			this.siteAddress = siteAddress;
@@ -966,11 +966,11 @@ public class IntakeForm extends Form implements Serializable {
 			this.siteAddress = siteAddress;
 		}
 
-		public int getProjectedPercentOfTimeAtSite() {
+		public String getProjectedPercentOfTimeAtSite() {
 			return projectedPercentOfTimeAtSite;
 		}
 
-		public void setProjectedPercentOfTimeAtSite(int projectedPercentOfTimeAtSite) {
+		public void setProjectedPercentOfTimeAtSite(String projectedPercentOfTimeAtSite) {
 			this.projectedPercentOfTimeAtSite = projectedPercentOfTimeAtSite;
 		}
 
