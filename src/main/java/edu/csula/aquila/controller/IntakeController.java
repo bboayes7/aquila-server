@@ -23,7 +23,7 @@ public class IntakeController {
 	//create a new form
 	@RequestMapping(value = "intake/", method = RequestMethod.POST)
 	public IntakeForm newIntakeForm(@RequestBody IntakeForm intakeForm) {
-		
+		//only in draft state
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
 
@@ -32,6 +32,10 @@ public class IntakeController {
 	public IntakeForm updateIntakeForm(@RequestBody IntakeForm intakeForm, @PathVariable Long id) {
 		intakeForm.setId(id);
 		
+		//write only in draft state
+		//if(proposal.state != draft)
+		//throw new RestException(403, forbidden)
+		//else...
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
 	

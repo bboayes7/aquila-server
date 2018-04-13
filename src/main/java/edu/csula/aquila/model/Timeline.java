@@ -18,7 +18,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -276,12 +278,12 @@ public class Timeline implements Serializable {
 		Map<String, Long> requiredForms;
 
 		//Files as a map 
-		@ElementCollection
+		@ManyToMany
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
 		@JoinTable(
 		            name = "required_files",
-		            joinColumns = @JoinColumn(name = "file_info_id"),
+		            joinColumns = @JoinColumn(name = "required_file_id"),
 		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
 		Map<String, FileInfo> requiredFiles;
 
