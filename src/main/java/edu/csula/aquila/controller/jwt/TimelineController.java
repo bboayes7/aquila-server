@@ -1,4 +1,4 @@
-package edu.csula.aquila.controller;
+package edu.csula.aquila.controller.jwt;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
-import edu.csula.aquila.model.Timeline.Stage;
+import edu.csula.aquila.model.Stage;
 
 @RestController
 public class TimelineController {
@@ -48,8 +48,7 @@ public class TimelineController {
 
 	// update a timeline when UAS and PI make a timeline together
 	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
-	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id,
-			@PathVariable Long proposalId) 
+	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) 
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
 				
@@ -120,6 +119,7 @@ public class TimelineController {
 			timeline.setPrincipalInvestigator(proposal.getUser().getFirstName() +" "+ 
 													proposal.getUser().getLastName());
 			timeline.setProposal(proposal);
+			System.out.println("timeline stage size: " + timeline.getStages().size());
 			proposal.setTimeline(timeline);
 		}
 		

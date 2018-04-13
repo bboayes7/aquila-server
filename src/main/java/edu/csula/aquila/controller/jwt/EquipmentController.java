@@ -1,4 +1,4 @@
-package edu.csula.aquila.controller;
+package edu.csula.aquila.controller.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

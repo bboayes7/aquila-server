@@ -1,4 +1,4 @@
-package edu.csula.aquila.controller;
+package edu.csula.aquila.controller.jwt;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.StageDao;
 import edu.csula.aquila.model.FileInfo;
-import edu.csula.aquila.model.Timeline.Stage;
+import edu.csula.aquila.model.Stage;
 
 @RestController
 public class FileInfoController {
@@ -74,6 +74,7 @@ public class FileInfoController {
 		stageDao.saveStage(stage);*/
 		
 		fileInfo = fileInfoDao.updateFile(fileId, propId, diskFilename);
+		
 		return fileInfo;
 	}
 
@@ -85,6 +86,7 @@ public class FileInfoController {
 	}
 	
 	
+	// delete file
 	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
 	public String deleteFile(@PathVariable Long timelineId, @PathVariable Long stageId, @PathVariable Long fileId) throws FileNotFoundException
 	{
@@ -110,32 +112,12 @@ public class FileInfoController {
 	}
 
 	
+	// download file
 	@RequestMapping( value = "/downloadfile/{fileId}", method = RequestMethod.GET )
-	public void dowloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
+	public void downloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
 	{
-		FileInfo fileInfo = fileInfoDao.getFile(fileId);
-		File fileToDownload = new File(fileInfo.getFilePath());
-		
-	      
-	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
-	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
-	        // Set the response headers. File.length() returns the size of the file
-	        // as a long, which we need to convert to a String.
-	        
-	        response.setContentLength((int) fileToDownload.length());
-	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
-
-	        // Binary files need to read/written in bytes.
-	        FileInputStream in = new FileInputStream( fileToDownload );
-	        OutputStream out = response.getOutputStream();
-	        byte buffer[] = new byte[2048];
-	        int bytesRead = -1;
-	        while( (bytesRead = in.read( buffer )) != -1 ) 
-	        {
-	            out.write( buffer, 0, bytesRead );
-	        }
-	        in.close();
-	        out.close();
-	  }
+	
+		fileInfoDao.downloadFile(response, fileId);
+	}
 	
 }
