@@ -8,9 +8,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.csula.aquila.model.Timeline;
-import edu.csula.aquila.model.User;
-import edu.csula.aquila.model.Timeline.Stage;
+import edu.csula.aquila.model.Stage;
 
 @Repository
 public class StageDaoImpl implements StageDao{
@@ -25,7 +23,7 @@ public class StageDaoImpl implements StageDao{
 	
 	@Override
 	public List<Stage> getStages(Long timelineId){
-		String query = "from Stage where Stage.timeline_id = :id order by stage_order";
+		String query = "from Stage where timeline_id = :id order by stage_order";
 		return entityManager.createQuery( query , Stage.class )
 				.setParameter("id", timelineId)
 	            .getResultList();
@@ -47,7 +45,7 @@ public class StageDaoImpl implements StageDao{
 	@Transactional
 	public void deleteStage( Long id ) 
 	{
-		Stage stage = entityManager.find(Timeline.Stage.class, id);
+		Stage stage = entityManager.find(Stage.class, id);
 		entityManager.remove(stage);
 	}
 }
