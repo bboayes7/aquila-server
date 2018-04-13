@@ -35,18 +35,20 @@ public class FileInfoController {
 
 	
 	//save file to disk , database, then add to Stage
-	@RequestMapping(value= "/proposal/{propId}/stage/{stageId}/fileupload/{fileName}" , method = RequestMethod.PUT)
-	public FileInfo uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileId}" , method = RequestMethod.PUT)
+	public FileInfo uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable Long fileId)throws IOException
 	{
 
 		String diskFilename = null ;
-		FileInfo fileInfo ;
+		
+		
+		FileInfo fileInfo = fileInfoDao.getFile(fileId);
 		
 		
 		try
 		{
 			//saveFile saves file to disk and returns new fileName 
-			diskFilename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
+			diskFilename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileInfo.getFileName() );		
 
         } 
 		catch (IOException e) 
@@ -57,10 +59,10 @@ public class FileInfoController {
 		System.out.println(diskFilename);
 		
 		//check if fileIfo exist in database, if yes then update, if no then add
-		Stage stage = stageDao.getStage(stageId);
-		Map<String,FileInfo> requiredFiles = stage.getRequiredFiles();
+		//Stage stage = stageDao.getStage(stageId);
+		//Map<String,FileInfo> requiredFiles = stage.getRequiredFiles();
 		
-		if(requiredFiles.containsKey(fileName)) 
+		/*if(requiredFiles.containsKey(fileName)) 
 		{
 			fileInfo = fileInfoDao.updateFile(fileName, propId, diskFilename);
 		}
@@ -69,10 +71,9 @@ public class FileInfoController {
 		}
 		
 		requiredFiles.put(fileName, fileInfo);
-		stageDao.saveStage(stage);
+		stageDao.saveStage(stage);*/
 		
-		
-		
+		fileInfo = fileInfoDao.updateFile(fileId, propId, diskFilename);
 		return fileInfo;
 	}
 

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -278,14 +279,13 @@ public class Timeline implements Serializable {
 		Map<String, Long> requiredForms;
 
 		//Files as a map 
-		@ManyToMany
+		@OneToMany
 		@MapKeyColumn(name = "file_name")
 		@Column(name = "file")
-		@JoinTable(
-		            name = "required_files",
+		@JoinTable( name = "required_files",
 		            joinColumns = @JoinColumn(name = "required_file_id"),
 		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
-		Map<String, FileInfo> requiredFiles;
+		Map<String, FileInfo> requiredFiles = new HashMap<>();
 
 		// allows uas member to add comments to a stage if needed
 		@Column(name = "comments")

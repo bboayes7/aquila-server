@@ -76,14 +76,9 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	
 	@Override
 	@Transactional
-	public FileInfo updateFile( String fileName, Long id, String diskFilename )
+	public FileInfo updateFile( Long fileId, Long id, String diskFilename )
 	{
-		String query = "from FileInfo where lower(fileName) = :fileName";
-
-		List<FileInfo> fileInfos = entityManager.createQuery( query, FileInfo.class )
-	            .setParameter( "fileName", fileName.toLowerCase() )
-	            .getResultList();
-	        FileInfo fileInfo = fileInfos.get( 0 );
+		FileInfo fileInfo = entityManager.find(FileInfo.class, fileId);
 	        
 	        
 	    //find proposal by id
@@ -103,7 +98,6 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		fileInfo.setNameOfUploader(nameOfUploader);
 		fileInfo.setFilePath(path);
 		fileInfo.setFileType(fileType);
-		fileInfo.setFileName(fileName);
 		fileInfo.setUploadDate(fileAddDate);
 		fileInfo.setUploaded(true);
 				
