@@ -167,10 +167,6 @@ public class EconomicInterestPI extends Form implements Serializable {
 	private Date dateSigned;
 	
 	private String signature;
-	
-	@JsonIgnore
-	@OneToOne(mappedBy = "economicInterestPi")
-	private Proposal proposal;
 
 	public EconomicInterestPI() {}
 
@@ -184,7 +180,7 @@ public class EconomicInterestPI extends Form implements Serializable {
 			Boolean loanPaidOff, Boolean giftsReceived, String giftsDescription, Integer giftsValue,
 			Date giftsReceivedDate, Boolean travelThroughEntity, boolean travelPaymentTypeGift,
 			boolean travelPaymentTypeIncome, int travelAmount, Date travelStartDate, Date travelEndDate,
-			String travelDescription, Date dateSigned, String signature, Proposal proposal) {
+			String travelDescription, Date dateSigned, String signature) {
 		super();
 		this.progress = progress;
 		this.lastName = lastName;
@@ -232,7 +228,6 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.travelDescription = travelDescription;
 		this.dateSigned = dateSigned;
 		this.signature = signature;
-		this.proposal = proposal;
 	}
 
 	public int getProgress() {
@@ -601,14 +596,6 @@ public class EconomicInterestPI extends Form implements Serializable {
 
 	public void setSignature(String signature) {
 		this.signature = signature;
-	}
-
-	public Proposal getProposal() {
-		return proposal;
-	}
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
 	}
 
 	public static long getSerialversionuid() {
