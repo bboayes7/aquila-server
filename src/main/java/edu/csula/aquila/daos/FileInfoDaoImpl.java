@@ -76,14 +76,9 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	
 	@Override
 	@Transactional
-	public FileInfo updateFile( String fileName, Long id, String diskFilename )
+	public FileInfo updateFile( Long fileId, Long id, String diskFilename )
 	{
-		String query = "from FileInfo where lower(fileName) = :fileName";
-
-		List<FileInfo> fileInfos = entityManager.createQuery( query, FileInfo.class )
-	            .setParameter( "fileName", fileName.toLowerCase() )
-	            .getResultList();
-	        FileInfo fileInfo = fileInfos.get( 0 );
+		FileInfo fileInfo = entityManager.find(FileInfo.class, fileId);
 	        
 	        
 	    //find proposal by id
@@ -103,7 +98,6 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		fileInfo.setNameOfUploader(nameOfUploader);
 		fileInfo.setFilePath(path);
 		fileInfo.setFileType(fileType);
-		fileInfo.setFileName(fileName);
 		fileInfo.setUploadDate(fileAddDate);
 		fileInfo.setUploaded(true);
 				
@@ -198,29 +192,30 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		
 	}
 	
-	/*@Override
+	@Override
 	public void downloadFile( HttpServletResponse response, Long id ) throws IOException
 	{
 		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
 		File fileToDownload = new File(fileInfo.getFilePath());
 	      
-	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
+	         MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
 	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
-	        // Set the response headers. File.length() returns the size of the file
-	        // as a long, which we need to convert to a String.
-	        //response.setContentType( "image/jpg" );
-	        response.setHeader( "Content-Length", "" + fileToDownload.length() );
+	       	        
+	        response.setContentLength((int) fileToDownload.length());
 	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
 
 	        // Binary files need to read/written in bytes.
 	        FileInputStream in = new FileInputStream( fileToDownload );
 	        OutputStream out = response.getOutputStream();
 	        byte buffer[] = new byte[2048];
-	        int bytesRead;
-	        while( (bytesRead = in.read( buffer )) > 0 )
+	        int bytesRead = -1;
+	        while( (bytesRead = in.read( buffer )) != -1 ) 
+	        {
 	            out.write( buffer, 0, bytesRead );
+	        }
 	        in.close();
-	   }*/
+	        out.close();
+	   }
 	
 
 }

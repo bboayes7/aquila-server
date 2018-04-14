@@ -35,18 +35,20 @@ public class FileInfoController {
 
 	
 	//save file to disk , database, then add to Stage
-	@RequestMapping(value= "/proposal/{propId}/stage/{stageId}/fileupload/{fileName}" , method = RequestMethod.PUT)
-	public FileInfo uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable String fileName, @PathVariable Long stageId)throws IOException
+	@RequestMapping(value= "/proposal/{propId}/fileupload/{fileId}" , method = RequestMethod.PUT)
+	public FileInfo uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long propId, @PathVariable Long fileId)throws IOException
 	{
 
 		String diskFilename = null ;
-		FileInfo fileInfo ;
+		
+		
+		FileInfo fileInfo = fileInfoDao.getFile(fileId);
 		
 		
 		try
 		{
 			//saveFile saves file to disk and returns new fileName 
-			diskFilename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileName );		
+			diskFilename = fileInfoDao.saveFileToDisk( Arrays.asList(file), propId, fileInfo.getFileName() );		
 
         } 
 		catch (IOException e) 
@@ -57,10 +59,10 @@ public class FileInfoController {
 		System.out.println(diskFilename);
 		
 		//check if fileIfo exist in database, if yes then update, if no then add
-		Stage stage = stageDao.getStage(stageId);
-		Map<String,FileInfo> requiredFiles = stage.getRequiredFiles();
+		//Stage stage = stageDao.getStage(stageId);
+		//Map<String,FileInfo> requiredFiles = stage.getRequiredFiles();
 		
-		if(requiredFiles.containsKey(fileName)) 
+		/*if(requiredFiles.containsKey(fileName)) 
 		{
 			fileInfo = fileInfoDao.updateFile(fileName, propId, diskFilename);
 		}
@@ -68,8 +70,11 @@ public class FileInfoController {
 			fileInfo =	fileInfoDao.addFileToDB(propId, diskFilename, fileName);
 		}
 		
-		stage.getRequiredFiles().put(fileName, fileInfo);
-		stageDao.saveStage(stage);
+		requiredFiles.put(fileName, fileInfo);
+		stageDao.saveStage(stage);*/
+		
+		fileInfo = fileInfoDao.updateFile(fileId, propId, diskFilename);
+		
 		return fileInfo;
 	}
 
@@ -79,6 +84,7 @@ public class FileInfoController {
 	public void returnFile(@RequestParam String fileName) {
 		fileInfoDao.returnFile(fileName);
 	}
+	
 	
 	// delete file
 	@RequestMapping(value = "/timeline/{timelineId}/stage/{stageId}/deletefile/{fileId}", method = RequestMethod.DELETE)
@@ -105,33 +111,13 @@ public class FileInfoController {
 		return deleteStatus;
 	}
 
+	
 	// download file
 	@RequestMapping( value = "/downloadfile/{fileId}", method = RequestMethod.GET )
-	public void dowloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
+	public void downloadFile( HttpServletResponse response, @PathVariable Long fileId) throws IOException
 	{
-		FileInfo fileInfo = fileInfoDao.getFile(fileId);
-		File fileToDownload = new File(fileInfo.getFilePath());
-		
-	      
-	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
-	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
-	        // Set the response headers. File.length() returns the size of the file
-	        // as a long, which we need to convert to a String.
-	        
-	        response.setContentLength((int) fileToDownload.length());
-	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
-
-	        // Binary files need to read/written in bytes.
-	        FileInputStream in = new FileInputStream( fileToDownload );
-	        OutputStream out = response.getOutputStream();
-	        byte buffer[] = new byte[2048];
-	        int bytesRead = -1;
-	        while( (bytesRead = in.read( buffer )) != -1 ) 
-	        {
-	            out.write( buffer, 0, bytesRead );
-	        }
-	        in.close();
-	        out.close();
-	  }
+	
+		fileInfoDao.downloadFile(response, fileId);
+	}
 	
 }
