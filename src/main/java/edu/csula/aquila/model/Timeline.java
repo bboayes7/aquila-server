@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -28,8 +24,6 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
-
 
 
 @Entity
@@ -79,16 +73,13 @@ public class Timeline implements Serializable {
 
 	public Timeline()
 	{
-	 
+			
 	}
 	
 	//default timeline , still in progress
 	public Timeline(Date uasDueDate) 
 	{		
 		this.uasDueDate = uasDueDate;
-		
-		//instantiate list of default stages
-		List<Stage> defaultStages = new ArrayList<Stage>();
 		
 		//create instance of date
 		Calendar deadline = Calendar.getInstance();
@@ -114,42 +105,16 @@ public class Timeline implements Serializable {
 		deadline.add(Calendar.DATE, -2);
 		Date deadline4 = deadline.getTime();
 		
-		
-		//file lists and form lists for each stage
-		Map<String,FileInfo> files1 = new HashMap<>();
-		Map<String,FileInfo> files2 = new HashMap<>();
-		Map<String,FileInfo> files3 = new HashMap<>();
-		Map<String,FileInfo> files4 = new HashMap<>();
-		Map<String,Long> forms2 = new HashMap<>();
-		Map<String,Long> forms3 = new HashMap<>();
-		Map<String,Long> forms4 = new HashMap<>();
-		
-		
-		//put filename as key in maps
-		files1.put("First Budget", null);
-		files2.put("Sub Contract Documents", null);
-		files2.put("Final Budget", null);
-		files2.put("Equipment Quotes & Specs", null);
-		files3.put("Supporting Letters", null);
-		files3.put("Signatures PDF", null);
-		
-		//put forms into map, still implementing
-		/*forms2.put("Budget");
-		forms2.put("Equipment");
-		forms3.put("Intake Form");
-		forms3.put("Conflict of Interest");
-		forms3.put("Approval");
-		*/
+		//instantiate list of default stages
+		List<Stage> defaultStages = new ArrayList<Stage>();
 		
 		//create default stages
-		Stage stage1 = new Stage("First Budget Due", deadline1, "Principal Investigator", null, files1);
-		Stage stage2 = new Stage("Final Budget Due", deadline2, "Principal Investigator", forms2, files2);
-		Stage stage3 = new Stage("Print Forms/ Project Summary", deadline3, "Principal Investigator", forms3, files3);
-		Stage stage4 = new Stage("Final Proposal", deadline4, "Principal Investigator", forms4, files4);
+		Stage stage1 = new Stage(1, "First Budget Due", deadline1, "Principal Investigator", null, null);
+		Stage stage2 = new Stage(2, "Final Budget Due", deadline2, "Principal Investigator", null, null);
+		Stage stage3 = new Stage(3, "Print Forms/ Project Summary", deadline3, "Principal Investigator", null, null);
+		Stage stage4 = new Stage(4, "Final Proposal", deadline4, "Principal Investigator", null, null);
 		
-		
-		//set timeline to stage
-		//add default stages
+		//set timeline to stage and add default stages
 		stage1.setTimeline(this);
 		defaultStages.add(stage1);
 		stage2.setTimeline(this);
@@ -159,9 +124,8 @@ public class Timeline implements Serializable {
 		stage4.setTimeline(this);
 		defaultStages.add(stage4);
 		this.stages = defaultStages;
-		
-		
-		
+
+				
 	}
 	
 
@@ -256,199 +220,6 @@ public class Timeline implements Serializable {
 
 	public void setProposal(Proposal proposal) {
 		this.proposal = proposal;
-	}
-
-
-
-	// Timeline contains a list of stages
-	// This is the innerclass of stage to help a uas member
-	// manage the timeline
-	@Entity
-	@Table(name = "stage")
-	public static class Stage implements Serializable {
-
-		private static final long serialVersionUID = 4793986574923358796L;
-
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		@Column(name = "stage_id")
-		Long Id;
-
-		@Column
-		String name;
-		
-		@Column(name = "stage_order")
-		int stageOrder;
-
-		@Column(name = "expected_date")
-		Date expectedDate;
-
-		@Column(name = "completed_date")
-		Date completedDate;
-		
-		//these two booleans allow a PI to move on to the next stage
-		//a PI can move on to the next stage when the first one is false and the second one is true
-		
-		//when PI completes a stage turn to true
-		@Column(name = "uas_review_required")
-		boolean uasReviewRequired;
-		
-		//When uas completes a review for a stage turn to true
-		@Column(name ="uas_reviewed")
-		boolean uasReviewed;
-		
-		//Deadline Type (for PI or ORSP)
-		@Column(name = "deadline_type")
-		String deadlineType;
-		
-		//Forms as a map (Test)
-		@ElementCollection
-		@MapKeyColumn(name = "form_name")
-		@Column(name = "form_id")
-		@CollectionTable(name = "required_forms", joinColumns = @JoinColumn(name = "required_form_id"))
-		Map<String, Long> requiredForms;
-
-		//Files as a map 
-		@ElementCollection
-		@MapKeyColumn(name = "file_name")
-		@Column(name = "file")
-		@JoinTable(
-		            name = "required_files",
-		            joinColumns = @JoinColumn(name = "file_info_id"),
-		            inverseJoinColumns = @JoinColumn(name = "stage_id"))
-		Map<String, FileInfo> requiredFiles;
-
-		// allows uas member to add comments to a stage if needed
-		@Column(name = "comments")
-		String addComments;
-		
-		@JsonIgnore
-		@ManyToOne(cascade = CascadeType.MERGE)
-		@JoinColumn(name = "timeline_id")
-		Timeline timeline;
-		
-		
-
-		public Stage() {
-		}
-		
-		public Stage(String name, Date expectedDate, String deadlineType, Map<String,Long> requiredForms, Map<String,FileInfo> requiredFiles) 
-		{
-			this.name = name;
-			this.expectedDate = expectedDate;
-			this.deadlineType = deadlineType;
-			this.requiredForms = requiredForms;
-			this.requiredFiles = requiredFiles;
-		}
-
-
-
-
-		public Stage(String name, Date expectedDate, Date completedDate, boolean uasReviewRequired, boolean uasReviewed,
-				String deadlineType, Map<String, Long> requiredForms, Map<String, FileInfo> requiredFiles,
-				String addComments) {
-			this.name = name;
-			this.expectedDate = expectedDate;
-			this.completedDate = completedDate;
-			this.uasReviewRequired = uasReviewRequired;
-			this.uasReviewed = uasReviewed;
-			this.deadlineType = deadlineType;
-			this.requiredForms = requiredForms;
-			this.requiredFiles = requiredFiles;
-			this.addComments = addComments;
-		}
-
-		public Long getId() {
-			return Id;
-		}
-
-		public void setId(Long id) {
-			Id = id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public Date getExpectedDate() {
-			return expectedDate;
-		}
-
-		public void setExpectedDate(Date expectedDate) {
-			this.expectedDate = expectedDate;
-		}
-
-		public Date getCompletedDate() {
-			return completedDate;
-		}
-
-		public void setCompletedDate(Date completedDate) {
-			this.completedDate = completedDate;
-		}
-
-		public boolean isUasReviewRequired() {
-			return uasReviewRequired;
-		}
-
-		public void setUasReviewRequired(boolean uasReviewRequired) {
-			this.uasReviewRequired = uasReviewRequired;
-		}
-
-		public boolean isUasReviewed() {
-			return uasReviewed;
-		}
-
-		public void setUasReviewed(boolean uasReviewed) {
-			this.uasReviewed = uasReviewed;
-		}
-
-		public String getDeadlineType() {
-			return deadlineType;
-		}
-
-		public void setDeadlineType(String deadlineType) {
-			this.deadlineType = deadlineType;
-		}
-
-		public Map<String, Long> getRequiredForms() {
-			return requiredForms;
-		}
-
-		public void setRequiredForms(Map<String, Long> requiredForms) {
-			this.requiredForms = requiredForms;
-		}
-
-		public Map<String, FileInfo> getRequiredFiles() {
-			return requiredFiles;
-		}
-
-		public void setRequiredFiles(Map<String, FileInfo> requiredFiles) {
-			this.requiredFiles = requiredFiles;
-		}
-
-		public String getAddComments() {
-			return addComments;
-		}
-
-		public void setAddComments(String addComments) {
-			this.addComments = addComments;
-		}
-
-		public Timeline getTimeline() {
-			return timeline;
-		}
-
-		public void setTimeline(Timeline timeline) {
-			this.timeline = timeline;
-		}
-
-	
-
-
 	}
 
 }

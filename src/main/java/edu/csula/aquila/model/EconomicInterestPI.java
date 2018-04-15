@@ -20,11 +20,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @DiscriminatorValue("economic_interest_pi")
 public class EconomicInterestPI extends Form implements Serializable {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	private int progress;
-	
+	// general info
 	@Column(name = "last_name")
 	private String lastName;
 	
@@ -37,16 +36,20 @@ public class EconomicInterestPI extends Form implements Serializable {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
+	// what is this
 	private Department department;
 	
 	@Column(name="mail_code")
-	private String mailCode; //int or string?
+	private String mailCode;
 	
+	@Column
 	private String email;
 	
 	@Column(name = "project_title")
 	private String projectTitle;
 	
+	@Column
+	private String campus;
 	//Section 1 - Funding Entity
 	
 	@Column(name ="entity_name")
@@ -61,17 +64,24 @@ public class EconomicInterestPI extends Form implements Serializable {
 	@Column(name = "funding_amount")
 	private Integer fundingAmount;
 	
+	@Column(name = "estimate_amount")
+	private Boolean estimateAmount;
+	
 	@Column(name = "actual_amount")
 	private Boolean actualAmount;
 	
 	//Section 2 - Type of Statement
-	
-	@Column(name = "statement_type")
-	private String statementType;
+	@Column(name="initial_funding")
+	private boolean initialFunding;
 	
 	@Column(name = "fund_date")
 	private Date fundDate;
 	
+	@Column(name = "interim_fund")
+	private boolean interimFund;
+	
+	@Column(name="interim_date")
+	private Date interimDate;
 	//Section 3 - Filer info
 	//a
 	@Column(name = "position_held")
@@ -86,6 +96,9 @@ public class EconomicInterestPI extends Form implements Serializable {
 	
 	@Column(name = "invest_amount")
 	private Integer investAmount;
+	
+	@Column(name="date_disposed")
+	private Date dateDisposed;
 	
 	//c
 	@Column(name = "received_income")
@@ -104,8 +117,8 @@ public class EconomicInterestPI extends Form implements Serializable {
 	@Column(name = "loan_amount")
 	private Integer loanAmount;
 	
-	@Column(name = "loan_type")
-	private String loanType;
+	@Column(name = "loan_secured")
+	private boolean loanSecured;
 	
 	@Column(name = "loan_interest")
 	private Double loanInterest;
@@ -130,16 +143,20 @@ public class EconomicInterestPI extends Form implements Serializable {
 	@Column(name = "travel_through_entity")
 	private Boolean travelThroughEntity;
 	
-	@Column(name = "travel_payment_type")
-	private String travelPaymentType;
+	@Column(name = "travel_payment_type_gift")
+	private boolean travelPaymentTypeGift;
 	
-	@Column(name = "travel_payment_amount")
-	private Integer atravelPaymentAmount;
+	@Column(name = "travel_payment_type_income")
+	private boolean travelPaymentTypeIncome;
 	
-	@ElementCollection
-	@CollectionTable(name = "travel_payment_dates", joinColumns=@JoinColumn(name="tpd_id"))
-	@Column(name = "dates")
-	private List<Date> travelPaymentDates;
+	@Column(name = "travel_amount")
+	private int travelAmount;
+	
+	@Column(name = "travel_start_date")
+	private Date travelStartDate;
+	
+	@Column(name = "travel_end_date")
+	private Date travelEndDate;	
 	
 	@Column(name = "travel_description")
 	private String travelDescription;
@@ -150,23 +167,20 @@ public class EconomicInterestPI extends Form implements Serializable {
 	private Date dateSigned;
 	
 	private String signature;
-	
-	@JsonIgnore
-	@OneToOne(mappedBy = "economicInterestPi")
-	private Proposal proposal;
-	
+
 	public EconomicInterestPI() {}
 
 	public EconomicInterestPI(int progress, String lastName, String firstName, String middleInitial, String phoneNumber,
-			Department department, String mailCode, String email, String projectTitle, String entityName,
-			String entityAddress, String principalBusiness, Integer fundingAmount, Boolean actualAmount,
-			String statementType, Date fundDate, Boolean positionHeld, String positionTitle,
-			Boolean investmentGreaterThan, Integer investAmount, Boolean receivedIncome, Integer receivedAmount,
-			Boolean receivedThroughSpouse, Boolean receivedThroughEntity, Integer loanAmount, String loanType,
-			Double loanInterest, Boolean loanPaidOff, Boolean giftsReceived, String giftsDescription,
-			Integer giftsValue, Date giftsReceivedDate, Boolean travelThroughEntity, String travelPaymentType,
-			Integer atravelPaymentAmount, List<Date> travelPaymentDates, String travelDescription, Date dateSigned,
-			String signature) {
+			Department department, String mailCode, String email, String projectTitle, String campus, String entityName,
+			String entityAddress, String principalBusiness, Integer fundingAmount, Boolean estimateAmount,
+			Boolean actualAmount, boolean initialFunding, Date fundDate, boolean interimFund, Date interimDate,
+			Boolean positionHeld, String positionTitle, Boolean investmentGreaterThan, Integer investAmount,
+			Date dateDisposed, Boolean receivedIncome, Integer receivedAmount, Boolean receivedThroughSpouse,
+			Boolean receivedThroughEntity, Integer loanAmount, boolean loanSecured, Double loanInterest,
+			Boolean loanPaidOff, Boolean giftsReceived, String giftsDescription, Integer giftsValue,
+			Date giftsReceivedDate, Boolean travelThroughEntity, boolean travelPaymentTypeGift,
+			boolean travelPaymentTypeIncome, int travelAmount, Date travelStartDate, Date travelEndDate,
+			String travelDescription, Date dateSigned, String signature) {
 		super();
 		this.progress = progress;
 		this.lastName = lastName;
@@ -177,23 +191,28 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.mailCode = mailCode;
 		this.email = email;
 		this.projectTitle = projectTitle;
+		this.campus = campus;
 		this.entityName = entityName;
 		this.entityAddress = entityAddress;
 		this.principalBusiness = principalBusiness;
 		this.fundingAmount = fundingAmount;
+		this.estimateAmount = estimateAmount;
 		this.actualAmount = actualAmount;
-		this.statementType = statementType;
+		this.initialFunding = initialFunding;
 		this.fundDate = fundDate;
+		this.interimFund = interimFund;
+		this.interimDate = interimDate;
 		this.positionHeld = positionHeld;
 		this.positionTitle = positionTitle;
 		this.investmentGreaterThan = investmentGreaterThan;
 		this.investAmount = investAmount;
+		this.dateDisposed = dateDisposed;
 		this.receivedIncome = receivedIncome;
 		this.receivedAmount = receivedAmount;
 		this.receivedThroughSpouse = receivedThroughSpouse;
 		this.receivedThroughEntity = receivedThroughEntity;
 		this.loanAmount = loanAmount;
-		this.loanType = loanType;
+		this.loanSecured = loanSecured;
 		this.loanInterest = loanInterest;
 		this.loanPaidOff = loanPaidOff;
 		this.giftsReceived = giftsReceived;
@@ -201,14 +220,15 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.giftsValue = giftsValue;
 		this.giftsReceivedDate = giftsReceivedDate;
 		this.travelThroughEntity = travelThroughEntity;
-		this.travelPaymentType = travelPaymentType;
-		this.atravelPaymentAmount = atravelPaymentAmount;
-		this.travelPaymentDates = travelPaymentDates;
+		this.travelPaymentTypeGift = travelPaymentTypeGift;
+		this.travelPaymentTypeIncome = travelPaymentTypeIncome;
+		this.travelAmount = travelAmount;
+		this.travelStartDate = travelStartDate;
+		this.travelEndDate = travelEndDate;
 		this.travelDescription = travelDescription;
 		this.dateSigned = dateSigned;
 		this.signature = signature;
 	}
-
 
 	public int getProgress() {
 		return progress;
@@ -282,6 +302,14 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.projectTitle = projectTitle;
 	}
 
+	public String getCampus() {
+		return campus;
+	}
+
+	public void setCampus(String campus) {
+		this.campus = campus;
+	}
+
 	public String getEntityName() {
 		return entityName;
 	}
@@ -314,6 +342,14 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.fundingAmount = fundingAmount;
 	}
 
+	public Boolean getEstimateAmount() {
+		return estimateAmount;
+	}
+
+	public void setEstimateAmount(Boolean estimateAmount) {
+		this.estimateAmount = estimateAmount;
+	}
+
 	public Boolean getActualAmount() {
 		return actualAmount;
 	}
@@ -322,12 +358,12 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.actualAmount = actualAmount;
 	}
 
-	public String getStatementType() {
-		return statementType;
+	public boolean isInitialFunding() {
+		return initialFunding;
 	}
 
-	public void setStatementType(String statementType) {
-		this.statementType = statementType;
+	public void setInitialFunding(boolean initialFunding) {
+		this.initialFunding = initialFunding;
 	}
 
 	public Date getFundDate() {
@@ -336,6 +372,22 @@ public class EconomicInterestPI extends Form implements Serializable {
 
 	public void setFundDate(Date fundDate) {
 		this.fundDate = fundDate;
+	}
+
+	public boolean isInterimFund() {
+		return interimFund;
+	}
+
+	public void setInterimFund(boolean interimFund) {
+		this.interimFund = interimFund;
+	}
+
+	public Date getInterimDate() {
+		return interimDate;
+	}
+
+	public void setInterimDate(Date interimDate) {
+		this.interimDate = interimDate;
 	}
 
 	public Boolean getPositionHeld() {
@@ -368,6 +420,14 @@ public class EconomicInterestPI extends Form implements Serializable {
 
 	public void setInvestAmount(Integer investAmount) {
 		this.investAmount = investAmount;
+	}
+
+	public Date getDateDisposed() {
+		return dateDisposed;
+	}
+
+	public void setDateDisposed(Date dateDisposed) {
+		this.dateDisposed = dateDisposed;
 	}
 
 	public Boolean getReceivedIncome() {
@@ -410,12 +470,12 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.loanAmount = loanAmount;
 	}
 
-	public String getLoanType() {
-		return loanType;
+	public boolean isLoanSecured() {
+		return loanSecured;
 	}
 
-	public void setLoanType(String loanType) {
-		this.loanType = loanType;
+	public void setLoanSecured(boolean loanSecured) {
+		this.loanSecured = loanSecured;
 	}
 
 	public Double getLoanInterest() {
@@ -474,28 +534,44 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.travelThroughEntity = travelThroughEntity;
 	}
 
-	public String getTravelPaymentType() {
-		return travelPaymentType;
+	public boolean isTravelPaymentTypeGift() {
+		return travelPaymentTypeGift;
 	}
 
-	public void setTravelPaymentType(String travelPaymentType) {
-		this.travelPaymentType = travelPaymentType;
+	public void setTravelPaymentTypeGift(boolean travelPaymentTypeGift) {
+		this.travelPaymentTypeGift = travelPaymentTypeGift;
 	}
 
-	public Integer getAtravelPaymentAmount() {
-		return atravelPaymentAmount;
+	public boolean isTravelPaymentTypeIncome() {
+		return travelPaymentTypeIncome;
 	}
 
-	public void setAtravelPaymentAmount(Integer atravelPaymentAmount) {
-		this.atravelPaymentAmount = atravelPaymentAmount;
+	public void setTravelPaymentTypeIncome(boolean travelPaymentTypeIncome) {
+		this.travelPaymentTypeIncome = travelPaymentTypeIncome;
 	}
 
-	public List<Date> getTravelPaymentDates() {
-		return travelPaymentDates;
+	public int getTravelAmount() {
+		return travelAmount;
 	}
 
-	public void setTravelPaymentDates(List<Date> travelPaymentDates) {
-		this.travelPaymentDates = travelPaymentDates;
+	public void setTravelAmount(int travelAmount) {
+		this.travelAmount = travelAmount;
+	}
+
+	public Date getTravelStartDate() {
+		return travelStartDate;
+	}
+
+	public void setTravelStartDate(Date travelStartDate) {
+		this.travelStartDate = travelStartDate;
+	}
+
+	public Date getTravelEndDate() {
+		return travelEndDate;
+	}
+
+	public void setTravelEndDate(Date travelEndDate) {
+		this.travelEndDate = travelEndDate;
 	}
 
 	public String getTravelDescription() {
@@ -522,14 +598,9 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.signature = signature;
 	}
 
-	public Proposal getProposal() {
-		return proposal;
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
-	}
-	
 	
 	
 }

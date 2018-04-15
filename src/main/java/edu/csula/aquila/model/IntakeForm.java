@@ -55,7 +55,8 @@ public class IntakeForm extends Form implements Serializable {
 	private Date endDate;
 
 	// B
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<Personnel> personnel;
 
 	// C
@@ -127,15 +128,18 @@ public class IntakeForm extends Form implements Serializable {
 	private List<String> otherActivitiesList;
 
 	// D
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<SubgrantsOrSubcontracts> subgrantsOrSubcontracts;
 
 	// E
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")	
 	private List<ProjectLocations> projectLocations;
 
 	// F
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy = "intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<AdditionalPartiesInvolved> additionalPartiesInvolved;
 
 	// G
@@ -170,7 +174,8 @@ public class IntakeForm extends Form implements Serializable {
 	private Map<String, Integer> requestedEquipment;
 
 	// H
-	@OneToMany(cascade = { CascadeType.ALL }, mappedBy ="intakeForm")
+	@OneToMany(cascade = { CascadeType.ALL })
+	@JoinColumn(name="form_id")
 	private List<Space> space;
 
 	// I
@@ -712,7 +717,7 @@ public class IntakeForm extends Form implements Serializable {
 		// relation
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public Personnel() {
@@ -812,28 +817,25 @@ public class IntakeForm extends Form implements Serializable {
 		@Column(name = "contact_person_name")
 		String contactPersonName;
 
-		@Column(name = "contact_person_email")
-		String contactPersonEmail;
+		@Column(name = "contact_info")
+		String contactInfo;
 
-		@Column(name = "contact_person_phone")
-		long contactPersonPhone;
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id")
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public SubgrantsOrSubcontracts() {
 		}
 
 		public SubgrantsOrSubcontracts(String institution, String address, int proposedFundingAmount,
-				String contactPersonName, String contactPersonEmail, long contactPersonPhone) {
+				String contactPersonName, String contactInfo) {
 			this.institution = institution;
 			this.address = address;
 			this.proposedFundingAmount = proposedFundingAmount;
 			this.contactPersonName = contactPersonName;
-			this.contactPersonEmail = contactPersonEmail;
-			this.contactPersonPhone = contactPersonPhone;
+			this.contactInfo = contactInfo;
 		}
 
 		public Long getId() {
@@ -876,20 +878,12 @@ public class IntakeForm extends Form implements Serializable {
 			this.contactPersonName = contactPersonName;
 		}
 
-		public String getContactPersonEmail() {
-			return contactPersonEmail;
+		public String getContactInfo() {
+			return contactInfo;
 		}
 
-		public void setContactPersonEmail(String contactPersonEmail) {
-			this.contactPersonEmail = contactPersonEmail;
-		}
-
-		public long getContactPersonPhone() {
-			return contactPersonPhone;
-		}
-
-		public void setContactPersonPhone(long contactPersonPhone) {
-			this.contactPersonPhone = contactPersonPhone;
+		public void setContactInfo(String contactInfo) {
+			this.contactInfo = contactInfo;
 		}
 
 		public IntakeForm getIntakeForm() {
@@ -925,7 +919,7 @@ public class IntakeForm extends Form implements Serializable {
 		String siteAddress;
 
 		@Column(name = "time_on_site")
-		int projectedPercentOfTimeAtSite;
+		String projectedPercentOfTimeAtSite;
 
 		// Will on-campus space or off-campus rental
 		// agreement need to be arranged?
@@ -934,13 +928,13 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public ProjectLocations() {
 		}
 
-		public ProjectLocations(String siteName, String siteAddress, int projectedPercentOfTimeAtSite,
+		public ProjectLocations(String siteName, String siteAddress, String projectedPercentOfTimeAtSite,
 				boolean agreementArranged) {
 			this.siteName = siteName;
 			this.siteAddress = siteAddress;
@@ -972,11 +966,11 @@ public class IntakeForm extends Form implements Serializable {
 			this.siteAddress = siteAddress;
 		}
 
-		public int getProjectedPercentOfTimeAtSite() {
+		public String getProjectedPercentOfTimeAtSite() {
 			return projectedPercentOfTimeAtSite;
 		}
 
-		public void setProjectedPercentOfTimeAtSite(int projectedPercentOfTimeAtSite) {
+		public void setProjectedPercentOfTimeAtSite(String projectedPercentOfTimeAtSite) {
 			this.projectedPercentOfTimeAtSite = projectedPercentOfTimeAtSite;
 		}
 
@@ -1023,7 +1017,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public AdditionalPartiesInvolved() {
@@ -1103,7 +1097,7 @@ public class IntakeForm extends Form implements Serializable {
 
 		@JsonIgnore
 		@ManyToOne
-		@JoinColumn(name = "intake_form_id", nullable = true)
+		@JoinColumn(name = "form_id", insertable=false, updatable=false)
 		IntakeForm intakeForm;
 
 		public Space() {

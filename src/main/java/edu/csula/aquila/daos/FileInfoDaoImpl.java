@@ -1,7 +1,10 @@
 package edu.csula.aquila.daos;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,8 +12,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +40,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 	{
 		return entityManager.find(FileInfo.class, id);
 	}
+		
 	
 	@Override
 	@Transactional
@@ -43,32 +49,70 @@ public class FileInfoDaoImpl implements FileInfoDao{
 		return entityManager.merge(fileInfo);
 	}
 	
-
+	
 	@Override
 	@Transactional
-	public FileInfo addFileToDB(Long id, String filename) 
+	public FileInfo addFileToDB(Long id, String diskFilename, String fileName) 
 	{
 		//find proposal by id
 		Proposal proposal = entityManager.find(Proposal.class, id);
 		String nameOfUploader = proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName();
 		
 		//get file type
-		String [] ext = filename.split("\\.");
+		String [] ext = diskFilename.split("\\.");
 		int extIndex = ext.length - 1;
 		String fileType = ext[extIndex].toUpperCase();
 		
 		Date fileAddDate = new Date();
-		String path = directory + filename;
+		String path = directory + diskFilename;
 		
 		//create new file then merge, file type in progress
-		FileInfo fileInfo = new FileInfo(nameOfUploader, filename, fileType, path, fileAddDate, true);
+		FileInfo fileInfo = new FileInfo(nameOfUploader, fileName, fileType, path, fileAddDate, true);
 		
-		fileInfo = entityManager.merge(fileInfo);
-		return fileInfo;
-		
+		return fileInfo = entityManager.merge(fileInfo);
+				
 	}
 	
 	
+	@Override
+	@Transactional
+	public FileInfo updateFile( String fileName, Long id, String diskFilename )
+	{
+		String query = "from FileInfo where lower(fileName) = :fileName";
+
+		List<FileInfo> fileInfos = entityManager.createQuery( query, FileInfo.class )
+	            .setParameter( "fileName", fileName.toLowerCase() )
+	            .getResultList();
+	        FileInfo fileInfo = fileInfos.get( 0 );
+	        
+	        
+	    //find proposal by id
+		Proposal proposal = entityManager.find(Proposal.class, id);
+		String nameOfUploader = proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName();
+			
+		//get file type
+		String [] ext = diskFilename.split("\\.");
+		int extIndex = ext.length - 1;
+		String fileType = ext[extIndex].toUpperCase();
+		
+		Date fileAddDate = new Date();
+		String path = directory + diskFilename;
+		
+		
+		//update current object in database
+		fileInfo.setNameOfUploader(nameOfUploader);
+		fileInfo.setFilePath(path);
+		fileInfo.setFileType(fileType);
+		fileInfo.setFileName(fileName);
+		fileInfo.setUploadDate(fileAddDate);
+		fileInfo.setUploaded(true);
+				
+	        
+		return entityManager.merge(fileInfo);
+	}
+	
+	
+	//TODO check back on this method when vm is set up
 	@Override
 	public String saveFileToDisk(List<MultipartFile> files, Long id, String fileName) throws IOException 
 	{
@@ -105,7 +149,7 @@ public class FileInfoDaoImpl implements FileInfoDao{
 			
 			//save bytes to the created path(with new filename)
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(directory + newFileName );
+            Path path = Paths.get(directory + newFileName + "." + extension);
             Files.write(path, bytes); 
             
 		}
@@ -116,16 +160,67 @@ public class FileInfoDaoImpl implements FileInfoDao{
 
 	
 	@Override
-	public void returnFile(String filename)
+	public void returnFile(String diskFilename)
 	{
 		try
 		{
-			Runtime.getRuntime().exec("cmd /c start " + directory + filename);
+			Runtime.getRuntime().exec("cmd /c start " + directory + diskFilename);
 		} catch (IOException e) 
 		{
 			System.out.println("Invalid File Name");
 			e.printStackTrace();
 		}
 	}
+	
+	
+	@Override
+	@Transactional
+	public void deleteFile( Long id ) throws FileNotFoundException
+	{
+		boolean deleteSuccessful = false;
+		
+		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
+		File fileToDelete = new File(fileInfo.getFilePath());
+		
+		if(!fileToDelete.exists()) 
+		{
+			 throw new FileNotFoundException("File does not currently Exist");
+		}
+		else
+		{
+			deleteSuccessful = fileToDelete.delete();
+		}
+		
+		if(!deleteSuccessful)
+			System.out.println("File was not Deleted Succesfully" );
+		
+		entityManager.remove(fileInfo);
+		
+	}
+	
+	/*@Override
+	public void downloadFile( HttpServletResponse response, Long id ) throws IOException
+	{
+		FileInfo fileInfo = entityManager.find(FileInfo.class, id);
+		File fileToDownload = new File(fileInfo.getFilePath());
+	      
+	        MimetypesFileTypeMap mimetypesFileTypeMap=new MimetypesFileTypeMap();
+	        response.setContentType(mimetypesFileTypeMap.getContentType(fileToDownload));
+	        // Set the response headers. File.length() returns the size of the file
+	        // as a long, which we need to convert to a String.
+	        //response.setContentType( "image/jpg" );
+	        response.setHeader( "Content-Length", "" + fileToDownload.length() );
+	        response.setHeader( "Content-Disposition", "attachment; filename=" + fileInfo.getFileName() );
+
+	        // Binary files need to read/written in bytes.
+	        FileInputStream in = new FileInputStream( fileToDownload );
+	        OutputStream out = response.getOutputStream();
+	        byte buffer[] = new byte[2048];
+	        int bytesRead;
+	        while( (bytesRead = in.read( buffer )) > 0 )
+	            out.write( buffer, 0, bytesRead );
+	        in.close();
+	   }*/
+	
 
 }

@@ -20,24 +20,17 @@ public class EconomicInterestPIController {
 	@Autowired
 	private ProposalDao proposalDao;
 	
-	@RequestMapping(value = "/proposal/{proposalId}/saveeconomicinterest", method = RequestMethod.POST)
-	public EconomicInterestPI saveEconomicInterestPI(@PathVariable Long proposalId, @RequestBody EconomicInterestPI economicInterestPI)
-	{
-		Proposal proposal = proposalDao.getProposal(proposalId);
-		proposal.setEconomicInterestPi(economicInterestPI);
-		economicInterestPI.setProposal(proposal);
-		return economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
-	}
-	
+	// get economic interest
 	@RequestMapping(value = "/proposal/economicinterest/{id}", method = RequestMethod.GET)
 	public EconomicInterestPI getEconomicInterestPIById( @PathVariable Long id )
 	{
 		return economicInterestPIDao.getEconomicInterestPiById( id );
 	}
-	
-	@RequestMapping(value = "/proposal/editeconomicinterest", method = RequestMethod.PUT)
-	public EconomicInterestPI updateEconomicInterestPI( @RequestBody EconomicInterestPI economicInterestPI )
+	// update economic interest
+	@RequestMapping(value = "/proposal/editeconomicinterest/{id}", method = RequestMethod.PUT)
+	public EconomicInterestPI updateEconomicInterestPI( @RequestBody EconomicInterestPI economicInterestPI, @PathVariable Long id )
 	{
+		economicInterestPI.setId(id);
 		return economicInterestPIDao.updateEconomicInterestPI( economicInterestPI );
 	}
 

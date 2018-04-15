@@ -1,5 +1,11 @@
 spring.datasource.url=jdbc:mysql://localhost/aquila?useSSL=false
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.username=root
-spring.datasource.password=madefresh
+
+spring.datasource.username=admin
+spring.datasource.password=abcd
 spring.jpa.database-platform=org.hibernate.dialect.MySQL57Dialect
+
+spring.mail.host=localhost
+spring.mail.port=25
+spring.mail.username=sd2018@localhost.localdomain
+spring.mail.password=12345

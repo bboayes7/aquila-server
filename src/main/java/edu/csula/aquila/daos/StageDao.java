@@ -1,6 +1,9 @@
 package edu.csula.aquila.daos;
 
-import edu.csula.aquila.model.Timeline.Stage;
+import java.util.List;
+
+import edu.csula.aquila.model.Stage;
+
 
 public interface StageDao {
 	
@@ -11,6 +14,8 @@ public interface StageDao {
 	public Stage updateStage( Stage stage );
 	
 	public void deleteStage( Long id );
+	
+	public List<Stage> getStages( Long timelineId );
 
 	
 }

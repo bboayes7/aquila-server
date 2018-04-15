@@ -20,8 +20,9 @@ import edu.csula.aquila.daos.UserDao;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
+import edu.csula.aquila.model.Proposal.Status;
+import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
-import edu.csula.aquila.model.Timeline.Stage;
 import edu.csula.aquila.model.User;
 
 @RestController
@@ -59,7 +60,7 @@ public class ProposalController {
 		proposal.setUser(user);
 		
 		//set the status
-		proposal.setStatus("Draft");
+		proposal.setStatus(Status.DRAFT);
 
 		//set the date
 		proposal.setDateCreated(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
@@ -75,11 +76,11 @@ public class ProposalController {
 		//instantiate timeline with pre meeting stage
 		Map<String,Long> forms = new HashMap<>();
 		forms.put("Intake Form", intakeForm.getId());
-		System.out.println("PROPOSAL CONTROLLER INTAKE FORM ID : " + intakeForm.getId());
 		Map<String,FileInfo> files = new HashMap<>();
 		FileInfo preMeetingBudget = new FileInfo("Pre-Meeting Budget", false);
 		files.put("Pre-Meeting Budget", fileInfoDao.saveFile(preMeetingBudget));
-		Stage preMeetingStage = new Stage("Pre-Meeting", null,"Principal Investigator", forms, files);
+		Stage preMeetingStage = new Stage(0, "Pre-Meeting", null,"Principal Investigator", forms, files);
+		preMeetingStage.setStageOrder(0);
 		List<Stage> preMeeting = new ArrayList<>();
 		preMeeting.add(preMeetingStage);
 		
