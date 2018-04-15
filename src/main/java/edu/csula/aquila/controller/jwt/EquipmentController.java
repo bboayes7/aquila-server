@@ -64,4 +64,5 @@ public class EquipmentController {
 		equipmentForm.setId(id);	
 		return equipmentDao.saveEquipmentForm(equipmentForm);
 	}
+	
 }
