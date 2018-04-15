@@ -16,7 +16,6 @@ import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.User;
-import edu.csula.aquila.model.Proposal.Status;
 import edu.csula.aquila.model.User.Type;
 
 @RestController
@@ -31,7 +30,7 @@ public class IntakeController {
 	//TimelineController timelineController;
 	
 	//create a new form
-	@RequestMapping(value = "intake/", method = RequestMethod.POST)
+	@RequestMapping(value = "/intake", method = RequestMethod.POST)
 	public IntakeForm newIntakeForm( @RequestBody IntakeForm intakeForm) 
 	{
 		
@@ -39,11 +38,11 @@ public class IntakeController {
 	}
 
 	//update a form
-	@RequestMapping(value = "/proposal/{propId}/intake/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.PUT)
 	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm, 
-			@PathVariable Long propId, @PathVariable Long id) 
+			@PathVariable Long propId, @PathVariable Long intakeId) 
 	{
-		intakeForm.setId(id);
+		intakeForm.setId(intakeId);
 		
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
@@ -58,9 +57,9 @@ public class IntakeController {
 					
 					case INVESTIGATOR :
 						System.out.println(currentUser.getId());
-						if(currentUser.getId() != userId)
+						if(currentUser.getId() != userId) 
 							throw new RestException(401, "UNAUTHORIZED");
-						
+					
 						intakeForm = intakeDao.saveIntakeForm(intakeForm) ;
 						break;
 						
@@ -97,7 +96,7 @@ public class IntakeController {
 			case POSTMEETING : {
 					switch(currentUser.getType()){
 						case INVESTIGATOR :
-							if(currentUser.getId() != id)
+							if(currentUser.getId() != userId)
 								throw new RestException(401, "UNAUTHORIZED");
 							
 							intakeForm = intakeDao.saveIntakeForm(intakeForm) ;
@@ -129,16 +128,16 @@ public class IntakeController {
 	}
 	
 	//return a form 
-	@RequestMapping(value = "/proposal/{propId}/intake/{id}", method = RequestMethod.GET)
-	public IntakeForm getIntakeForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId, @PathVariable Long id) 
+	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.GET)
+	public IntakeForm getIntakeForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId, @PathVariable Long intakeId) 
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
 		
-		System.out.println(currentUser.getId());
+		System.out.println(currentUser.getId() + " -- " + userId + " "+ currentUser.getType());
 		if(currentUser.getType() == Type.INVESTIGATOR && currentUser.getId() != userId )
 			throw new RestException(401, "UNAUTHORIZED");
 		
-		return intakeDao.getIntakeForm(id);
+		return intakeDao.getIntakeForm(intakeId);
 	}
 }

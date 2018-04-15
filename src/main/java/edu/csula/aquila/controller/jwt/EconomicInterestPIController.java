@@ -30,6 +30,7 @@ public class EconomicInterestPIController {
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
 		
+		System.out.println(proposal.getUser().getId() + " == "+ currentUser.getId());
 		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() ) 
 			throw new RestException(401, "UNAUTHORIZED");
 		
@@ -44,8 +45,10 @@ public class EconomicInterestPIController {
 	{
 		
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() )
+		System.out.println(currentUser.getId());
+		if(currentUser.getType() == Type.INVESTIGATOR && currentUser.getId() != userId )
 			throw new RestException(401, "UNAUTHORIZED");
 		
 		return economicInterestPIDao.getEconomicInterestPiById( econIntId );
@@ -55,16 +58,81 @@ public class EconomicInterestPIController {
 	public EconomicInterestPI updateEconomicInterestPI( @ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@PathVariable Long econIntId, @RequestBody EconomicInterestPI economicInterestPI )
 	{
+		economicInterestPI.setId(econIntId);
+		
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
+		System.out.println(userId);
 		
-		if(currentUser.getType() == Type.UAS_ANALYST && proposal.getStatus() != Status.MEETING ) 
-			throw new RestException(401, "UNAUTHORIZED");
+		switch( proposal.getStatus() ){
+
+			case DRAFT : {
+				switch(currentUser.getType()){ 
+					case INVESTIGATOR :
+					case UAS_ANALYST : 
+						throw new RestException(401, "UNAUTHORIZED");
+						
+					case SYSADMIN : 
+						economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+						break;
+				}
+			}
+
+			case CANCELLED : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR :
+						case UAS_ANALYST : 
+							throw new RestException(401, "UNAUTHORIZED");
+							
+						case SYSADMIN : 
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+							break;
+					}
+			}
+
+			case MEETING : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : 
+							throw new RestException(401, "UNAUTHORIZED");
+						
+						case UAS_ANALYST :													
+						case SYSADMIN : 
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+							break;
+					}
+			}
+
+			case POSTMEETING : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR :
+							if(currentUser.getId() != userId)
+								throw new RestException(401, "UNAUTHORIZED");
+							
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+							break;
+							
+						case UAS_ANALYST :
+						case SYSADMIN : 
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+							break;
+					}
+			}
+			
+			case FINAL : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : 						
+						case UAS_ANALYST : 
+							throw new RestException(401, "UNAUTHORIZED");
+						
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getStatus() != Status.DRAFT)
-			throw new RestException(403, "FORBIDDEN");
-		
-		economicInterestPI.setId(econIntId);	
-		return economicInterestPIDao.updateEconomicInterestPI( economicInterestPI );
+						case SYSADMIN : 
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI) ;
+							break;
+					}
+			}
+		}
+			
+		return economicInterestPI ;
 	}
 
 }
