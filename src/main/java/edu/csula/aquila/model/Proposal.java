@@ -63,22 +63,11 @@ public class Proposal implements Serializable{
 	@JoinColumn(name = "approval_form_id")
 	ApprovalForm approvalForm;
 	
+	// has to be one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_kp_non_phs_id")
-	ConflictOfInterestKPNonPHS coiKpNonPhs;
-	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_kp_phs_id")
-	ConflictOfInterestKPPHS coiKpPhs;
-	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_phs_id")
-	ConflictOfInterestPHS coiPhs;
-	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_pi_non_phs_id")
-	ConflictOfInterestPINonPHS coiPiNonPhs;
-	
+	@JoinColumn(name = "coi_id")
+	ConflictOfInterestForm conflictOfInterestForm;
+	// has to bw one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "economic_interest_pi_id")
 	EconomicInterestPI economicInterestPi;
@@ -96,22 +85,22 @@ public class Proposal implements Serializable{
 		this.user = user;
 		this.dateCreated = dateCreated;
 	}
+	
+	
 
-	public Proposal(String proposalName, Date dateCreated, String status, User user, IntakeForm intakeForm,
-			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestKPNonPHS coiKpNonPhs,
-			ConflictOfInterestKPPHS coiKpPhs, ConflictOfInterestPHS coiPhs, ConflictOfInterestPINonPHS coiPiNonPhs,
+	public Proposal(Long id, String proposalName, Date dateCreated, Status status, User user, IntakeForm intakeForm,
+			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestForm conflictOfInterestForm,
 			EconomicInterestPI economicInterestPi, EquipmentForm equipmentForm) {
 		super();
+		this.id = id;
 		this.proposalName = proposalName;
 		this.dateCreated = dateCreated;
+		this.status = status;
 		this.user = user;
 		this.intakeForm = intakeForm;
 		this.timeline = timeline;
 		this.approvalForm = approvalForm;
-		this.coiKpNonPhs = coiKpNonPhs;
-		this.coiKpPhs = coiKpPhs;
-		this.coiPhs = coiPhs;
-		this.coiPiNonPhs = coiPiNonPhs;
+		this.conflictOfInterestForm = conflictOfInterestForm;
 		this.economicInterestPi = economicInterestPi;
 		this.equipmentForm = equipmentForm;
 	}
@@ -180,36 +169,12 @@ public class Proposal implements Serializable{
 		this.approvalForm = approvalForm;
 	}
 
-	public ConflictOfInterestKPNonPHS getCoiKpNonPhs() {
-		return coiKpNonPhs;
+	public ConflictOfInterestForm getConflictOfInterestForm() {
+		return conflictOfInterestForm;
 	}
 
-	public void setCoiKpNonPhs(ConflictOfInterestKPNonPHS coiKpNonPhs) {
-		this.coiKpNonPhs = coiKpNonPhs;
-	}
-
-	public ConflictOfInterestKPPHS getCoiKpPhs() {
-		return coiKpPhs;
-	}
-
-	public void setCoiKpPhs(ConflictOfInterestKPPHS coiKpPhs) {
-		this.coiKpPhs = coiKpPhs;
-	}
-
-	public ConflictOfInterestPHS getCoiPhs() {
-		return coiPhs;
-	}
-
-	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
-		this.coiPhs = coiPhs;
-	}
-
-	public ConflictOfInterestPINonPHS getCoiPiNonPhs() {
-		return coiPiNonPhs;
-	}
-
-	public void setCoiPiNonPhs(ConflictOfInterestPINonPHS coiPiNonPhs) {
-		this.coiPiNonPhs = coiPiNonPhs;
+	public void setConflictOfInterestForm(ConflictOfInterestForm conflictOfInterestForm) {
+		this.conflictOfInterestForm = conflictOfInterestForm;
 	}
 
 	public EconomicInterestPI getEconomicInterestPi() {
@@ -227,8 +192,10 @@ public class Proposal implements Serializable{
 	public void setEquipmentForm(EquipmentForm equipmentForm) {
 		this.equipmentForm = equipmentForm;
 	}
-	
-	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 
 }
