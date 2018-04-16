@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -64,9 +65,9 @@ public class Proposal implements Serializable{
 	ApprovalForm approvalForm;
 	
 	// has to be one to many
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_id")
-	ConflictOfInterestForm conflictOfInterestForm;
+	@OneToMany(cascade = {CascadeType.MERGE})
+	@JoinColumn(name = "conflict_of_interest_id")
+	List<ConflictOfInterestForm> conflictOfInterestForm;
 	// has to bw one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "economic_interest_pi_id")
