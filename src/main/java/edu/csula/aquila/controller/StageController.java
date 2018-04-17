@@ -212,7 +212,7 @@ public class StageController {
 
 			switch (key) {
 			// this case is easy since there's already an intake form set
-			case "Intake":
+			case "Intake Form":
 				IntakeForm intakeForm = proposal.getIntakeForm();
 				form.setValue(intakeForm.getId());
 
@@ -220,7 +220,7 @@ public class StageController {
 			// this case is tricky since there isn't an equipment form created yet and there's no id
 			// we also have to consider if a stage is getting updated again and there's already a form linked
 			// if that's the case then we would have to check if a value is null to create a new form for the link
-			case "Equipment":
+			case "Equipment Form":
 				if (form.getValue() == null) {
 					EquipmentForm equipmentForm = new EquipmentForm();
 					equipmentForm = equipmentDao.saveEquipmentForm(equipmentForm);
@@ -246,7 +246,9 @@ public class StageController {
 					coiForm.setType("OIPHS"); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
-					//push this coi form to proposal COI list
+					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
+					coiForms.add(coiForm);
+					proposal.setConflictOfInterestForms(coiForms);
 					break;
 				}
 				break;
@@ -256,7 +258,9 @@ public class StageController {
 					coiForm.setType("OINONPHS"); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
-					//push this coi form to proposal COI list
+					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
+					coiForms.add(coiForm);
+					proposal.setConflictOfInterestForms(coiForms);					
 					break;
 				}
 				break;
@@ -266,7 +270,9 @@ public class StageController {
 					coiForm.setType("PIPHS"); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
-					//push this coi form to proposal COI list
+					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
+					coiForms.add(coiForm);
+					proposal.setConflictOfInterestForms(coiForms);
 					break;
 				}
 				break;
@@ -276,7 +282,9 @@ public class StageController {
 					coiForm.setType("PINONPHS"); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
-					//push this coi form to proposal COI list
+					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
+					coiForms.add(coiForm);
+					proposal.setConflictOfInterestForms(coiForms);
 					break;
 				}
 				break;
@@ -319,22 +327,22 @@ public class StageController {
 					EconomicInterestPI economicInterest = proposal.getEconomicInterestPi();
 					complete = economicInterest.isComplete();
 					break;
-				case "COI Other Investigator/Key Personnel PHS":
-					ConflictOfInterestKPPHS coiKpPhs = proposal.getCoiKpPhs();
-					complete = coiKpPhs.isComplete();
-					break;
-				case "COI Other Investigator/Key Personnel NONPHS":
-					ConflictOfInterestKPNonPHS coiKpNonPhs = proposal.getCoiKpNonPhs();
-					complete = coiKpNonPhs.isComplete();
-					break;
-				case "COI Principal Investigator PHS":
-					ConflictOfInterestPHS coiPhs = proposal.getCoiPhs();
-					complete = coiPhs.isComplete();
-					break;
-				case "COI Principal Investigator NONPHS":
-					ConflictOfInterestPINonPHS coiPiNonPhs = proposal.getCoiPiNonPhs();
-					complete = coiPiNonPhs.isComplete();
-					break;
+//				case "COI Other Investigator/Key Personnel PHS":
+//					ConflictOfInterestKPPHS coiKpPhs = proposal.getCoiKpPhs();
+//					complete = coiKpPhs.isComplete();
+//					break;
+//				case "COI Other Investigator/Key Personnel NONPHS":
+//					ConflictOfInterestKPNonPHS coiKpNonPhs = proposal.getCoiKpNonPhs();
+//					complete = coiKpNonPhs.isComplete();
+//					break;
+//				case "COI Principal Investigator PHS":
+//					ConflictOfInterestPHS coiPhs = proposal.getCoiPhs();
+//					complete = coiPhs.isComplete();
+//					break;
+//				case "COI Principal Investigator NONPHS":
+//					ConflictOfInterestPINonPHS coiPiNonPhs = proposal.getCoiPiNonPhs();
+//					complete = coiPiNonPhs.isComplete();
+//					break;
 				// make cases for key {"Approval"}
 				}
 

@@ -68,7 +68,7 @@ public class Proposal implements Serializable{
 	// has to be one to many
 	@OneToMany(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "conflict_of_interest_id")
-	List<ConflictOfInterestForm> conflictOfInterestForm;
+	List<ConflictOfInterestForm> conflictOfInterestForms;
 	
 	// has to bw one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
@@ -90,7 +90,7 @@ public class Proposal implements Serializable{
 	}
 
 	public Proposal(Long id, String proposalName, Date dateCreated, Status status, User user, IntakeForm intakeForm,
-			Timeline timeline, ApprovalForm approvalForm, List<ConflictOfInterestForm> conflictOfInterestForm,
+			Timeline timeline, ApprovalForm approvalForm, List<ConflictOfInterestForm> conflictOfInterestForms,
 			EconomicInterestPI economicInterestPi, EquipmentForm equipmentForm) {
 		super();
 		this.id = id;
@@ -101,7 +101,7 @@ public class Proposal implements Serializable{
 		this.intakeForm = intakeForm;
 		this.timeline = timeline;
 		this.approvalForm = approvalForm;
-		this.conflictOfInterestForm = conflictOfInterestForm;
+		this.conflictOfInterestForms = conflictOfInterestForms;
 		this.economicInterestPi = economicInterestPi;
 		this.equipmentForm = equipmentForm;
 	}
@@ -170,12 +170,12 @@ public class Proposal implements Serializable{
 		this.approvalForm = approvalForm;
 	}
 
-	public List<ConflictOfInterestForm> getConflictOfInterestForm() {
-		return conflictOfInterestForm;
+	public List<ConflictOfInterestForm> getConflictOfInterestForms() {
+		return conflictOfInterestForms;
 	}
 
-	public void setConflictOfInterestForm(List<ConflictOfInterestForm> conflictOfInterestForm) {
-		this.conflictOfInterestForm = conflictOfInterestForm;
+	public void setConflictOfInterestForms(List<ConflictOfInterestForm> conflictOfInterestForms) {
+		this.conflictOfInterestForms = conflictOfInterestForms;
 	}
 
 	public EconomicInterestPI getEconomicInterestPi() {
