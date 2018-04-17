@@ -10,6 +10,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToOne;
 
@@ -125,6 +126,10 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 	@Column(name="ari_date")
 	private Date aRIDate;
 
+	@ManyToOne
+	@JoinColumn(name = "prop_id", insertable=false, updatable=false)
+	private Proposal proposal;
+	
 	public ConflictOfInterestForm() {
 	}
 
@@ -136,7 +141,7 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 			Date projectPeriodStart, Date projectPeriodEnd, int amountRequested, String iRBACUCIBCNo,
 			boolean significantFinInterest, boolean anyOtherInvestigators, String otherInvestigatorsValue,
 			String piSignature, Date piDate, String keyPersonnelSign, Date keyPersonnelDate, boolean aRIOfficial,
-			Date aRIDate) {
+			Date aRIDate, Proposal proposal) {
 		super();
 		this.type = type;
 		this.proposalNumber = proposalNumber;
@@ -170,6 +175,7 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 		this.keyPersonnelDate = keyPersonnelDate;
 		this.aRIOfficial = aRIOfficial;
 		this.aRIDate = aRIDate;
+		this.proposal = proposal;
 	}
 
 	public String getType() {
@@ -426,6 +432,14 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 
 	public void setaRIDate(Date aRIDate) {
 		this.aRIDate = aRIDate;
+	}
+
+	public Proposal getProposal() {
+		return proposal;
+	}
+
+	public void setProposal(Proposal proposal) {
+		this.proposal = proposal;
 	}
 
 	public static long getSerialversionuid() {

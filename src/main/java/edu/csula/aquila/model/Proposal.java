@@ -2,6 +2,7 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -68,6 +69,7 @@ public class Proposal implements Serializable{
 	@OneToMany(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "conflict_of_interest_id")
 	List<ConflictOfInterestForm> conflictOfInterestForm;
+	
 	// has to bw one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "economic_interest_pi_id")
@@ -86,11 +88,9 @@ public class Proposal implements Serializable{
 		this.user = user;
 		this.dateCreated = dateCreated;
 	}
-	
-	
 
 	public Proposal(Long id, String proposalName, Date dateCreated, Status status, User user, IntakeForm intakeForm,
-			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestForm conflictOfInterestForm,
+			Timeline timeline, ApprovalForm approvalForm, List<ConflictOfInterestForm> conflictOfInterestForm,
 			EconomicInterestPI economicInterestPi, EquipmentForm equipmentForm) {
 		super();
 		this.id = id;
@@ -170,11 +170,11 @@ public class Proposal implements Serializable{
 		this.approvalForm = approvalForm;
 	}
 
-	public ConflictOfInterestForm getConflictOfInterestForm() {
+	public List<ConflictOfInterestForm> getConflictOfInterestForm() {
 		return conflictOfInterestForm;
 	}
 
-	public void setConflictOfInterestForm(ConflictOfInterestForm conflictOfInterestForm) {
+	public void setConflictOfInterestForm(List<ConflictOfInterestForm> conflictOfInterestForm) {
 		this.conflictOfInterestForm = conflictOfInterestForm;
 	}
 
@@ -197,6 +197,5 @@ public class Proposal implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 
 }
