@@ -48,30 +48,6 @@ public class EquipmentController {
 		
 		return equipmentDao.saveEquipmentForm(equipmentForm);
 	}
-
-	// @RequestMapping(value= "/proposal/{propId}/equipment/{id}", method =
-	// RequestMethod.PUT)
-	// public EquipmentForm updateEquipmentForm(@ModelAttribute("currentUser") User
-	// currentUser,
-	// @RequestBody EquipmentForm equipmentForm, @PathVariable Long id,
-	// @PathVariable Long propId)
-	// {
-	// Proposal proposal = proposalDao.getProposal(propId);
-	//
-	// if(currentUser.getType() == Type.UAS_ANALYST && proposal.getStatus() !=
-	// Status.MEETING )
-	// throw new RestException(401, "UNAUTHORIZED");
-	//
-	// if(currentUser.getType() == Type.INVESTIGATOR && proposal.getStatus() !=
-	// Status.DRAFT)
-	// throw new RestException(403, "FORBIDDEN");
-	//
-	//
-	//
-	//
-	// equipmentForm.setId(id);
-	// return equipmentDao.saveEquipmentForm(equipmentForm);
-	// }
 	
 	//new update
 	@RequestMapping(value= "/proposal/{propId}/equipment/{equipId}", method = RequestMethod.PUT)
@@ -110,7 +86,7 @@ public class EquipmentController {
 						}
 			
 						case SYSADMIN : {
-							throw new RestException(401, "UNAUTHORIZED");
+							return equipmentDao.saveEquipmentForm(equipmentForm);
 						}	
 					}
 			}

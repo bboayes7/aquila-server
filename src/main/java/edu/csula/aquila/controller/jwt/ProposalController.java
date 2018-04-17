@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +49,7 @@ public class ProposalController {
 	
 	//Create a proposal
 	@RequestMapping(value = "proposal/", method = RequestMethod.POST)
-	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate) {
+	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate, @ModelAttribute("currentUser") User currentUser) {
 		//create proposal and set the name
 		Proposal proposal = new Proposal();
 		
