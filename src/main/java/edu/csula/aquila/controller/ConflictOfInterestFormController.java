@@ -27,6 +27,13 @@ public class ConflictOfInterestFormController {
 		return conflictOfInterestFormDao.getConflictOfInterestFormById(id);
 	}
 	
+	@RequestMapping(value = "/proposal/conflictofinterest/{id}", method = RequestMethod.PUT)
+    public ConflictOfInterestForm updateConflictOfInterestForm( @RequestBody ConflictOfInterestForm coiForm )
+    {
+		//set the id
+    	return conflictOfInterestFormDao.updateConflictOfInterestForm( coiForm );
+    			
+    }
 	@RequestMapping(value = "/proposal/{proposalId}/conflictofinterest", method = RequestMethod.POST)
     public ConflictOfInterestForm saveConflictOfInterestForm( @PathVariable Long proposalId, @RequestBody ConflictOfInterestForm coiForm )
     {
@@ -37,11 +44,5 @@ public class ConflictOfInterestFormController {
     			
     }
 	
-	@RequestMapping(value = "/proposal/conflictofinterest", method = RequestMethod.PUT)
-    public ConflictOfInterestForm updateConflictOfInterestForm( @RequestBody ConflictOfInterestForm coiForm )
-    {
-    	return conflictOfInterestFormDao.updateConflictOfInterestForm( coiForm );
-    			
-    }
 
 }
