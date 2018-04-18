@@ -15,8 +15,8 @@ import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
-import edu.csula.aquila.model.User;
 import edu.csula.aquila.model.Proposal.Status;
+import edu.csula.aquila.model.User;
 import edu.csula.aquila.model.User.Type;
 
 @RestController
@@ -31,47 +31,88 @@ public class IntakeController {
 	//TimelineController timelineController;
 	
 	//create a new form
-	@RequestMapping(value = "/proposal/{propId}/intake/", method = RequestMethod.POST)
-	public IntakeForm newIntakeForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId, 
-			@RequestBody IntakeForm intakeForm) 
+	@RequestMapping(value = "/intake", method = RequestMethod.POST)
+	public IntakeForm newIntakeForm( @RequestBody IntakeForm intakeForm) 
 	{
-		
-		Proposal proposal = proposalDao.getProposal(propId);
-		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() ) 
-			throw new RestException(401, "UNAUTHORIZED");
 		
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
 
 	//update a form
-	@RequestMapping(value = "/proposal/{propId}/intake/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.PUT)
 	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm, 
-			@PathVariable Long propId, @PathVariable Long id) 
+			@PathVariable Long propId, @PathVariable Long intakeId) 
 	{
-		intakeForm.setId(id);
+		intakeForm.setId(intakeId);
 		
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
+		System.out.println(userId);
+		System.out.println(currentUser.getType());
 		
-		if(currentUser.getType() == Type.UAS_ANALYST && proposal.getStatus() != Status.MEETING ) 
-			throw new RestException(401, "UNAUTHORIZED");
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getStatus() != Status.DRAFT)
-			throw new RestException(403, "FORBIDDEN");
 		
-	
+		switch(currentUser.getType()) {
+		
+			case INVESTIGATOR:
+				switch(proposal.getStatus()) {
+				
+				case DRAFT:
+				case POSTMEETING:{
+					if(currentUser.getId().equals(userId))
+					{
+						intakeForm = intakeDao.saveIntakeForm(intakeForm);
+						break;
+					}
+					else
+					{
+						throw new RestException(401, "UNAUTHORIZED");
+					}
+				}
+				
+				case MEETING:
+				case FINAL:
+				case CANCELLED:
+					throw new RestException(401, "UNAUTHORIZED");
+				
+				}
+				
+			case UAS_ANALYST:
+				switch(proposal.getStatus()) {
+				
+				case MEETING:
+				case POSTMEETING:
+					intakeForm = intakeDao.saveIntakeForm(intakeForm);
+					break;
+				
+				
+				case DRAFT:
+				case FINAL:
+				case CANCELLED:
+					throw new RestException( 403, "FORBIDDEN");
+				
+				}
+				
+			case SYSADMIN:
+				intakeForm = intakeDao.saveIntakeForm(intakeForm);
+				break;
+				
+		}
+		
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
 	
 	//return a form 
-	@RequestMapping(value = "/proposal/{propId}/intake/{id}", method = RequestMethod.GET)
-	public IntakeForm getIntakeForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId, @PathVariable Long id) 
+	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.GET)
+	public IntakeForm getIntakeForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId, @PathVariable Long intakeId) 
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() )
+		System.out.println(currentUser.getId() + " -- " + userId + " "+ currentUser.getType());
+		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 		
-		return intakeDao.getIntakeForm(id);
+		return intakeDao.getIntakeForm(intakeId);
 	}
 }

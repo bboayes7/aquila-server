@@ -26,16 +26,20 @@ public class EconomicInterestPIController {
 	private ProposalDao proposalDao;
 	
 	@RequestMapping(value = "/proposal/{proposalId}/economicinterest", method = RequestMethod.POST)
-	public EconomicInterestPI newEconomicInterestPI(@ModelAttribute("currentUser") User currentUser, @PathVariable Long proposalId, @RequestBody EconomicInterestPI economicInterestPI)
+	public EconomicInterestPI newEconomicInterestPI(@ModelAttribute("currentUser") User currentUser, @PathVariable Long proposalId, 
+			@RequestBody EconomicInterestPI economicInterestPI)
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() ) 
-			throw new RestException(401, "UNAUTHORIZED");
+		//Long userId = currentUser.getId();
 		
+		//if(currentUser.getType() == Type.INVESTIGATOR && !proposal.getUser().getId().equals(userId) ) 
+		//	throw new RestException(401, "UNAUTHORIZED");
+		economicInterestPI = economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
 		proposal.setEconomicInterestPi(economicInterestPI);
-		economicInterestPI.setProposal(proposal);
-		return economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
+		proposal = proposalDao.saveProposal(proposal);
+				
+		return economicInterestPI ;
 	}
 	
 	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.GET)
@@ -44,27 +48,75 @@ public class EconomicInterestPIController {
 	{
 		
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() )
+		System.out.println(currentUser.getId());
+		if(currentUser.getType() == Type.INVESTIGATOR && currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 		
 		return economicInterestPIDao.getEconomicInterestPiById( econIntId );
 	}
 	
-	@RequestMapping(value = "/proposal/{propId}/editeconomicinterest/{econIntId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.PUT)
 	public EconomicInterestPI updateEconomicInterestPI( @ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@PathVariable Long econIntId, @RequestBody EconomicInterestPI economicInterestPI )
 	{
+		economicInterestPI.setId(econIntId);
+		
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
+		System.out.println(userId);
 		
-		if(currentUser.getType() == Type.UAS_ANALYST && proposal.getStatus() != Status.MEETING ) 
-			throw new RestException(401, "UNAUTHORIZED");
+		proposal.setStatus(Status.DRAFT);
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getStatus() != Status.DRAFT)
-			throw new RestException(403, "FORBIDDEN");
+		switch(currentUser.getType()) {
 		
-		economicInterestPI.setId(econIntId);	
-		return economicInterestPIDao.updateEconomicInterestPI( economicInterestPI );
+			case INVESTIGATOR:
+				switch(proposal.getStatus()) {
+				
+				case POSTMEETING:{
+					if(currentUser.getId().equals(userId))
+					{
+						economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+						break;
+					}
+					else
+					{
+						throw new RestException(401, "UNAUTHORIZED");
+					}
+				}
+				
+				case DRAFT:
+				case MEETING:
+				case FINAL:
+				case CANCELLED:
+					throw new RestException(401, "UNAUTHORIZED");
+				
+				}
+				
+			case UAS_ANALYST:
+				switch(proposal.getStatus()) {
+				
+				case MEETING:
+				case POSTMEETING:
+					economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+					break;
+				
+				
+				case DRAFT:
+				case FINAL:
+				case CANCELLED:
+					throw new RestException( 403, "FORBIDDEN");
+				
+				}
+				
+			case SYSADMIN:
+				economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+				break;
+				
+	}
+			
+		return economicInterestPI ;
 	}
 
 }

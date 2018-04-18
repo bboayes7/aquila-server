@@ -23,6 +23,7 @@ import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Proposal.Status;
+import edu.csula.aquila.model.User.Type;
 import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
 import edu.csula.aquila.model.User;
@@ -45,7 +46,13 @@ public class ProposalController {
 	
 	//Get a proposal
 	@RequestMapping(value = "proposal/{id}", method = RequestMethod.GET)
-	public Proposal getProposal(@PathVariable Long id){
+	public Proposal getProposal(@ModelAttribute("currentUser") User currentUser, @PathVariable Long id)
+	{
+		Long userId = currentUser.getId();
+		
+		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
+			throw new RestException(401, "UNAUTHORIZED");
+		
 		return proposalDao.getProposal(id);
 	}
 	
@@ -110,7 +117,7 @@ public class ProposalController {
 	public List<Proposal> getProposalsOfUser(@PathVariable Long userId, @ModelAttribute("currentUser") User currentUser){
 		if(currentUser.getType() == Type.INVESTIGATOR && !userId.equals(currentUser.getId()))
 			throw new RestException(401, "UNAUTHORIZED");
-		
+
 		
 		return proposalDao.getProposalsOfUser(userId);
 	}
