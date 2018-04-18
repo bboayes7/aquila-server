@@ -18,6 +18,7 @@ import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.UserDao;
+import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
@@ -25,6 +26,7 @@ import edu.csula.aquila.model.Proposal.Status;
 import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
 import edu.csula.aquila.model.User;
+import edu.csula.aquila.model.User.Type;
 
 @RestController
 public class ProposalController {
@@ -50,6 +52,11 @@ public class ProposalController {
 	//Create a proposal
 	@RequestMapping(value = "proposal/", method = RequestMethod.POST)
 	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate, @ModelAttribute("currentUser") User currentUser) {
+		
+		//check if the user creating the proposal is creating a proposal for themselves
+		if(!proposalInstantiate.getUserId().equals(currentUser.getId()))
+			throw new RestException(401, "UNAUTHORIZED");
+		
 		//create proposal and set the name
 		Proposal proposal = new Proposal();
 		
@@ -57,7 +64,7 @@ public class ProposalController {
 		proposal.setProposalName(proposalInstantiate.getProposalName());
 		
 		//set the user
-		User user = userDao.getUser(proposalInstantiate.getUserId());
+		User user = userDao.getUser(currentUser.getId());
 		proposal.setUser(user);
 		
 		//set the status
@@ -99,10 +106,13 @@ public class ProposalController {
 	}
 	
 	//Get a list of proposals of a user
-	@RequestMapping(value = "proposals/{id}", method = RequestMethod.GET)
-	public List<Proposal> getProposalsOfUser(@PathVariable Long id){
+	@RequestMapping(value = "proposals/{userId}", method = RequestMethod.GET)
+	public List<Proposal> getProposalsOfUser(@PathVariable Long userId, @ModelAttribute("currentUser") User currentUser){
+		if(currentUser.getType() == Type.INVESTIGATOR && !userId.equals(currentUser.getId()))
+			throw new RestException(401, "UNAUTHORIZED");
 		
-		return proposalDao.getProposalsOfUser(id);
+		
+		return proposalDao.getProposalsOfUser(userId);
 	}
 	
 	

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,13 @@ import edu.csula.aquila.daos.EquipmentDao;
 import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.TimelineDao;
+import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Timeline;
+import edu.csula.aquila.model.User;
+import edu.csula.aquila.model.User.Type;
 import edu.csula.aquila.model.Stage;
 
 @RestController
@@ -36,20 +40,26 @@ public class TimelineController {
 	
 	@Autowired 
 	EquipmentDao equipmentDao;
-	
-
 
 	// create a new timeline
-	@RequestMapping(value = "timeline", method = RequestMethod.POST)
-	public Timeline newTimeline(@RequestBody Timeline timeline) 
+	@RequestMapping(value = "/proposal/{proposalId}/timeline", method = RequestMethod.POST)
+	public Timeline newTimeline(@RequestBody Timeline timeline, @ModelAttribute("currentUser") User currentUser) 
 	{
+		if(currentUser.getType() == Type.INVESTIGATOR)
+			throw new RestException(401, "UNAUTHORIZED");
+		
 		return timelineDao.saveTimeline(timeline);
 	}
+	
+	
 
 	// update a timeline when UAS and PI make a timeline together
-	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PUT)
-	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) 
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{timelineId}", method = RequestMethod.PUT)
+	public Timeline updateTimelineFirstMeeting(@RequestBody Timeline timeline, @PathVariable Long timelineId, @PathVariable Long proposalId, @ModelAttribute("currentUser") User currentUser) 
 	{
+		if(currentUser.getType() == Type.INVESTIGATOR)
+			throw new RestException(401, "UNAUTHORIZED");
+		
 		Proposal proposal = proposalDao.getProposal(proposalId);
 				
 		if(timeline.getUasDueDate() != null && timeline.getStages().size() == 1)
@@ -124,37 +134,37 @@ public class TimelineController {
 		}
 		
 
-		timeline.setId(id);
+		timeline.setId(timelineId);
 		return timelineDao.saveTimeline(timeline);
 	}
 	
 	//update timeline simple types when there are changes happening along the meeting
-	@RequestMapping(value = "/proposal/{proposalId}/timeline/{id}", method = RequestMethod.PATCH)
-	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long id, @PathVariable Long proposalId) {
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{timelineId}", method = RequestMethod.PATCH)
+	public Timeline updateTimeline(@RequestBody Timeline timeline, @PathVariable Long timelineId, @PathVariable Long proposalId, @ModelAttribute("currentUser") User currentUser) {
+		Proposal proposal = proposalDao.getProposal(proposalId);
 		
-		timeline.setId(id);
+		if(currentUser.getType() == Type.INVESTIGATOR)
+			throw new RestException(401, "UNAUTHORIZED");
+		
+		timeline.setId(timelineId);
 		return timelineDao.saveTimeline(timeline);
 	}
 	
 
 	// return a timeline
-	@RequestMapping(value = "timeline/{id}", method = RequestMethod.GET)
-	public Timeline getTimeline(@PathVariable Long id) 
+	@RequestMapping(value = "/proposal/{proposalId}/timeline/{timelineId}", method = RequestMethod.GET)
+	public Timeline getTimeline(@PathVariable Long timelineId, @PathVariable Long proposalId,@ModelAttribute("currentUser") User currentUser) 
 	{
-		return timelineDao.getTimeline(id);
+		Proposal proposal = proposalDao.getProposal(proposalId);
+		
+		
+		if(currentUser.getType() == Type.INVESTIGATOR && !proposal.getUser().getId().equals(currentUser.getId()))
+			throw new RestException(401, "UNAUTHORIZED");
+		
+		
+		return timelineDao.getTimeline(timelineId);
 	}
 
-	//public void stageCheck(Timeline.Stage stage) {
-		//pseudo code
-		//get the stage
-		//check if all forms are completed through the isComplete boolean
-		//if all forms are complete, have a boolean called formsCompleted and set it to true
-		//check if all the files are uploaded through the isUploaded boolean
-		//if all files are uploaded, have a boolean called filesUploaded and set it to true
-		//when formsCompleted && filesUploaded is true
-		//set uasReviewRequired to true
-		//send an email to UAS
-	//}
 
 
 }
