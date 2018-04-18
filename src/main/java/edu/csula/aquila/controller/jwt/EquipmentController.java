@@ -30,8 +30,9 @@ public class EquipmentController {
 	public EquipmentForm getEquipmentForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long id, @PathVariable Long propId) 
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
+		long userId = proposal.getUser().getId();
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() )
+		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 				
 		return equipmentDao.getEquipmentForm(id);
@@ -42,8 +43,9 @@ public class EquipmentController {
 			@RequestBody EquipmentForm equipmentForm)
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
+		Long userId = proposal.getUser().getId();
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getUser().getId() != currentUser.getId() ) 
+		if( currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) ) 
 			throw new RestException(401, "UNAUTHORIZED");
 		
 		return equipmentDao.saveEquipmentForm(equipmentForm);

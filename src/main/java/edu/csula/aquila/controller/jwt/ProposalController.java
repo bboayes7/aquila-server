@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +18,12 @@ import edu.csula.aquila.daos.FileInfoDao;
 import edu.csula.aquila.daos.IntakeDao;
 import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.UserDao;
+import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.FileInfo;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
 import edu.csula.aquila.model.Proposal.Status;
+import edu.csula.aquila.model.User.Type;
 import edu.csula.aquila.model.Stage;
 import edu.csula.aquila.model.Timeline;
 import edu.csula.aquila.model.User;
@@ -42,7 +45,13 @@ public class ProposalController {
 	
 	//Get a proposal
 	@RequestMapping(value = "proposal/{id}", method = RequestMethod.GET)
-	public Proposal getProposal(@PathVariable Long id){
+	public Proposal getProposal(@ModelAttribute("currentUser") User currentUser, @PathVariable Long id)
+	{
+		Long userId = currentUser.getId();
+		
+		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
+			throw new RestException(401, "UNAUTHORIZED");
+		
 		return proposalDao.getProposal(id);
 	}
 	
@@ -99,7 +108,9 @@ public class ProposalController {
 	
 	//Get a list of proposals of a user
 	@RequestMapping(value = "proposals/{id}", method = RequestMethod.GET)
-	public List<Proposal> getProposalsOfUser(@PathVariable Long id){
+	public List<Proposal> getProposalsOfUser(@ModelAttribute("currentUser") User currentUser, @PathVariable Long id)
+	{
+		
 		
 		return proposalDao.getProposalsOfUser(id);
 	}
