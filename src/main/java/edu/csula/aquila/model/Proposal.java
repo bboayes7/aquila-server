@@ -2,6 +2,7 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -63,22 +65,12 @@ public class Proposal implements Serializable{
 	@JoinColumn(name = "approval_form_id")
 	ApprovalForm approvalForm;
 	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_kp_non_phs_id")
-	ConflictOfInterestKPNonPHS coiKpNonPhs;
+	// has to be one to many
+	@OneToMany(cascade = {CascadeType.MERGE})
+	@JoinColumn(name = "conflict_of_interest_id")
+	List<ConflictOfInterestForm> conflictOfInterestForms;
 	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_kp_phs_id")
-	ConflictOfInterestKPPHS coiKpPhs;
-	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_phs_id")
-	ConflictOfInterestPHS coiPhs;
-	
-	@OneToOne(cascade = {CascadeType.MERGE})
-	@JoinColumn(name = "coi_pi_non_phs_id")
-	ConflictOfInterestPINonPHS coiPiNonPhs;
-	
+	// has to bw one to many
 	@OneToOne(cascade = {CascadeType.MERGE})
 	@JoinColumn(name = "economic_interest_pi_id")
 	EconomicInterestPI economicInterestPi;
@@ -97,21 +89,19 @@ public class Proposal implements Serializable{
 		this.dateCreated = dateCreated;
 	}
 
-	public Proposal(String proposalName, Date dateCreated, String status, User user, IntakeForm intakeForm,
-			Timeline timeline, ApprovalForm approvalForm, ConflictOfInterestKPNonPHS coiKpNonPhs,
-			ConflictOfInterestKPPHS coiKpPhs, ConflictOfInterestPHS coiPhs, ConflictOfInterestPINonPHS coiPiNonPhs,
+	public Proposal(Long id, String proposalName, Date dateCreated, Status status, User user, IntakeForm intakeForm,
+			Timeline timeline, ApprovalForm approvalForm, List<ConflictOfInterestForm> conflictOfInterestForms,
 			EconomicInterestPI economicInterestPi, EquipmentForm equipmentForm) {
 		super();
+		this.id = id;
 		this.proposalName = proposalName;
 		this.dateCreated = dateCreated;
+		this.status = status;
 		this.user = user;
 		this.intakeForm = intakeForm;
 		this.timeline = timeline;
 		this.approvalForm = approvalForm;
-		this.coiKpNonPhs = coiKpNonPhs;
-		this.coiKpPhs = coiKpPhs;
-		this.coiPhs = coiPhs;
-		this.coiPiNonPhs = coiPiNonPhs;
+		this.conflictOfInterestForms = conflictOfInterestForms;
 		this.economicInterestPi = economicInterestPi;
 		this.equipmentForm = equipmentForm;
 	}
@@ -180,36 +170,12 @@ public class Proposal implements Serializable{
 		this.approvalForm = approvalForm;
 	}
 
-	public ConflictOfInterestKPNonPHS getCoiKpNonPhs() {
-		return coiKpNonPhs;
+	public List<ConflictOfInterestForm> getConflictOfInterestForms() {
+		return conflictOfInterestForms;
 	}
 
-	public void setCoiKpNonPhs(ConflictOfInterestKPNonPHS coiKpNonPhs) {
-		this.coiKpNonPhs = coiKpNonPhs;
-	}
-
-	public ConflictOfInterestKPPHS getCoiKpPhs() {
-		return coiKpPhs;
-	}
-
-	public void setCoiKpPhs(ConflictOfInterestKPPHS coiKpPhs) {
-		this.coiKpPhs = coiKpPhs;
-	}
-
-	public ConflictOfInterestPHS getCoiPhs() {
-		return coiPhs;
-	}
-
-	public void setCoiPhs(ConflictOfInterestPHS coiPhs) {
-		this.coiPhs = coiPhs;
-	}
-
-	public ConflictOfInterestPINonPHS getCoiPiNonPhs() {
-		return coiPiNonPhs;
-	}
-
-	public void setCoiPiNonPhs(ConflictOfInterestPINonPHS coiPiNonPhs) {
-		this.coiPiNonPhs = coiPiNonPhs;
+	public void setConflictOfInterestForms(List<ConflictOfInterestForm> conflictOfInterestForms) {
+		this.conflictOfInterestForms = conflictOfInterestForms;
 	}
 
 	public EconomicInterestPI getEconomicInterestPi() {
@@ -227,8 +193,9 @@ public class Proposal implements Serializable{
 	public void setEquipmentForm(EquipmentForm equipmentForm) {
 		this.equipmentForm = equipmentForm;
 	}
-	
-	
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }
