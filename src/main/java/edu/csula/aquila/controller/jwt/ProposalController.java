@@ -57,7 +57,7 @@ public class ProposalController {
 	
 	//Create a proposal
 	@RequestMapping(value = "proposal/", method = RequestMethod.POST)
-	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate) {
+	public Proposal newProposal(@RequestBody ProposalInstantiate proposalInstantiate, @ModelAttribute("currentUser") User currentUser) {
 		//create proposal and set the name
 		Proposal proposal = new Proposal();
 		

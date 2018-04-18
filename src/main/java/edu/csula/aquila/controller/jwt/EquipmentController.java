@@ -20,24 +20,24 @@ import edu.csula.aquila.model.User.Type;
 @RestController
 public class EquipmentController {
 
-	@Autowired 
+	@Autowired
 	private EquipmentDao equipmentDao;
-	
+
 	@Autowired
 	private ProposalDao proposalDao;
-	
-	@RequestMapping(value = "/proposal/{propId}/equipment/{id}", method = RequestMethod.GET)
-	public EquipmentForm getEquipmentForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long id, @PathVariable Long propId) 
-	{
+
+	@RequestMapping(value = "/proposal/{propId}/equipment/{equipId}", method = RequestMethod.GET)
+	public EquipmentForm getEquipmentForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long equipId,
+			@PathVariable Long propId) {
 		Proposal proposal = proposalDao.getProposal(propId);
-		long userId = proposal.getUser().getId();
-		
-		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
+
+		if (currentUser.getType() == Type.INVESTIGATOR && !proposal.getUser().getId().equals(currentUser.getId()))
+
 			throw new RestException(401, "UNAUTHORIZED");
-				
-		return equipmentDao.getEquipmentForm(id);
+
+		return equipmentDao.getEquipmentForm(equipId);
 	}
-	
+
 	@RequestMapping(value = "/proposal/{propId}/equipment/" , method = RequestMethod.POST)
 	public EquipmentForm newEquipmentForm(@ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@RequestBody EquipmentForm equipmentForm)
@@ -51,19 +51,102 @@ public class EquipmentController {
 		return equipmentDao.saveEquipmentForm(equipmentForm);
 	}
 	
-	@RequestMapping(value= "/proposal/{propId}/equipment/{id}", method = RequestMethod.PUT)
+	//new update
+	@RequestMapping(value= "/proposal/{propId}/equipment/{equipId}", method = RequestMethod.PUT)
 	public EquipmentForm updateEquipmentForm(@ModelAttribute("currentUser") User currentUser, 
-			@RequestBody EquipmentForm equipmentForm, @PathVariable Long id, @PathVariable Long propId)
+			@RequestBody EquipmentForm equipmentForm, @PathVariable Long equipId, @PathVariable Long propId)
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
 		
-		if(currentUser.getType() == Type.UAS_ANALYST && proposal.getStatus() != Status.MEETING ) 
-			throw new RestException(401, "UNAUTHORIZED");
+		equipmentForm.setId(equipId);
+		switch(proposal.getStatus()){
+		//DRAFT
+			case DRAFT : {
+				switch(currentUser.getType()){
+					case INVESTIGATOR : {
+						throw new RestException(401, "UNAUTHORIZED");
+					}
+				
+					case UAS_ANALYST : {
+						throw new RestException(401, "UNAUTHORIZED");
+					}
 		
-		if(currentUser.getType() == Type.INVESTIGATOR && proposal.getStatus() != Status.DRAFT)
-			throw new RestException(403, "FORBIDDEN");
+					case SYSADMIN : {
+						return equipmentDao.saveEquipmentForm(equipmentForm);
+					}	
+				}
+			}
+		//CANCELLED
+			case CANCELLED : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : {
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+						
+						case UAS_ANALYST : {
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+			
+						case SYSADMIN : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}	
+					}
+			}
+		//MEETING
+			case MEETING : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : {
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+						
+						case UAS_ANALYST : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}
+			
+						case SYSADMIN : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}
+					}
+			}
+		//POSTMEETING
+			case POSTMEETING : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : {
+							if(proposal.getUser().getId().equals(currentUser.getId())) {
+								return equipmentDao.saveEquipmentForm(equipmentForm);	
+							} else {
+								throw new RestException(401, "UNAUTHORIZED");
+							}
+						}
+						
+						case UAS_ANALYST : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}
+			
+						case SYSADMIN : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}
+					}
+			}
+		//FINAL
+			case FINAL : {
+					switch(currentUser.getType()){
+						case INVESTIGATOR : {
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+						
+						case UAS_ANALYST : {
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+			
+						case SYSADMIN : {
+							return equipmentDao.saveEquipmentForm(equipmentForm);
+						}	
+					}
+			}
+		}
 		
-		equipmentForm.setId(id);	
-		return equipmentDao.saveEquipmentForm(equipmentForm);
+		return null;
 	}
+	
 }

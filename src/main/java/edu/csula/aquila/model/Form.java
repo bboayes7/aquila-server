@@ -31,6 +31,9 @@ public class Form implements Serializable{
 	
 	@Column(name = "is_complete")
 	private boolean isComplete;
+//	
+//	@Column(name = "progress")
+//	private int progress;
 	
 //	@JsonIgnore
 //	@ManyToOne(cascade = { CascadeType.ALL })
@@ -58,6 +61,14 @@ public class Form implements Serializable{
 	public void setComplete(boolean isComplete) {
 		this.isComplete = isComplete;
 	}
+
+//	public int getProgress() {
+//		return progress;
+//	}
+//
+//	public void setProgress(int progress) {
+//		this.progress = progress;
+//	}
 
 	
 	

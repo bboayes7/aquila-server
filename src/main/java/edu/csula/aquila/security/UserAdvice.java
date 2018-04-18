@@ -20,7 +20,7 @@ public class UserAdvice {
 	@ModelAttribute("currentUser")
 	public User getUserFromJwt(@RequestHeader("Authorization") String token) {
 
-		System.out.println(token);
+//		System.out.println(token);
 		
 		//parse the token
 		Claims claims = Jwts.parser().setSigningKey("Chengyu's Gold Team").parseClaimsJws(token).getBody();
@@ -32,7 +32,6 @@ public class UserAdvice {
 		String typeString = (String) claims.get("type");
 		Object id = claims.get("id");
 		Long setId = new Long((Integer)id);
-
 		
 
 		
@@ -46,6 +45,7 @@ public class UserAdvice {
 		currentUser.setLastName(lastName);
 		currentUser.setType(type);
 		currentUser.setId(setId);
+		
 		
 		return currentUser;
 	}
