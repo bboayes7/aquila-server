@@ -57,7 +57,7 @@ public class EquipmentController {
 			@RequestBody EquipmentForm equipmentForm, @PathVariable Long equipId, @PathVariable Long propId)
 	{
 		Proposal proposal = proposalDao.getProposal(propId);
-		
+		proposal.setStatus(Status.POSTMEETING);
 		equipmentForm.setId(equipId);
 		switch(proposal.getStatus()){
 		//DRAFT

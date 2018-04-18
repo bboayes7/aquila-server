@@ -151,9 +151,6 @@ public class EconomicInterestPI extends Form implements Serializable {
 	
 	private String signature;
 	
-	@JsonIgnore
-	@OneToOne(mappedBy = "economicInterestPi")
-	private Proposal proposal;
 	
 	public EconomicInterestPI() {}
 
@@ -522,14 +519,7 @@ public class EconomicInterestPI extends Form implements Serializable {
 		this.signature = signature;
 	}
 
-	public Proposal getProposal() {
-		return proposal;
-	}
-
-	public void setProposal(Proposal proposal) {
-		this.proposal = proposal;
-	}
-	
+		
 	
 	
 }

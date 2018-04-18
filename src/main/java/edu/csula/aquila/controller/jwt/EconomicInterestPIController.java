@@ -26,18 +26,20 @@ public class EconomicInterestPIController {
 	private ProposalDao proposalDao;
 	
 	@RequestMapping(value = "/proposal/{proposalId}/economicinterest", method = RequestMethod.POST)
-	public EconomicInterestPI newEconomicInterestPI(@ModelAttribute("currentUser") User currentUser, @PathVariable Long proposalId, @RequestBody EconomicInterestPI economicInterestPI)
+	public EconomicInterestPI newEconomicInterestPI(@ModelAttribute("currentUser") User currentUser, @PathVariable Long proposalId, 
+			@RequestBody EconomicInterestPI economicInterestPI)
 	{
 		Proposal proposal = proposalDao.getProposal(proposalId);
+		
 		//Long userId = currentUser.getId();
 		
 		//if(currentUser.getType() == Type.INVESTIGATOR && !proposal.getUser().getId().equals(userId) ) 
 		//	throw new RestException(401, "UNAUTHORIZED");
-		
+		economicInterestPI = economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
 		proposal.setEconomicInterestPi(economicInterestPI);
 		proposal = proposalDao.saveProposal(proposal);
-		economicInterestPI.setProposal(proposal);		
-		return economicInterestPIDao.saveEconomicInterestPI( economicInterestPI );
+				
+		return economicInterestPI ;
 	}
 	
 	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.GET)
@@ -55,7 +57,7 @@ public class EconomicInterestPIController {
 		return economicInterestPIDao.getEconomicInterestPiById( econIntId );
 	}
 	
-	@RequestMapping(value = "/proposal/{propId}/editeconomicinterest/{econIntId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.PUT)
 	public EconomicInterestPI updateEconomicInterestPI( @ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@PathVariable Long econIntId, @RequestBody EconomicInterestPI economicInterestPI )
 	{
@@ -64,6 +66,8 @@ public class EconomicInterestPIController {
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
 		System.out.println(userId);
+		
+		proposal.setStatus(Status.DRAFT);
 		
 		switch(currentUser.getType()) {
 		
