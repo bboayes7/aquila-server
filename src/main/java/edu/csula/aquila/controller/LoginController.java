@@ -11,18 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.csula.aquila.daos.LoginDao;
 import edu.csula.aquila.daos.UserDao;
+import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.User;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
 public class LoginController {
-	
-	@Autowired
-	private LoginDao loginDao;
 	
 	@Autowired
 	private UserDao userDao;
@@ -37,9 +33,9 @@ public class LoginController {
 	public ResponseEntity<Object> login(@RequestBody User user){
 		
 		//check if user sent any fields
-//		if(user.getUsername() == null && user.getPassword() == null) {
-//			 throw new RestException( 400, "Missing username and/or password." );
-//		}
+		if(user.getUsername() == null && user.getPassword() == null) {
+			 throw new RestException( 400, "Missing username and/or password." );
+		}
 
 		//get user from database, this means the username is correct
 		User userDB = userDao.getUserByUsername(user.getUsername());

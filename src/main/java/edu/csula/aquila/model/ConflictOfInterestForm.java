@@ -2,27 +2,27 @@ package edu.csula.aquila.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @DiscriminatorValue("conflict_of_interest")
 public class ConflictOfInterestForm extends Form implements Serializable {
 
 	private static final long serialVersionUID = -8195316383450056859L;
-	@Column
-	private String type;
+	
+	public enum CoiType {
+		OIPHS, OINONPHS, PIPHS, PINONPHS
+	}
+	
+	@Enumerated(EnumType.STRING)
+	private CoiType type;
 
 	// private User principleInvestigator;
 	@Column(name="proposal_number")
@@ -133,7 +133,7 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 	public ConflictOfInterestForm() {
 	}
 
-	public ConflictOfInterestForm(String type, Long proposalNumber, String proposalTitle, String sponsor,
+	public ConflictOfInterestForm(CoiType type, Long proposalNumber, String proposalTitle, String sponsor,
 			String sponsorType, String sponsorSpecification, boolean newProposal, boolean contAddFunding,
 			boolean newChangeInvestigator, boolean newInterestObtained, String previousProposalNumber,
 			boolean newSponsor, String previousSponsorName, boolean requestFromIrb, boolean noCostTimeExtension,
@@ -142,7 +142,6 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 			boolean significantFinInterest, boolean anyOtherInvestigators, String otherInvestigatorsValue,
 			String piSignature, Date piDate, String keyPersonnelSign, Date keyPersonnelDate, boolean aRIOfficial,
 			Date aRIDate, Proposal proposal) {
-		super();
 		this.type = type;
 		this.proposalNumber = proposalNumber;
 		this.proposalTitle = proposalTitle;
@@ -178,11 +177,11 @@ public class ConflictOfInterestForm extends Form implements Serializable {
 		this.proposal = proposal;
 	}
 
-	public String getType() {
+	public CoiType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(CoiType type) {
 		this.type = type;
 	}
 

@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 //import org.springframework.mail.MailSender;
 //import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +21,7 @@ import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.daos.StageDao;
 import edu.csula.aquila.daos.TimelineDao;
 import edu.csula.aquila.model.ConflictOfInterestForm;
+import edu.csula.aquila.model.ConflictOfInterestForm.CoiType;
 import edu.csula.aquila.model.EconomicInterestPI;
 import edu.csula.aquila.model.EquipmentForm;
 import edu.csula.aquila.model.FileInfo;
@@ -243,7 +242,7 @@ public class StageController {
 			case "COI Other Investigator/Key Personnel PHS":
 				if (form.getValue() == null) {
 					ConflictOfInterestForm coiForm = new ConflictOfInterestForm();
-					coiForm.setType("OIPHS"); // make this into an enum
+					coiForm.setType(CoiType.OIPHS); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
 					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
@@ -255,7 +254,7 @@ public class StageController {
 			case "COI Other Investigator/Key Personnel NONPHS":
 				if (form.getValue() == null) {
 					ConflictOfInterestForm coiForm = new ConflictOfInterestForm();
-					coiForm.setType("OINONPHS"); // make this into an enum
+					coiForm.setType(CoiType.OINONPHS); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
 					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
@@ -267,7 +266,7 @@ public class StageController {
 			case "COI Principal Investigator PHS":
 				if (form.getValue() == null) {
 					ConflictOfInterestForm coiForm = new ConflictOfInterestForm();
-					coiForm.setType("PIPHS"); // make this into an enum
+					coiForm.setType(CoiType.PIPHS); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
 					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
@@ -279,7 +278,7 @@ public class StageController {
 			case "COI Principal Investigator NONPHS":
 				if (form.getValue() == null) {
 					ConflictOfInterestForm coiForm = new ConflictOfInterestForm();
-					coiForm.setType("PINONPHS"); // make this into an enum
+					coiForm.setType(CoiType.PINONPHS); // make this into an enum
 					coiForm = coiFormDao.saveConflictOfInterestForm(coiForm);
 					form.setValue(coiForm.getId());
 					List<ConflictOfInterestForm> coiForms = proposal.getConflictOfInterestForms();
@@ -382,7 +381,7 @@ public class StageController {
 			// for now just print email sent
 			// SimpleMailMessage msg = new SimpleMailMessage();
 			// msg.setFrom( "aquila@csula.com" );
-			// msg.setTo( "barryboayes17@gmail.com" );
+			// msg.setTo( "bravobravo90@yahoo.com" );
 			// msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
 			// msg.setText("A user has completed a stage, please go to our
 			// website and review this stage");

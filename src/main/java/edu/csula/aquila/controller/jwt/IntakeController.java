@@ -15,7 +15,6 @@ import edu.csula.aquila.daos.ProposalDao;
 import edu.csula.aquila.error.RestException;
 import edu.csula.aquila.model.IntakeForm;
 import edu.csula.aquila.model.Proposal;
-import edu.csula.aquila.model.Proposal.Status;
 import edu.csula.aquila.model.User;
 import edu.csula.aquila.model.User.Type;
 
