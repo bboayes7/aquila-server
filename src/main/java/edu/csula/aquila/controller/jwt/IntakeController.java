@@ -27,7 +27,6 @@ public class IntakeController {
 	@Autowired
 	private ProposalDao proposalDao;
 	
-	//TimelineController timelineController;
 	
 	//create a new form
 	@RequestMapping(value = "/intake", method = RequestMethod.POST)
@@ -39,7 +38,7 @@ public class IntakeController {
 
 	//update a form
 	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.PUT)
-	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm, 
+	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm,
 			@PathVariable Long propId, @PathVariable Long intakeId) 
 	{
 		intakeForm.setId(intakeId);
@@ -108,7 +107,6 @@ public class IntakeController {
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
 		
-		System.out.println(currentUser.getId() + " -- " + userId + " "+ currentUser.getType());
 		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 		
