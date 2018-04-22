@@ -51,7 +51,7 @@ public class EconomicInterestPIController {
 		Long userId = proposal.getUser().getId();
 		
 		System.out.println(currentUser.getId());
-		if(currentUser.getType() == Type.INVESTIGATOR && currentUser.getId().equals(userId) )
+		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 		
 		return economicInterestPIDao.getEconomicInterestPiById( econIntId );
@@ -65,9 +65,7 @@ public class EconomicInterestPIController {
 		
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
-		System.out.println(userId);
 		
-		proposal.setStatus(Status.DRAFT);
 		
 		switch(currentUser.getType()) {
 		
