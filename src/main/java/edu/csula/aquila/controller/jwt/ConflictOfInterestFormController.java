@@ -49,31 +49,32 @@ public class ConflictOfInterestFormController {
 		Proposal proposal = proposalDao.getProposal(proposalId);
 		Long userId = proposal.getUser().getId();
 		
-		proposal.setStatus(Status.FINAL);
+		//proposal.setStatus(Status.DRAFT);
 		switch(currentUser.getType()) {
 		
 			case INVESTIGATOR:
 				switch(proposal.getStatus()) {
 				
-					case POSTMEETING:{
+					case POSTMEETING:
 						if(currentUser.getId().equals(userId))
 						{
 							coiForm = conflictOfInterestFormDao.saveConflictOfInterestForm(coiForm);
-							break;
 						}
 						else
 						{
 							throw new RestException(401, "UNAUTHORIZED");
 						}
-					}
+					
+					break;
 					
 					case DRAFT:
 					case MEETING:
 					case FINAL:
-					case CANCELLED:
+					case CANCELLED:{
 						throw new RestException(401, "UNAUTHORIZED");
-					
 					}
+				}
+				break;
 				
 			case UAS_ANALYST:
 				switch(proposal.getStatus()) {
@@ -90,6 +91,7 @@ public class ConflictOfInterestFormController {
 						throw new RestException( 403, "FORBIDDEN");
 					
 					}
+				break;
 				
 			case SYSADMIN:
 				coiForm = conflictOfInterestFormDao.saveConflictOfInterestForm(coiForm);
