@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.csula.aquila.model.Proposal;
+import edu.csula.aquila.model.User;
 
 @Repository
 public class ProposalDaoImpl  implements ProposalDao{
@@ -50,6 +51,12 @@ public class ProposalDaoImpl  implements ProposalDao{
 				.setParameter("id", id)
 				.getResultList();
 		
+	}
+
+	@Override
+	public List<Proposal> getProposals() {
+		return entityManager.createQuery( "from Proposal order by proposal_id", Proposal.class )
+	            .getResultList();
 	}
 
 

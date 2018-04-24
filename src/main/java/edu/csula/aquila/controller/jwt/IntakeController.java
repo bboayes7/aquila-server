@@ -43,6 +43,7 @@ public class IntakeController {
 			@PathVariable Long propId, @PathVariable Long intakeId) 
 	{
 		intakeForm.setId(intakeId);
+		intakeForm.setComplete(true);
 		
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();

@@ -122,6 +122,16 @@ public class ProposalController {
 		return proposalDao.getProposalsOfUser(userId);
 	}
 	
+	//Get a list of all proposals 
+	@RequestMapping(value = "proposals/", method = RequestMethod.GET)
+	public List<Proposal> getProposals(@ModelAttribute("currentUser") User currentUser){
+		if(currentUser.getType() == Type.INVESTIGATOR)
+			throw new RestException(401, "UNAUTHORIZED");
+
+		
+		return proposalDao.getProposals();
+	}
+	
 	
 }
 

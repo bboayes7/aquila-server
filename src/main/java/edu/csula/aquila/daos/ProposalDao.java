@@ -14,5 +14,7 @@ public interface ProposalDao {
 
 	List<Proposal> getProposalsOfUser( Long id );
 	
+	List<Proposal> getProposals();
+	
 
 }

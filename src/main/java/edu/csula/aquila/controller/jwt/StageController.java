@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 //import org.springframework.mail.MailSender;
 //import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,8 +55,8 @@ public class StageController {
 	@Autowired
 	private ConflictOfInterestFormDao coiFormDao;
 
-	// @Autowired
-	// MailSender mailSender;
+	 @Autowired
+	 MailSender mailSender;
 
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
@@ -168,6 +170,22 @@ public class StageController {
 		timelineDao.saveTimeline(timeline);
 
 		return new Message("Stages Reordered");
+	}
+	
+	//stage check controller
+	@RequestMapping(value = "proposal/{propId}/timeline/stage/{stageId}", method = RequestMethod.GET)
+	public @ResponseBody Message checkStage(@PathVariable Long stageId, @PathVariable Long propId) {
+
+		Stage stage = stageDao.getStage(stageId);
+		Proposal proposal = proposalDao.getProposal(propId);
+		
+		boolean stageComplete = stageCheck(stage, proposal);
+		
+		if(stageComplete) {
+			return new Message("Stage Complete. An email has been sent to a UAS Analyst.");
+		}
+		
+		return new Message("Stage Not Complete. Please review your forms and files.");
 	}
 
 	public class Message {
@@ -296,7 +314,7 @@ public class StageController {
 
 	// checks if a stage is complete
 
-	public void stageCheck(Stage stage, Proposal proposal) {
+	public boolean stageCheck(Stage stage, Proposal proposal) {
 		// check if all forms are completed through the isComplete boolean
 		boolean formsComplete = false;
 		boolean filesUploaded = true; // consider if stages dont have required
@@ -352,6 +370,7 @@ public class StageController {
 			}
 		}
 
+		//if complete boolean still true, then all forms are complete
 		if (complete) {
 			formsComplete = true;
 		}
@@ -368,7 +387,7 @@ public class StageController {
 				}
 			}
 		}
-
+		//if complete boolean still true, then all files are uploaded
 		if (complete) {
 			filesUploaded = true;
 		}
@@ -379,15 +398,17 @@ public class StageController {
 			stage.setUasReviewRequired(true);
 			// send an email to UAS
 			// for now just print email sent
-			// SimpleMailMessage msg = new SimpleMailMessage();
-			// msg.setFrom( "aquila@csula.com" );
-			// msg.setTo( "bravobravo90@yahoo.com" );
-			// msg.setSubject( "There Is A Stage That Needs To Be Reviewed");
-			// msg.setText("A user has completed a stage, please go to our
-			// website and review this stage");
-			// mailSender.send(msg);
+			 SimpleMailMessage msg = new SimpleMailMessage();
+			 msg.setFrom( "aquila@csula.com" );
+			 msg.setTo( "barryboayes@gmail.com" );
+			 msg.setSubject( "There Is A Stage From " + proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " That Needs To Be Reviewed");
+			 msg.setText(proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " has completed a stage in " +  proposal.getProposalName() +  ". Please visit our website and review this stage");
+			 mailSender.send(msg);
 			System.out.println("Email 'sent'");
+			return true;
 		}
+		
+		return false;
 	}
 
 }
