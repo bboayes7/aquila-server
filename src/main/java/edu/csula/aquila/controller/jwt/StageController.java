@@ -317,32 +317,30 @@ public class StageController {
 	public boolean stageCheck(Stage stage, Proposal proposal) {
 		// check if all forms are completed through the isComplete boolean
 		boolean formsComplete = false;
-		boolean filesUploaded = true; // consider if stages dont have required
-										// files or required forms
-
+		boolean filesUploaded = false; 
+		
 		// HANDLE FORMS
 		Map<String, Long> forms = stage.getRequiredForms();
 
 		// check if all forms are complete (maybe add a condition if form list
 		// is 0 then
 		// dont call this?)
-		boolean complete = true;
+		System.out.println("form size: " + forms.size());
 		if (forms.size() != 0) {
 			for (Map.Entry<String, Long> form : forms.entrySet()) {
 				String key = form.getKey();
-
 				switch (key) {
-				case "Intake":
+				case "Intake Form":
 					IntakeForm intakeForm = proposal.getIntakeForm();
-					complete = intakeForm.isComplete();
+					formsComplete  = intakeForm.isComplete();
 					break;
-				case "Equipment":
+				case "Equipment Form":
 					EquipmentForm equipmentForm = proposal.getEquipmentForm();
-					complete = equipmentForm.isComplete();
+					formsComplete = equipmentForm.isComplete();
 					break;
 				case "Statement Of Economic Interest":
 					EconomicInterestPI economicInterest = proposal.getEconomicInterestPi();
-					complete = economicInterest.isComplete();
+					formsComplete = economicInterest.isComplete();
 					break;
 //				case "COI Other Investigator/Key Personnel PHS":
 //					ConflictOfInterestKPPHS coiKpPhs = proposal.getCoiKpPhs();
@@ -363,35 +361,27 @@ public class StageController {
 				// make cases for key {"Approval"}
 				}
 
-				// if any of the forms aren't complete, break the loop
-				if (complete == false) {
-					break;
-				}
+
 			}
 		}
 
-		//if complete boolean still true, then all forms are complete
-		if (complete) {
-			formsComplete = true;
-		}
 
 		// HANDLE FILES
 		Map<String, FileInfo> files = stage.getRequiredFiles();
 		if (files.size() != 0) {
 			for (Map.Entry<String, FileInfo> file : files.entrySet()) {
+				System.out.println(file.getValue().getFileName());
 				if (file.getValue().isUploaded() == true) {
-					complete = true;
+					filesUploaded = true;
 				} else {
-					complete = false;
+					filesUploaded = false;
 					break;
 				}
 			}
 		}
-		//if complete boolean still true, then all files are uploaded
-		if (complete) {
-			filesUploaded = true;
-		}
 
+
+		System.out.println("forms : " + formsComplete + "\nfiles: " + filesUploaded);
 		// when formsCompleted && filesUploaded is true
 		if (formsComplete && filesUploaded) {
 			// set uasReviewRequired to true
@@ -400,7 +390,7 @@ public class StageController {
 			// for now just print email sent
 			 SimpleMailMessage msg = new SimpleMailMessage();
 			 msg.setFrom( "aquila@csula.com" );
-			 msg.setTo( "barryboayes@gmail.com" );
+			 msg.setTo( "barryboayes17@gmail.com" );
 			 msg.setSubject( "There Is A Stage From " + proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " That Needs To Be Reviewed");
 			 msg.setText(proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " has completed a stage in " +  proposal.getProposalName() +  ". Please visit our website and review this stage");
 			 mailSender.send(msg);
