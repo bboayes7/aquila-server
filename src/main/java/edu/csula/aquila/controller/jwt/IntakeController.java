@@ -27,7 +27,6 @@ public class IntakeController {
 	@Autowired
 	private ProposalDao proposalDao;
 	
-	//TimelineController timelineController;
 	
 	//create a new form
 	@RequestMapping(value = "/intake", method = RequestMethod.POST)
@@ -39,7 +38,7 @@ public class IntakeController {
 
 	//update a form
 	@RequestMapping(value = "/proposal/{propId}/intake/{intakeId}", method = RequestMethod.PUT)
-	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm, 
+	public IntakeForm updateIntakeForm(@ModelAttribute("currentUser") User currentUser, @RequestBody IntakeForm intakeForm,
 			@PathVariable Long propId, @PathVariable Long intakeId) 
 	{
 		intakeForm.setId(intakeId);
@@ -50,32 +49,35 @@ public class IntakeController {
 		System.out.println(userId);
 		System.out.println(currentUser.getType());
 		
-		
+		//proposal.setStatus(Status.POSTMEETING);
 		
 		switch(currentUser.getType()) {
 		
 			case INVESTIGATOR:
-				switch(proposal.getStatus()) {
+				switch(proposal.getStatus()){
 				
-				case DRAFT:
-				case POSTMEETING:{
-					if(currentUser.getId().equals(userId))
-					{
-						intakeForm = intakeDao.saveIntakeForm(intakeForm);
-						break;
-					}
-					else
-					{
+					case DRAFT:
+					case POSTMEETING:
+						if(currentUser.getId().equals(userId))
+						{
+							intakeForm = intakeDao.saveIntakeForm(intakeForm);
+							System.out.println("success");
+							
+						}
+						else
+						{
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+					
+					break;
+					
+					
+					case MEETING:
+					case FINAL:
+					case CANCELLED:
 						throw new RestException(401, "UNAUTHORIZED");
-					}
 				}
-				
-				case MEETING:
-				case FINAL:
-				case CANCELLED:
-					throw new RestException(401, "UNAUTHORIZED");
-				
-				}
+				break;
 				
 			case UAS_ANALYST:
 				switch(proposal.getStatus()) {
@@ -92,12 +94,13 @@ public class IntakeController {
 					throw new RestException( 403, "FORBIDDEN");
 				
 				}
-				
+				break;
+			
 			case SYSADMIN:
 				intakeForm = intakeDao.saveIntakeForm(intakeForm);
 				break;
-				
 		}
+		
 		
 		return intakeDao.saveIntakeForm(intakeForm);
 	}
@@ -109,7 +112,6 @@ public class IntakeController {
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
 		
-		System.out.println(currentUser.getId() + " -- " + userId + " "+ currentUser.getType());
 		if(currentUser.getType() == Type.INVESTIGATOR && !currentUser.getId().equals(userId) )
 			throw new RestException(401, "UNAUTHORIZED");
 		
