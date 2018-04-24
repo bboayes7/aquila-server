@@ -48,32 +48,35 @@ public class IntakeController {
 		System.out.println(userId);
 		System.out.println(currentUser.getType());
 		
-		
+		//proposal.setStatus(Status.POSTMEETING);
 		
 		switch(currentUser.getType()) {
 		
 			case INVESTIGATOR:
-				switch(proposal.getStatus()) {
+				switch(proposal.getStatus()){
 				
-				case DRAFT:
-				case POSTMEETING:{
-					if(currentUser.getId().equals(userId))
-					{
-						intakeForm = intakeDao.saveIntakeForm(intakeForm);
-						break;
-					}
-					else
-					{
+					case DRAFT:
+					case POSTMEETING:
+						if(currentUser.getId().equals(userId))
+						{
+							intakeForm = intakeDao.saveIntakeForm(intakeForm);
+							System.out.println("success");
+							
+						}
+						else
+						{
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+					
+					break;
+					
+					
+					case MEETING:
+					case FINAL:
+					case CANCELLED:
 						throw new RestException(401, "UNAUTHORIZED");
-					}
 				}
-				
-				case MEETING:
-				case FINAL:
-				case CANCELLED:
-					throw new RestException(401, "UNAUTHORIZED");
-				
-				}
+				break;
 				
 			case UAS_ANALYST:
 				switch(proposal.getStatus()) {
@@ -90,12 +93,13 @@ public class IntakeController {
 					throw new RestException( 403, "FORBIDDEN");
 				
 				}
-				
+				break;
+			
 			case SYSADMIN:
 				intakeForm = intakeDao.saveIntakeForm(intakeForm);
 				break;
-				
 		}
+		
 		
 		return intakeDao.saveIntakeForm(intakeForm);
 	}

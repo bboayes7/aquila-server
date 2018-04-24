@@ -42,6 +42,7 @@ public class EconomicInterestPIController {
 		return economicInterestPI ;
 	}
 	
+	
 	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.GET)
 	public EconomicInterestPI getEconomicInterestPIById( @ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@PathVariable Long econIntId )
@@ -57,6 +58,7 @@ public class EconomicInterestPIController {
 		return economicInterestPIDao.getEconomicInterestPiById( econIntId );
 	}
 	
+	
 	@RequestMapping(value = "/proposal/{propId}/economicinterest/{econIntId}", method = RequestMethod.PUT)
 	public EconomicInterestPI updateEconomicInterestPI( @ModelAttribute("currentUser") User currentUser, @PathVariable Long propId,
 			@PathVariable Long econIntId, @RequestBody EconomicInterestPI economicInterestPI )
@@ -66,53 +68,55 @@ public class EconomicInterestPIController {
 		Proposal proposal = proposalDao.getProposal(propId);
 		Long userId = proposal.getUser().getId();
 		
-		
+		//proposal.setStatus(Status.POSTMEETING);
 		switch(currentUser.getType()) {
 		
 			case INVESTIGATOR:
 				switch(proposal.getStatus()) {
 				
-				case POSTMEETING:{
-					if(currentUser.getId().equals(userId))
-					{
-						economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
-						break;
-					}
-					else
-					{
+					case POSTMEETING:
+						if(currentUser.getId().equals(userId))
+						{
+							economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+							
+						}
+						else
+						{
+							throw new RestException(401, "UNAUTHORIZED");
+						}
+					break;
+					
+					case DRAFT:
+					case MEETING:
+					case FINAL:
+					case CANCELLED:
 						throw new RestException(401, "UNAUTHORIZED");
+					
 					}
-				}
-				
-				case DRAFT:
-				case MEETING:
-				case FINAL:
-				case CANCELLED:
-					throw new RestException(401, "UNAUTHORIZED");
-				
-				}
-				
+					break;
+					
 			case UAS_ANALYST:
 				switch(proposal.getStatus()) {
-				
-				case MEETING:
-				case POSTMEETING:
-					economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+					
+					case MEETING:
+					case POSTMEETING:
+						economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
+						break;
+					
+					
+					case DRAFT:
+					case FINAL:
+					case CANCELLED:
+						throw new RestException( 403, "FORBIDDEN");
+					
+					}
 					break;
-				
-				
-				case DRAFT:
-				case FINAL:
-				case CANCELLED:
-					throw new RestException( 403, "FORBIDDEN");
-				
-				}
-				
+					
 			case SYSADMIN:
 				economicInterestPI = economicInterestPIDao.saveEconomicInterestPI(economicInterestPI);
 				break;
-				
-	}
+					
+		}
 			
 		return economicInterestPI ;
 	}
