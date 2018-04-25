@@ -34,6 +34,7 @@ import edu.csula.aquila.model.Timeline;
 
 @RestController
 public class StageController {
+	
 	@Autowired
 	private StageDao stageDao;
 
@@ -55,8 +56,8 @@ public class StageController {
 	@Autowired
 	private ConflictOfInterestFormDao coiFormDao;
 
-	 @Autowired
-	 MailSender mailSender;
+	@Autowired
+	MailSender mailSender;
 
 	// Get a stage
 	@RequestMapping(value = "timeline/stage/{id}", method = RequestMethod.GET)
@@ -92,9 +93,28 @@ public class StageController {
 
 		proposalDao.saveProposal(proposal);
 
-		// stage check
-//		stageCheck(stage, proposal);
-
+		//if an analyst reviewed the stage send an email to the pi
+		if(stage.isUasReviewed() && stage.getName().equals("Pre-Meeting")) {
+			 SimpleMailMessage msg = new SimpleMailMessage();
+			 msg.setFrom( "aquila@csula.com" );
+//			 msg.setTo( proposal.getUser().getEmail() );
+			 msg.setTo("aquila@localhost.localdomain");
+			 msg.setSubject( "A UAS Analyst Has Approved Your Draft Proposal");
+			 msg.setText("Please contact UAS by phone (323) 343-2531 to set a appointment for a meeting regarding your project.");
+			 mailSender.send(msg);
+		}
+		
+		//if an analyst reviewed the stage send an email to the pi
+		if(stage.isUasReviewed()) {
+			 SimpleMailMessage msg = new SimpleMailMessage();
+			 msg.setFrom( "aquila@csula.com" );
+//			 msg.setTo( proposal.getUser().getEmail() );
+			 msg.setTo("aquila@localhost.localdomain");
+			 msg.setSubject( "A UAS Analyst Has Approved A Stage");
+			 msg.setText("Please contact UAS for additional inquiries ");
+			 mailSender.send(msg);
+		}
+		
 		return stageDao.saveStage(stage);
 	}
 
@@ -387,10 +407,10 @@ public class StageController {
 			// set uasReviewRequired to true
 			stage.setUasReviewRequired(true);
 			// send an email to UAS
-			// for now just print email sent
 			 SimpleMailMessage msg = new SimpleMailMessage();
 			 msg.setFrom( "aquila@csula.com" );
-			 msg.setTo( "barryboayes17@gmail.com" );
+//			 msg.setTo( "barryboayes17@gmail.com" );
+			 msg.setTo("aquila@localhost.localdomain");
 			 msg.setSubject( "There Is A Stage From " + proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " That Needs To Be Reviewed");
 			 msg.setText(proposal.getUser().getFirstName() + " " + proposal.getUser().getLastName() + " has completed a stage in " +  proposal.getProposalName() +  ". Please visit our website and review this stage");
 			 mailSender.send(msg);
